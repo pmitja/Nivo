@@ -1,0 +1,103 @@
+import { sendReviewRequestForLeadAction } from "@/app/actions";
+import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { ReviewFeedbackTable } from "@/components/dashboard/review-feedback-table";
+import { Button } from "@/components/ui/button";
+import { requireClientUser } from "@/lib/auth";
+import {
+  getClientReviewFeedbacksPage,
+  getClientReviewRequests,
+  getCompany,
+  getCompletedReviewCandidates,
+} from "@/lib/dashboard-data";
+import { formatDate } from "@/lib/labels";
+
+export default async function ClientReviewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ feedbackPage?: string; feedbackRating?: string }>;
+}) {
+  const user = await requireClientUser();
+  const params = await searchParams;
+  const feedbackPage = Number(params.feedbackPage ?? "1");
+  const feedbackRating = params.feedbackRating ? Number(params.feedbackRating) : undefined;
+  const safeRating = feedbackRating && [1, 2, 3].includes(feedbackRating) ? feedbackRating : undefined;
+
+  const [company, candidates, requests, feedbacks] = await Promise.all([
+    getCompany(user.companyId!),
+    getCompletedReviewCandidates(user.companyId!),
+    getClientReviewRequests(user.companyId!),
+    getClientReviewFeedbacksPage(user.companyId!, Number.isFinite(feedbackPage) ? feedbackPage : 1, 10, safeRating),
+  ]);
+
+  return (
+    <DashboardShell user={user} mode="client" title="Google ocene" subtitle="Pošljite zahtevo za oceno zaključenim strankam.">
+      <div className="grid gap-6 xl:grid-cols-[1.15fr_.85fr]">
+        <Panel title="Zaključene stranke">
+          {company?.googleReviewUrl ? (
+            <div className="overflow-hidden rounded-[16px] border border-[#EEEAF5]">
+              <div className="hidden grid-cols-[1fr_.8fr_.8fr_auto] gap-3 border-b border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3 text-xs font-extrabold uppercase tracking-[.06em] text-[#8D8999] md:grid">
+                <div>Stranka</div>
+                <div>Storitev</div>
+                <div>Zadnja zahteva</div>
+                <div className="text-right">Akcija</div>
+              </div>
+              <div className="divide-y divide-[#EEEAF5] bg-white">
+                {candidates.length ? (
+                  candidates.map((candidate) => (
+                    <div key={candidate.id} className="grid gap-3 px-4 py-3 md:grid-cols-[1fr_.8fr_.8fr_auto] md:items-center">
+                      <div>
+                        <div className="text-sm font-extrabold">{candidate.displayName}</div>
+                        <div className="mt-1 text-xs font-semibold text-[#8A8694]">{candidate.phone} · {candidate.email || "Brez emaila"}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm font-bold text-[#28262F]">{candidate.service}</div>
+                        <div className="mt-1 text-xs font-semibold text-[#8A8694]">{candidate.location || "Brez lokacije"}</div>
+                      </div>
+                      <div className="text-sm font-semibold text-[#686473]">
+                        {candidate.latestReviewSentAt ? formatDate(candidate.latestReviewSentAt) : "Ni poslano"}
+                      </div>
+                      <form action={sendReviewRequestForLeadAction} className="md:justify-self-end">
+                        <input type="hidden" name="leadId" value={candidate.id} />
+                        <Button size="sm">Pošlji zahtevo za oceno</Button>
+                      </form>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-4">
+                    <EmptyState text="Ko bo povpraševanje označeno kot zaključeno, se bo stranka prikazala tukaj." />
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <EmptyState text="Google review povezava še ni nastavljena. Pošljite nam povezavo ali nas kontaktirajte, da jo uredimo za vas." />
+          )}
+        </Panel>
+
+        <Panel title="Zadnje zahteve">
+          <div className="grid gap-2">
+            {requests.length ? (
+              requests.slice(0, 10).map((request) => (
+                <div key={request.id} className="flex flex-wrap items-center justify-between gap-3 rounded-[14px] border border-[#EEEAF5] px-4 py-3">
+                  <div>
+                    <div className="text-sm font-extrabold">{request.phone}</div>
+                    <div className="mt-1 text-xs font-semibold text-[#777382]">{formatDate(request.createdAt)}</div>
+                  </div>
+                  <StatusPill>{request.status === "sent" ? "Poslano" : request.status}</StatusPill>
+                </div>
+              ))
+            ) : (
+              <EmptyState text="Zahtev za ocene še ni." />
+            )}
+          </div>
+        </Panel>
+      </div>
+
+      <div className="mt-6">
+        <Panel title="Interne povratne informacije">
+          <ReviewFeedbackTable data={feedbacks} />
+        </Panel>
+      </div>
+    </DashboardShell>
+  );
+}

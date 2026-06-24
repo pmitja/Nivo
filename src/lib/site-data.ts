@@ -376,7 +376,7 @@ export const pricePromises = [
 
 export const priceFaqs = [
   { q: "Ali je potrebna vezava?", a: "Ne. Naročnino lahko prekinete kadarkoli — brez odpovednega roka in brez kazni." },
-  { q: "Ali so kakšni začetni stroški?", a: "Ne. Plačate 80 € mesečno ali 780 € za eno leto. Postavitev sistema je vključena." },
+  { q: "Ali so kakšni začetni stroški?", a: "Ne. Plačate 99 € mesečno ali 950 € za 12 mesecev. Postavitev sistema je vključena." },
   {
     q: "Kaj je vključeno v ceno?",
     a: "Spletna stran, gostovanje, CMS, SMS sistem, kontaktni obrazci, marketinške kampanje, zbiranje Google ocen, analitika, podpora in vzdrževanje.",
@@ -399,7 +399,7 @@ export const roofers = {
   reviews: [
     { text: "Odkar imam Nivo, ne zamudim več nobenega klica. Povpraševanja dobim na telefon takoj.", name: "Marko P.", meta: "Krovstvo · Gorenjska" },
     { text: "Stara stran ni prinašala nič. Zdaj me najdejo na Googlu in dobivam ponudbe vsak teden.", name: "Tomaž R.", meta: "Krovec · Štajerska" },
-    { text: "Najboljša investicija za 80 € na mesec. Več ocen, več strank, manj skrbi.", name: "Andrej K.", meta: "Krovstvo · Ljubljana" },
+    { text: "Najboljša investicija za 99 € na mesec. Več ocen, več strank, manj skrbi.", name: "Andrej K.", meta: "Krovstvo · Ljubljana" },
   ],
   planMini: ["Spletna stran", "SMS sistem", "Google ocene", "Kampanje", "Gostovanje", "Podpora"],
   otherTrades: [

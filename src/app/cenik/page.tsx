@@ -65,7 +65,7 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <CtaBand title="Pripravljeni na več povpraševanj?" text="80 € na mesec ali 780 € za eno leto. Brez vezave. Začnete prejemati povpraševanja v 10 dneh." />
+      <CtaBand title="Pripravljeni na več povpraševanj?" text="99 € na mesec ali 950 € za 12 mesecev. Brez vezave. Začnete prejemati povpraševanja v 10 dneh." />
     </PageShell>
   );
 }

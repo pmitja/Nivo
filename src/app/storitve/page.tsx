@@ -62,7 +62,7 @@ export default function ServicesPage() {
       <AddonsSection />
       <CtaBand
         title="En sistem. Ena cena. Več strank."
-        text="Začnite z 80 € na mesec. Brez vezave, prekinitev kadarkoli."
+        text="Začnite z 99 € na mesec ali 950 € za 12 mesecev. Brez vezave, prekinitev kadarkoli."
       />
     </PageShell>
   );
@@ -125,7 +125,7 @@ function PackageCard() {
   return (
     <div className="rounded-[28px] border border-[#E8E6F0] bg-white p-6 shadow-[0_28px_70px_rgba(20,19,29,.10)] md:p-8 lg:min-h-[720px]">
       <div className="inline-flex rounded-full bg-[#EFEBFF] px-4 py-2 text-[13px] font-extrabold text-[#6A5AE0]">
-        od 80 € / mesec
+        od 99 € / mesec
       </div>
       <h3 className="mt-8 text-[38px] font-extrabold leading-[1.05] tracking-[-.035em] md:text-[48px]">
         Spletna stran + sistem v enem paketu
