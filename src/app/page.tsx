@@ -63,13 +63,18 @@ export default function Home() {
       <section className="bg-white px-5 py-24 md:px-8">
         <div className="mx-auto grid max-w-[1100px] items-center gap-12 lg:grid-cols-[.9fr_1.1fr]">
           <div>
-            <Eyebrow>AI pomočnik</Eyebrow>
+            <div className="flex flex-wrap items-center gap-3">
+              <Eyebrow>AI pomočnik</Eyebrow>
+              <span className="rounded-full border border-[#DCD6FF] bg-[#F4F1FF] px-3 py-1.5 text-xs font-extrabold uppercase tracking-[.06em] text-[#6A5AE0]">
+                Pride kmalu
+              </span>
+            </div>
             <h2 className="mt-3 text-[32px] font-extrabold leading-[1.14] tracking-[-.03em] md:text-[38px]">
-              Stranka lažje pove, kaj potrebuje
+              Povzetki in osnutki ponudb so v pripravi
             </h2>
             <p className="mt-4 text-[16.5px] leading-[1.6] text-[#54515E]">
-              Sistem lahko stranki pomaga oddati jasnejše povpraševanje. Vi dobite več informacij in hitreje pripravite
-              odgovor ali ponudbo.
+              AI pomočnik bo pomagal urediti povpraševanja, izluščiti ključne podatke in pripraviti osnutek ponudbe.
+              Funkcija prihaja kmalu in ponudb ne bo pošiljala brez vaše potrditve.
             </p>
           </div>
           <div className="rounded-[20px] border border-[#ECEAF3] bg-[#FBFAFF] p-6">
@@ -98,12 +103,17 @@ export default function Home() {
             </div>
           </div>
           <div>
-            <Eyebrow>Urejanje vsebine</Eyebrow>
+            <div className="flex flex-wrap items-center gap-3">
+              <Eyebrow>Spremembe spletne strani</Eyebrow>
+              <span className="rounded-full border border-[#DCD6FF] bg-white px-3 py-1.5 text-xs font-extrabold uppercase tracking-[.06em] text-[#6A5AE0]">
+                Stage 2
+              </span>
+            </div>
             <h2 className="mt-3 text-[32px] font-extrabold leading-[1.14] tracking-[-.03em] md:text-[38px]">
-              Spremembe brez razvijalca
+              Spremembe prek zahtevka
             </h2>
             <p className="mt-4 text-[16.5px] leading-[1.6] text-[#54515E]">
-              Sami lahko uredite osnovne vsebine, slike, storitve in kontaktne podatke. Brez čakanja, brez dodatnih e-mailov.
+              V dashboardu oddate zahtevek za spremembo, ekipa Nivo pa ročno uredi vsebino, slike, storitve ali kontaktne podatke.
             </p>
           </div>
         </div>

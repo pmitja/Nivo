@@ -12,9 +12,9 @@ type BillingPeriod = "monthly" | "yearly";
 const plans = {
   monthly: {
     label: "Mesečno",
-    price: "80 €",
+    price: "99 €",
     unit: "/ mesec",
-    summary: "80 € na mesec",
+    summary: "99 € na mesec",
     note: "Največ fleksibilnosti. Prekinitev kadarkoli.",
     badge: "Brez vezave",
     cta: "Začni mesečno",
@@ -22,13 +22,13 @@ const plans = {
   },
   yearly: {
     label: "Letno",
-    price: "780 €",
-    unit: "/ leto",
-    summary: "780 € za eno leto",
-    note: "65 € / mesec ob letnem plačilu.",
-    badge: "Prihranite 180 €",
+    price: "950 €",
+    unit: "/ 12 mesecev",
+    summary: "950 € za 12 mesecev",
+    note: "79,17 € / mesec ob letnem plačilu.",
+    badge: "Prihranite 238 €",
     cta: "Začni letno",
-    inactiveItems: ["65 € / mesec", "Prihranek 180 €", "Vse funkcije vključene"],
+    inactiveItems: ["79,17 € / mesec", "Prihranek 238 €", "Vse funkcije vključene"],
   },
 } satisfies Record<
   BillingPeriod,
@@ -47,7 +47,7 @@ const plans = {
 const planFeatures = [
   "Spletna stran (do 5 podstrani)",
   "Gostovanje",
-  "CMS sistem",
+  "Zahtevki za spremembe",
   "Kontaktni obrazci",
   "SMS sistem",
   "Avtomatski odgovori",

@@ -65,7 +65,7 @@ export function MobileNav({ active }: { active?: string }) {
             </Link>
           ))}
           <Link
-            href="/kontakt"
+            href="/prijava"
             onClick={() => setOpen(false)}
             className={cn(
               'pt-4 text-[16px] font-semibold text-[#16151D] no-underline transition-all duration-300 hover:text-[#6A5AE0]',

@@ -26,7 +26,7 @@ export default function RoofersPage() {
               Profesionalna stran, takojšnji SMS odgovori in več Google ocen — da vas najdejo lastniki streh v vaši okolici.
             </p>
             <p className="mt-2.5 text-[18.5px] font-semibold leading-[1.5]">
-              Vse za samo <span className="text-[#6A5AE0]">80 € na mesec.</span>
+              Vse za samo <span className="text-[#6A5AE0]">99 € na mesec.</span>
             </p>
             <div className="mt-[30px] flex flex-wrap items-center gap-3.5">
               <Button asChild>
@@ -126,7 +126,7 @@ export default function RoofersPage() {
           <div className="relative">
             <div className="text-[13px] font-bold uppercase tracking-[.06em] text-white/75">Cel sistem za krovce</div>
             <div className="mt-3.5 flex items-baseline gap-2.5">
-              <span className="text-[60px] font-extrabold leading-none tracking-[-.03em]">80 €</span>
+              <span className="text-[60px] font-extrabold leading-none tracking-[-.03em]">99 €</span>
               <span className="text-lg opacity-85">/ mesec</span>
             </div>
             <p className="mt-3 max-w-[380px] text-base text-white/85">Spletna stran, SMS sistem, Google ocene in kampanje — vse vključeno. Brez vezave.</p>

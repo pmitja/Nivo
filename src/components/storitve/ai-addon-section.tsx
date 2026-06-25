@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { aiFeatures } from "@/lib/site-data";
 
@@ -10,23 +8,27 @@ export function AiAddonSection() {
         <div className="pointer-events-none absolute right-[-40px] top-[-80px] h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(140,123,240,.30),rgba(22,21,29,0)_70%)]" />
         <div className="relative grid items-center gap-12 lg:grid-cols-[.95fr_1.05fr]">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#8C7BF0]/25 bg-[#8C7BF0]/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[.06em] text-[#8C7BF0]">
-              ✦ AI pomočnik · doplačilo
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="text-xs font-bold uppercase tracking-[.08em] text-[#8C7BF0]">
+                AI pomočnik
+              </div>
+              <span className="rounded-full border border-[#8C7BF0]/25 bg-[#8C7BF0]/10 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[.06em] text-[#A99BF5]">
+                Pride kmalu
+              </span>
             </div>
             <h2 className="mt-[18px] text-[34px] font-extrabold leading-[1.12] tracking-[-.03em] md:text-[38px]">
-              Manj administracije.
+              Povzetki povpraševanj.
               <br />
-              Hitrejše ponudbe.
+              Osnutki ponudb.
             </h2>
             <p className="mt-4 text-[16.5px] leading-[1.6] text-[#B6B3C2]">
-              AI prebere sporočila strank, izlušči ključne podatke in pripravi osnutek ponudbe — vi samo potrdite.
+              AI pomočnik bo prebral sporočila strank, izluščil ključne podatke in pripravil osnutek ponudbe. Funkcija prihaja kmalu.
             </p>
             <div className="mt-6 flex items-baseline gap-2">
-              <span className="text-[44px] font-extrabold tracking-[-.03em]">20 €</span>
-              <span className="text-base font-medium text-[#9D9AAB]">/ mesec · doplačilo</span>
+              <span className="text-[44px] font-extrabold tracking-[-.03em]">Pride kmalu</span>
             </div>
-            <Button asChild className="mt-6">
-              <Link href="/kontakt">Dodaj AI pomočnika</Link>
+            <Button className="mt-6" disabled>
+              V pripravi
             </Button>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">

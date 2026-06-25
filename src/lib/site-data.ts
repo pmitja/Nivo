@@ -90,12 +90,12 @@ export const features = [
   {
     icon: "✦",
     title: "AI pomočnik",
-    desc: "Povpraševanja so bolj jasna — sistem stranki pomaga povedati, kaj potrebuje, kje in kdaj.",
+    desc: "Povzetki povpraševanj in osnutki ponudb so v pripravi.",
   },
   {
     icon: "✎",
-    title: "Enostavno urejanje",
-    desc: "Sami spremenite storitve, slike, reference in kontaktne podatke.",
+    title: "Spremembe spletne strani",
+    desc: "Oddate zahtevek, ekipa Nivo pa ročno uredi vsebino, slike ali kontaktne podatke.",
   },
   {
     icon: "◎",
@@ -136,14 +136,14 @@ export const aiQuestions = [
 ];
 
 export const cmsItems = [
+  "Zahtevek za spremembo",
+  "Slike in reference",
   "Storitve",
-  "Slike",
-  "Reference",
   "Kontaktni podatki",
   "Delovni čas",
   "Lokacije",
   "Pogosta vprašanja",
-  "Osnovna besedila",
+  "Objava po pregledu",
 ];
 
 export const steps = [
@@ -181,7 +181,7 @@ export const compareNew = [
   "Povpraševanje se shrani",
   "Lahko pošljete kampanje",
   "Lažje zbirate Google ocene",
-  "Vsebino urejate sami",
+  "Spremembe oddate kot zahtevek",
 ];
 
 export const planFeaturesLanding = [
@@ -192,7 +192,7 @@ export const planFeaturesLanding = [
   "Pregled povpraševanj",
   "Google review sistem",
   "Kampanje za stranke",
-  "Enostavno urejanje",
+  "Zahtevki za spremembe",
   "Gostovanje",
   "Tehnično vzdrževanje",
   "Osnovna SEO priprava",
@@ -202,9 +202,9 @@ export const planFeaturesLanding = [
 export const addonsLanding = [
   {
     title: "AI pomočnik",
-    desc: "Pomaga stranki oddati jasnejše povpraševanje.",
-    price: "20 €",
-    unit: "/ mesec",
+    desc: "Povzetki sporočil in osnutki ponudb so v pripravi.",
+    price: "Pride kmalu",
+    unit: "",
   },
   {
     title: "Google Business profil",
@@ -232,8 +232,8 @@ export const faqsLanding = [
     a: "Da. V mesečno ceno je vključena profesionalna spletna stran, postavitev sistema, gostovanje, vzdrževanje in osnovne funkcije za povpraševanja.",
   },
   {
-    q: "Ali lahko sam spreminjam vsebino?",
-    a: "Da. Urejate lahko osnovne vsebine, storitve, slike, reference, kontaktne podatke in druge ključne informacije.",
+    q: "Kako uredim spremembe na spletni strani?",
+    a: "V dashboardu oddate zahtevek za spremembo. Ekipa Nivo nato ročno uredi vsebino, slike, storitve ali kontaktne podatke.",
   },
   {
     q: "Ali potrebujem tehnično znanje?",
@@ -256,7 +256,7 @@ export const faqsLanding = [
 export const includedServices = [
   { title: "Spletna stran", desc: "Do 5 podstrani, profesionalen dizajn, mobilna optimizacija." },
   { title: "Gostovanje", desc: "Hitro in zanesljivo gostovanje — brez vaših skrbi." },
-  { title: "CMS sistem", desc: "Vsebine urejate sami, kadarkoli in brez programerja." },
+  { title: "Zahtevki za spremembe", desc: "Spremembe oddate v dashboardu, ekipa Nivo pa jih uredi za vas." },
   { title: "Kontaktni obrazci", desc: "Povpraševanja prihajajo naravnost do vas." },
   { title: "SMS obvestila", desc: "Takoj veste za vsako novo povpraševanje." },
   { title: "Avtomatski SMS odgovor", desc: "Stranka prejme takojšnjo potrditev, tudi ko ste na terenu." },
@@ -270,12 +270,12 @@ export const includedServices = [
 ];
 
 export const aiFeatures = [
-  "Urejanje sporočil strank",
   "Povzetek povpraševanja",
   "Izluščenje ključnih podatkov",
   "Priprava osnutka ponudbe",
-  "Manj administracije",
-  "Hitrejša priprava ponudb",
+  "Preglednejša administracija",
+  "Potrditev pred pošiljanjem",
+  "V pripravi za prihodnjo verzijo",
 ];
 
 export const serviceAddons = [
@@ -356,7 +356,7 @@ export const processFaqs = [
 export const pricePlanFeatures = [
   "Spletna stran (do 5 podstrani)",
   "Gostovanje",
-  "CMS sistem",
+  "Zahtevki za spremembe",
   "Kontaktni obrazci",
   "SMS sistem",
   "Avtomatski odgovori",
@@ -376,13 +376,13 @@ export const pricePromises = [
 
 export const priceFaqs = [
   { q: "Ali je potrebna vezava?", a: "Ne. Naročnino lahko prekinete kadarkoli — brez odpovednega roka in brez kazni." },
-  { q: "Ali so kakšni začetni stroški?", a: "Ne. Plačate 80 € mesečno ali 780 € za eno leto. Postavitev sistema je vključena." },
+  { q: "Ali so kakšni začetni stroški?", a: "Ne. Plačate 99 € mesečno ali 950 € za 12 mesecev. Postavitev sistema je vključena." },
   {
     q: "Kaj je vključeno v ceno?",
     a: "Spletna stran, gostovanje, CMS, SMS sistem, kontaktni obrazci, marketinške kampanje, zbiranje Google ocen, analitika, podpora in vzdrževanje.",
   },
   { q: "Kaj se zgodi, če prekličem?", a: "Sistem se deaktivira in spletna stran se odstrani. Brez skritih stroškov." },
-  { q: "Ali lahko dodam storitve kasneje?", a: "Seveda. AI pomočnika, SEO optimizacijo, Google profil ali oglase dodate kadarkoli." },
+  { q: "Ali lahko dodam storitve kasneje?", a: "Seveda. SEO optimizacijo, Google profil ali oglase dodate kadarkoli. AI pomočnik pride kmalu." },
 ];
 
 export const roofers = {
@@ -399,7 +399,7 @@ export const roofers = {
   reviews: [
     { text: "Odkar imam Nivo, ne zamudim več nobenega klica. Povpraševanja dobim na telefon takoj.", name: "Marko P.", meta: "Krovstvo · Gorenjska" },
     { text: "Stara stran ni prinašala nič. Zdaj me najdejo na Googlu in dobivam ponudbe vsak teden.", name: "Tomaž R.", meta: "Krovec · Štajerska" },
-    { text: "Najboljša investicija za 80 € na mesec. Več ocen, več strank, manj skrbi.", name: "Andrej K.", meta: "Krovstvo · Ljubljana" },
+    { text: "Najboljša investicija za 99 € na mesec. Več ocen, več strank, manj skrbi.", name: "Andrej K.", meta: "Krovstvo · Ljubljana" },
   ],
   planMini: ["Spletna stran", "SMS sistem", "Google ocene", "Kampanje", "Gostovanje", "Podpora"],
   otherTrades: [
@@ -422,7 +422,7 @@ export const english = {
     { icon: "★", title: "Google reviews", desc: "Ask happy customers for reviews with less awkward follow-up." },
     { icon: "⚡", title: "Campaigns", desc: "One-click promos to past customers." },
     { icon: "⤳", title: "Referrals", desc: "The system nudges customers to refer you." },
-    { icon: "✦", title: "AI assistant", desc: "Summarizes leads and drafts your quotes." },
+    { icon: "✦", title: "AI assistant", desc: "Coming soon." },
     { icon: "◎", title: "SEO", desc: "Local visibility so the right customers find you." },
   ],
   steps: [
@@ -431,7 +431,7 @@ export const english = {
     { num: "3", time: "Ongoing", title: "You get more leads", desc: "Leads land in your pocket and reviews start rolling in." },
   ],
   addons: [
-    { title: "AI Assistant", desc: "Lead summaries & quote drafts", price: "$20", unit: "/ month" },
+    { title: "AI Assistant", desc: "Coming soon", price: "Soon", unit: "" },
     { title: "Google Business Profile", desc: "Setup & optimization", price: "$500", unit: "one-time" },
     { title: "SEO Optimization", desc: "Local & technical SEO", price: "$500", unit: "one-time" },
     { title: "Ads", desc: "Google, Facebook, Instagram, TikTok", price: "Custom", unit: "campaigns" },
