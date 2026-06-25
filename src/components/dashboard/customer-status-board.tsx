@@ -285,11 +285,9 @@ function CustomerDialogContent({ customer }: { customer: ClientCustomerBoardItem
               <Badge>{leadStatusLabels[customer.latestLead.status]}</Badge>
             </div>
             <p className="mt-3 text-sm leading-6 text-[#55515F]">{customer.latestLead.message}</p>
-            {customer.latestLead.aiSummary ? (
-              <div className="mt-3 rounded-[12px] bg-[#F1EFF8] p-3 text-sm font-semibold leading-6 text-[#514AA8]">
-                {customer.latestLead.aiSummary}
-              </div>
-            ) : null}
+            <div className="mt-3 rounded-[12px] bg-[#F1EFF8] p-3 text-sm font-semibold leading-6 text-[#514AA8]">
+              AI povzetki in osnutki ponudb: pride kmalu.
+            </div>
           </div>
         ) : null}
 

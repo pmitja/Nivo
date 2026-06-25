@@ -18,9 +18,9 @@ Obrazec zbira ime, telefon, email, lokacijo, tip storitve, sporočilo, soglasje 
 
 Ko je obrazec oddan, se lead shrani v dashboard, obrtnik prejme SMS, stranka prejme avtomatski SMS in lead se prikaže v modulu Povpraševanja.
 
-## AI dodatek — 20 €/mesec
+## AI dodatek — pride kmalu
 
-AI očisti sporočilo stranke, pripravi povzetek, izlušči ključne informacije, pripravi osnutek ponudbe in skrajša administracijo. AI ne sme avtomatsko pošiljati ponudb brez potrditve uporabnika.
+AI bo očistil sporočilo stranke, pripravil povzetek, izluščil ključne informacije, pripravil osnutek ponudbe in skrajšal administracijo. Do takrat ga v UI prikazujemo kot »Pride kmalu«. AI ne sme avtomatsko pošiljati ponudb brez potrditve uporabnika.
 
 ## Google Business Profil — 500 € enkratno
 

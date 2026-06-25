@@ -32,7 +32,7 @@ export function SiteNav({ active }: { active?: string }) {
           ))}
         </div>
         <div className="flex items-center gap-3.5">
-          <Link href="/kontakt" className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline sm:inline md:inline">
+          <Link href="/prijava" className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline sm:inline md:inline">
             Prijava
           </Link>
           <Button asChild size="sm" className="hidden sm:inline-flex">

@@ -8,7 +8,9 @@ import { redirect } from "next/navigation";
 import { db } from "@/db";
 import {
   auditLogs,
+  campaigns,
   companies,
+  companyDocuments,
   companySmsSettings,
   leads,
   reviewFeedbacks,
@@ -18,10 +20,17 @@ import {
   supportTickets,
   users,
   websiteChangeRequests,
+  websiteChangeRequestComments,
 } from "@/db/schema";
 import { requireClientUser, requireSuperAdmin, requireUser } from "@/lib/auth";
 import { googleReviewSms } from "@/lib/sms-copy";
 import { markSmsAsSent } from "@/lib/sms";
+import {
+  isUploadableCompanyDocument,
+  prepareDocumentFile,
+  prepareLogoFile,
+  uploadPreparedFile,
+} from "@/lib/uploadthing";
 
 export async function createCompanyAction(formData: FormData) {
   const admin = await requireSuperAdmin();
@@ -39,7 +48,7 @@ export async function createCompanyAction(formData: FormData) {
       city: String(formData.get("city") ?? ""),
       domain: String(formData.get("domain") ?? ""),
       status: String(formData.get("status") ?? "setup") as "setup",
-      hasAiAddon: formData.get("hasAiAddon") === "on",
+      hasAiAddon: false,
       googleReviewUrl: String(formData.get("googleReviewUrl") ?? "") || null,
       internalNotes: String(formData.get("internalNotes") ?? "") || null,
     })
@@ -75,6 +84,208 @@ export async function createCompanyAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/stranke");
   redirect(`/admin/stranke?created=${company.id}`);
+}
+
+export async function updateCompanyAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+
+  if (!companyId) {
+    return;
+  }
+
+  await db
+    .update(companies)
+    .set({
+      name: String(formData.get("name") ?? "").trim(),
+      contactName: String(formData.get("contactName") ?? "").trim(),
+      email: String(formData.get("email") ?? "").toLowerCase().trim(),
+      phone: String(formData.get("phone") ?? "").trim(),
+      industry: String(formData.get("industry") ?? "").trim() || null,
+      address: String(formData.get("address") ?? "").trim() || null,
+      city: String(formData.get("city") ?? "").trim() || null,
+      domain: String(formData.get("domain") ?? "").trim() || null,
+      status: String(formData.get("status") ?? "setup") as "setup",
+      hasAiAddon: false,
+      googleReviewUrl: String(formData.get("googleReviewUrl") ?? "").trim() || null,
+      websiteStatus: String(formData.get("websiteStatus") ?? "").trim() || "V pripravi",
+      googleBusinessProfileStatus: String(formData.get("googleBusinessProfileStatus") ?? "").trim() || "Ni naročeno",
+      seoStatus: String(formData.get("seoStatus") ?? "").trim() || "Ni naročeno",
+      advertisingStatus: String(formData.get("advertisingStatus") ?? "").trim() || "Ni naročeno",
+      internalNotes: String(formData.get("internalNotes") ?? "").trim() || null,
+      updatedAt: new Date(),
+    })
+    .where(eq(companies.id, companyId));
+
+  await db.insert(auditLogs).values({
+    companyId,
+    userId: admin.id,
+    action: "company_updated",
+    entityType: "company",
+    entityId: companyId,
+    metadata: { source: "super_admin_company_profile" },
+  });
+
+  revalidatePath("/admin/stranke");
+  revalidatePath(`/admin/stranke/${companyId}`);
+}
+
+export async function uploadCompanyLogoAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+  const file = formData.get("logo");
+
+  if (!companyId || !(file instanceof File) || file.size === 0) {
+    return;
+  }
+
+  const prepared = await prepareLogoFile(companyId, file);
+  const uploaded = await uploadPreparedFile(prepared.file);
+
+  await db
+    .update(companies)
+    .set({
+      logoUrl: uploaded.url,
+      logoKey: uploaded.key,
+      logoName: uploaded.name,
+      updatedAt: new Date(),
+    })
+    .where(eq(companies.id, companyId));
+
+  await db.insert(auditLogs).values({
+    companyId,
+    userId: admin.id,
+    action: "company_logo_uploaded",
+    entityType: "company",
+    entityId: companyId,
+    metadata: {
+      fileKey: uploaded.key,
+      customId: uploaded.customId ?? prepared.customId,
+      fileName: uploaded.name,
+    },
+  });
+
+  revalidatePath(`/admin/stranke/${companyId}`);
+  revalidatePath("/admin/stranke");
+}
+
+export async function uploadCompanyDocumentAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+  const file = formData.get("document");
+  const title = String(formData.get("title") ?? "").trim();
+  const notes = String(formData.get("notes") ?? "").trim();
+
+  if (!companyId || !(file instanceof File) || file.size === 0) {
+    return;
+  }
+
+  if (file.size > 15 * 1024 * 1024) {
+    throw new Error("Dokument je lahko velik največ 15 MB.");
+  }
+
+  if (!isUploadableCompanyDocument(file)) {
+    throw new Error("Dovoljeni so PDF, Word, Excel, SVG, PNG, JPG in WebP dokumenti.");
+  }
+
+  const prepared = prepareDocumentFile(companyId, file);
+  const uploaded = await uploadPreparedFile(prepared.file);
+
+  const [document] = await db
+    .insert(companyDocuments)
+    .values({
+      companyId,
+      uploadedById: admin.id,
+      title: title || uploaded.name,
+      fileName: uploaded.name,
+      fileUrl: uploaded.url,
+      fileKey: uploaded.key,
+      fileType: file.type || "application/octet-stream",
+      fileSize: uploaded.size,
+      customId: uploaded.customId ?? prepared.customId,
+      notes: notes || null,
+    })
+    .returning();
+
+  await db.insert(auditLogs).values({
+    companyId,
+    userId: admin.id,
+    action: "company_document_uploaded",
+    entityType: "company_document",
+    entityId: document.id,
+    metadata: {
+      fileKey: uploaded.key,
+      customId: uploaded.customId ?? prepared.customId,
+      fileName: uploaded.name,
+    },
+  });
+
+  revalidatePath(`/admin/stranke/${companyId}`);
+}
+
+export async function createCompanyServiceAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+
+  if (!companyId || !name) {
+    return;
+  }
+
+  await db.insert(services).values({
+    companyId,
+    name,
+    type: String(formData.get("type") ?? "website_changes") as "website_changes",
+    price: String(formData.get("price") ?? "").trim() || null,
+    billingType: String(formData.get("billingType") ?? "one_time") as "one_time",
+    status: String(formData.get("status") ?? "ordered") as "ordered",
+    startedAt: new Date(),
+    notes: String(formData.get("notes") ?? "").trim() || null,
+  });
+
+  await db.insert(auditLogs).values({
+    companyId,
+    userId: admin.id,
+    action: "service_created",
+    entityType: "service",
+    metadata: { source: "super_admin_company_profile", name },
+  });
+
+  revalidatePath(`/admin/stranke/${companyId}`);
+  revalidatePath("/admin/storitve");
+  revalidatePath("/admin/placila");
+}
+
+export async function updateCompanyServiceStatusAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+  const serviceId = String(formData.get("serviceId") ?? "");
+  const status = String(formData.get("status") ?? "ordered") as typeof services.$inferSelect.status;
+
+  if (!companyId || !serviceId) {
+    return;
+  }
+
+  await db
+    .update(services)
+    .set({
+      status,
+      completedAt: status === "completed" ? new Date() : null,
+    })
+    .where(and(eq(services.id, serviceId), eq(services.companyId, companyId)));
+
+  await db.insert(auditLogs).values({
+    companyId,
+    userId: admin.id,
+    action: "service_status_updated",
+    entityType: "service",
+    entityId: serviceId,
+    metadata: { status },
+  });
+
+  revalidatePath(`/admin/stranke/${companyId}`);
+  revalidatePath("/admin/storitve");
+  revalidatePath("/admin/placila");
 }
 
 export async function changePasswordAction(_: unknown, formData: FormData) {
@@ -121,6 +332,35 @@ export async function changePasswordAction(_: unknown, formData: FormData) {
   return { message: "Geslo je uspešno posodobljeno.", ok: true };
 }
 
+export async function updateClientCompanySettingsAction(_: unknown, formData: FormData) {
+  const user = await requireClientUser();
+
+  await db
+    .update(companies)
+    .set({
+      contactName: String(formData.get("contactName") ?? "").trim(),
+      email: String(formData.get("email") ?? "").toLowerCase().trim(),
+      phone: String(formData.get("phone") ?? "").trim(),
+      address: String(formData.get("address") ?? "").trim() || null,
+      city: String(formData.get("city") ?? "").trim() || null,
+      googleReviewUrl: String(formData.get("googleReviewUrl") ?? "").trim() || null,
+      updatedAt: new Date(),
+    })
+    .where(eq(companies.id, user.companyId!));
+
+  await db.insert(auditLogs).values({
+    companyId: user.companyId!,
+    userId: user.id,
+    action: "client_company_settings_updated",
+    entityType: "company",
+    entityId: user.companyId!,
+    metadata: { source: "client_settings" },
+  });
+
+  revalidatePath("/dashboard/nastavitve");
+  return { message: "Podatki podjetja so shranjeni.", ok: true };
+}
+
 export async function updateLeadStatusAction(formData: FormData) {
   const user = await requireUserForLeadAction();
   const leadId = String(formData.get("leadId") ?? "");
@@ -154,6 +394,82 @@ export async function createWebsiteRequestAction(formData: FormData) {
   redirect("/dashboard/spletna-stran?sent=1");
 }
 
+export async function updateWebsiteRequestStatusAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const requestId = String(formData.get("requestId") ?? "");
+  const status = String(formData.get("status") ?? "new") as typeof websiteChangeRequests.$inferSelect.status;
+
+  if (!requestId) {
+    return;
+  }
+
+  const [request] = await db
+    .update(websiteChangeRequests)
+    .set({
+      status,
+      resolvedAt: ["completed", "closed"].includes(status) ? new Date() : null,
+    })
+    .where(eq(websiteChangeRequests.id, requestId))
+    .returning();
+
+  if (!request) {
+    return;
+  }
+
+  await db.insert(auditLogs).values({
+    companyId: request.companyId,
+    userId: admin.id,
+    action: "website_request_status_updated",
+    entityType: "website_change_request",
+    entityId: request.id,
+    metadata: { status },
+  });
+
+  revalidatePath("/admin/zahtevki");
+  revalidatePath(`/admin/stranke/${request.companyId}`);
+  revalidatePath("/dashboard/spletna-stran");
+}
+
+export async function addWebsiteRequestCommentAction(formData: FormData) {
+  const user = await requireUser();
+  const requestId = String(formData.get("requestId") ?? "");
+  const message = String(formData.get("message") ?? "").trim();
+
+  if (!requestId || message.length < 2) {
+    return;
+  }
+
+  const where =
+    user.role === "super_admin"
+      ? eq(websiteChangeRequests.id, requestId)
+      : and(eq(websiteChangeRequests.id, requestId), eq(websiteChangeRequests.companyId, user.companyId!));
+
+  const [request] = await db.select().from(websiteChangeRequests).where(where).limit(1);
+
+  if (!request) {
+    return;
+  }
+
+  await db.insert(websiteChangeRequestComments).values({
+    requestId: request.id,
+    senderId: user.id,
+    message,
+  });
+
+  await db.insert(auditLogs).values({
+    companyId: request.companyId,
+    userId: user.id,
+    action: "website_request_comment_added",
+    entityType: "website_change_request",
+    entityId: request.id,
+    metadata: { source: user.role === "super_admin" ? "super_admin_requests" : "client_website" },
+  });
+
+  revalidatePath("/admin/zahtevki");
+  revalidatePath(`/admin/stranke/${request.companyId}`);
+  revalidatePath("/dashboard/spletna-stran");
+}
+
 export async function createSupportTicketAction(formData: FormData) {
   const user = await requireClientUser();
 
@@ -167,6 +483,115 @@ export async function createSupportTicketAction(formData: FormData) {
 
   revalidatePath("/dashboard/podpora");
   redirect("/dashboard/podpora?sent=1");
+}
+
+export async function updateSupportTicketStatusAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const ticketId = String(formData.get("ticketId") ?? "");
+  const status = String(formData.get("status") ?? "new") as typeof supportTickets.$inferSelect.status;
+
+  if (!ticketId) {
+    return;
+  }
+
+  const [ticket] = await db
+    .update(supportTickets)
+    .set({
+      status,
+      resolvedAt: ["completed", "closed"].includes(status) ? new Date() : null,
+    })
+    .where(eq(supportTickets.id, ticketId))
+    .returning();
+
+  if (!ticket) {
+    return;
+  }
+
+  await db.insert(auditLogs).values({
+    companyId: ticket.companyId,
+    userId: admin.id,
+    action: "support_ticket_status_updated",
+    entityType: "support_ticket",
+    entityId: ticket.id,
+    metadata: { status },
+  });
+
+  revalidatePath("/admin/zahtevki");
+  revalidatePath(`/admin/stranke/${ticket.companyId}`);
+  revalidatePath("/dashboard/podpora");
+}
+
+export async function createCampaignRequestAction(formData: FormData) {
+  const user = await requireClientUser();
+
+  await db.insert(supportTickets).values({
+    companyId: user.companyId!,
+    userId: user.id,
+    category: "pomoč pri kampanji",
+    title: String(formData.get("title") ?? "Nova kampanja"),
+    message: String(formData.get("message") ?? ""),
+  });
+
+  revalidatePath("/dashboard/kampanje");
+  redirect("/dashboard/kampanje?sent=1");
+}
+
+export async function createCampaignAction(formData: FormData) {
+  await requireSuperAdmin();
+
+  const companyId = String(formData.get("companyId") ?? "");
+  const name = String(formData.get("name") ?? "").trim();
+
+  if (!companyId || !name) {
+    return;
+  }
+
+  await db.insert(campaigns).values({
+    companyId,
+    name,
+    type: String(formData.get("type") ?? "sms") as "sms",
+    channel: String(formData.get("channel") ?? "SMS"),
+    status: String(formData.get("status") ?? "draft") as "draft",
+    message: String(formData.get("message") ?? "") || null,
+  });
+
+  revalidatePath("/admin/kampanje");
+  revalidatePath("/dashboard/kampanje");
+  redirect("/admin/kampanje?created=1");
+}
+
+export async function confirmPreparedCampaignAction(formData: FormData) {
+  const user = await requireClientUser();
+  const campaignId = String(formData.get("campaignId") ?? "");
+
+  if (!campaignId) {
+    return;
+  }
+
+  const [campaign] = await db
+    .update(campaigns)
+    .set({
+      status: "active",
+      updatedAt: new Date(),
+    })
+    .where(and(eq(campaigns.id, campaignId), eq(campaigns.companyId, user.companyId!), eq(campaigns.status, "prepared")))
+    .returning();
+
+  if (!campaign) {
+    return;
+  }
+
+  await db.insert(auditLogs).values({
+    companyId: user.companyId!,
+    userId: user.id,
+    action: "campaign_confirmed",
+    entityType: "campaign",
+    entityId: campaign.id,
+    metadata: { source: "client_campaigns" },
+  });
+
+  revalidatePath("/dashboard/kampanje");
+  revalidatePath("/admin/kampanje");
 }
 
 export async function updateAutoReplyMessageAction(_: unknown, formData: FormData) {

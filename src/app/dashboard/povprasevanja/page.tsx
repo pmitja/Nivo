@@ -1,4 +1,4 @@
-import { updateLeadStatusAction } from "@/app/actions";
+import { sendReviewRequestForLeadAction, updateLeadStatusAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -39,6 +39,17 @@ export default async function ClientLeadsPage() {
                   </Select>
                   <Button size="sm">Shrani</Button>
                 </form>
+                {lead.status === "completed" ? (
+                  <form action={sendReviewRequestForLeadAction}>
+                    <input type="hidden" name="leadId" value={lead.id} />
+                    <Button size="sm" variant="secondary">
+                      Pošlji zahtevo za oceno
+                    </Button>
+                  </form>
+                ) : null}
+              </div>
+              <div className="mt-4 rounded-[14px] border border-[#EEEAF5] bg-[#FBFAFF] p-4 text-sm font-semibold text-[#686473]">
+                AI pomočnik za povzetke in osnutke ponudb: <span className="font-extrabold text-[#6A5AE0]">pride kmalu</span>
               </div>
               <div className="mt-3 text-xs font-bold uppercase tracking-[.06em] text-[#9A96A5]">{formatDate(lead.createdAt)}</div>
             </div>

@@ -1,7 +1,6 @@
 import { DashboardShell, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { createCompanyAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -9,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { requireSuperAdmin } from "@/lib/auth";
 import { getAdminCompanies } from "@/lib/dashboard-data";
 import { companyStatusLabels, formatDate } from "@/lib/labels";
+import Link from "next/link";
 
 export default async function AdminCompaniesPage() {
   const user = await requireSuperAdmin();
@@ -70,11 +70,8 @@ export default async function AdminCompaniesPage() {
                 <Input id="review-url" name="googleReviewUrl" placeholder="https://..." />
               </Field>
             </div>
-            <div className="flex items-center gap-2">
-              <Checkbox id="has-ai-addon" name="hasAiAddon" />
-              <Label htmlFor="has-ai-addon" className="cursor-pointer">
-              Vklopi AI dodatek
-              </Label>
+            <div className="rounded-[14px] border border-[#EEEAF5] bg-[#FBFAFF] p-4 text-sm font-semibold text-[#686473]">
+              AI pomočnik: <span className="font-extrabold text-[#6A5AE0]">pride kmalu</span>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="internal-notes">Interni zapiski</Label>
@@ -99,7 +96,12 @@ export default async function AdminCompaniesPage() {
                   <StatusPill>{companyStatusLabels[company.status]}</StatusPill>
                 </div>
                 <div className="mt-3 text-xs font-bold uppercase tracking-[.06em] text-[#9A96A5]">
-                  Dodano {formatDate(company.createdAt)} · {company.hasAiAddon ? "AI dodatek" : "Brez AI dodatka"}
+                  Dodano {formatDate(company.createdAt)} · AI pride kmalu
+                </div>
+                <div className="mt-4">
+                  <Button asChild variant="secondary" size="sm">
+                    <Link href={`/admin/stranke/${company.id}`}>Odpri profil</Link>
+                  </Button>
                 </div>
               </div>
             ))}

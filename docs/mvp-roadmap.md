@@ -21,7 +21,7 @@ Zgraditi prvo verzijo SaaS dashboarda, ki omogoča dodajanje strank, upravljanje
 - profil stranke
 - urejanje paketa
 - status stranke
-- vklop AI dodatka
+- AI dodatek označen kot »Pride kmalu«
 - Google review link
 - interni zapiski
 

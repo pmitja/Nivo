@@ -1,4 +1,4 @@
-import { createWebsiteRequestAction } from "@/app/actions";
+import { addWebsiteRequestCommentAction, createWebsiteRequestAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,7 @@ export default async function ClientWebsitePage() {
           <div className="grid gap-3">
             {requests.length ? requests.map((request) => (
               <div key={request.id} className="rounded-[14px] border border-[#EEEAF5] p-4">
-                <div className="flex flex-wrap justify-between gap-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <div className="font-extrabold">{request.title}</div>
                     <div className="mt-1 text-sm font-semibold text-[#777382]">{formatDate(request.createdAt)}</div>
@@ -60,6 +60,28 @@ export default async function ClientWebsitePage() {
                     <StatusPill>{priorityLabels[request.priority]}</StatusPill>
                     <StatusPill>{websiteRequestStatusLabels[request.status]}</StatusPill>
                   </div>
+                </div>
+                <p className="mt-3 text-sm leading-6 text-[#55515F]">{request.message}</p>
+                <div className="mt-4 grid gap-3 border-t border-[#EFECF5] pt-4">
+                  {request.comments.length ? (
+                    <div className="grid gap-2">
+                      {request.comments.map((comment) => (
+                        <div key={comment.id} className="rounded-[12px] bg-[#FBFAFF] px-4 py-3">
+                          <div className="text-xs font-extrabold text-[#8A8694]">
+                            {comment.senderName || "Nivo"} · {formatDate(comment.createdAt)}
+                          </div>
+                          <p className="mt-1 text-sm leading-5 text-[#55515F]">{comment.message}</p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+                  <form action={addWebsiteRequestCommentAction} className="grid gap-2">
+                    <input type="hidden" name="requestId" value={request.id} />
+                    <Textarea name="message" required placeholder="Dodajte dodatne informacije ali odgovor ekipi Nivo." />
+                    <Button size="sm" variant="secondary">
+                      Dodaj odgovor
+                    </Button>
+                  </form>
                 </div>
               </div>
             )) : <EmptyState text="Oddajte prvi zahtevek za spremembo spletne strani." />}

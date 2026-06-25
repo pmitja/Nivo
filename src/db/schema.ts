@@ -122,6 +122,9 @@ export const companies = pgTable("companies", {
   googleBusinessProfileStatus: text("google_business_profile_status").default("Ni naročeno").notNull(),
   seoStatus: text("seo_status").default("Ni naročeno").notNull(),
   advertisingStatus: text("advertising_status").default("Ni naročeno").notNull(),
+  logoUrl: text("logo_url"),
+  logoKey: text("logo_key"),
+  logoName: text("logo_name"),
   internalNotes: text("internal_notes"),
   ...timestamps,
 });
@@ -332,6 +335,28 @@ export const supportTickets = pgTable(
     resolvedAt: timestamp("resolved_at", { withTimezone: true }),
   },
   (table) => [index("support_tickets_company_id_idx").on(table.companyId)],
+);
+
+export const companyDocuments = pgTable(
+  "company_documents",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    companyId: uuid("company_id").notNull().references(() => companies.id, { onDelete: "cascade" }),
+    uploadedById: uuid("uploaded_by_id").references(() => users.id, { onDelete: "set null" }),
+    title: text("title").notNull(),
+    fileName: text("file_name").notNull(),
+    fileUrl: text("file_url").notNull(),
+    fileKey: text("file_key").notNull(),
+    fileType: text("file_type").notNull(),
+    fileSize: integer("file_size").notNull(),
+    customId: text("custom_id"),
+    notes: text("notes"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("company_documents_company_id_idx").on(table.companyId),
+    index("company_documents_created_at_idx").on(table.createdAt),
+  ],
 );
 
 export const services = pgTable(

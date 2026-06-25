@@ -45,6 +45,7 @@ export function AddonPricingCards({
         const meta = addonMeta[addon.title];
         const badge = addon.badge ?? meta?.badge ?? addon.title;
         const gradient = addon.gradient ?? meta?.gradient ?? "bg-[linear-gradient(135deg,#F7F5FD,#EFEAFF_48%,#E2E9FF)]";
+        const comingSoon = addon.price.toLowerCase().includes("pride kmalu") || addon.price.toLowerCase().includes("soon");
 
         return (
           <div
@@ -72,12 +73,18 @@ export function AddonPricingCards({
                   ))}
                 </ul>
                 {addon.note ? <div className="mt-3 text-[12.5px] italic leading-[1.45] text-[#9A97A5]">{addon.note}</div> : null}
-                <Link
-                  href="/kontakt"
-                  className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#16151D] px-5 py-3 text-[14px] font-bold text-white no-underline transition-colors duration-200 hover:bg-[#4B3BC9] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/20"
-                >
-                  Izberi <ArrowRight size={15} />
-                </Link>
+                {comingSoon ? (
+                  <div className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#E2DFEA] bg-[#F7F6FB] px-5 py-3 text-[14px] font-bold text-[#6A6775]">
+                    Pride kmalu
+                  </div>
+                ) : (
+                  <Link
+                    href="/kontakt"
+                    className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#16151D] px-5 py-3 text-[14px] font-bold text-white no-underline transition-colors duration-200 hover:bg-[#4B3BC9] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/20"
+                  >
+                    Izberi <ArrowRight size={15} />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

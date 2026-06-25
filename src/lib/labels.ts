@@ -48,6 +48,50 @@ export const websiteRequestStatusLabels = {
   closed: "Zaprto",
 } as const;
 
+export const serviceTypeLabels = {
+  basic_plan: "Osnovni paket",
+  ai_addon: "AI dodatek (pride kmalu)",
+  google_business_profile: "Google Business Profil",
+  seo: "SEO",
+  advertising: "Oglaševanje",
+  website_changes: "Spremembe spletne strani",
+  campaigns: "Kampanje",
+  referral_system: "Referral sistem",
+} as const;
+
+export const serviceStatusLabels = {
+  not_ordered: "Ni naročeno",
+  ordered: "Naročeno",
+  setup: "V pripravi",
+  waiting_for_data: "Čaka na podatke",
+  active: "Aktivno",
+  completed: "Zaključeno",
+  cancelled: "Odpovedano",
+} as const;
+
+export const billingTypeLabels = {
+  monthly: "Mesečno",
+  one_time: "Enkratno",
+  custom: "Po ponudbi",
+} as const;
+
+export const campaignStatusLabels = {
+  draft: "Osnutek",
+  prepared: "Pripravljeno",
+  active: "Aktivno",
+  paused: "Pavzirano",
+  completed: "Zaključeno",
+  cancelled: "Odpovedano",
+} as const;
+
+export const supportTicketStatusLabels = {
+  new: "Novo",
+  in_progress: "V obdelavi",
+  waiting_for_info: "Čaka na informacije",
+  completed: "Urejeno",
+  closed: "Zaprto",
+} as const;
+
 export const priorityLabels = {
   low: "Nizka",
   normal: "Običajna",

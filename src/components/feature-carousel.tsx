@@ -55,12 +55,12 @@ const featureMedia: Record<string, FeatureMedia> = {
     image: "/features/customer-overview.webp",
   },
   "AI pomočnik": {
-    alt: "Generičen prikaz AI pomočnika z vprašanji in pogovornim vmesnikom.",
+    alt: "Generičen prikaz AI pomočnika, ki prihaja kmalu.",
     icon: Bot,
     image: "/features/ai-assistant.webp",
   },
-  "Enostavno urejanje": {
-    alt: "Generičen prikaz urejanja vsebine spletne strani.",
+  "Spremembe spletne strani": {
+    alt: "Generičen prikaz zahtevkov za spremembe spletne strani.",
     icon: Pencil,
     image: "/features/editor.webp",
   },
@@ -107,6 +107,7 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
           const wide = [0, 4, 6].includes(i);
           const media = featureMedia[f.title] ?? featureMedia["Spletna stran"];
           const Icon = media.icon;
+          const comingSoon = f.title === "AI pomočnik";
           return (
             <div
               key={f.title}
@@ -137,14 +138,21 @@ export function FeatureCarousel({ features }: { features: Feature[] }) {
                 <div className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-[#EFEBFF] text-lg text-[#6A5AE0]">
                   <Icon size={17} strokeWidth={2.3} />
                 </div>
-                <h3
-                  className={cn(
-                    "mt-3.5 font-bold tracking-[-.01em]",
-                    wide ? "text-[16px] lg:text-[18px]" : "text-[16px]",
-                  )}
-                >
-                  {f.title}
-                </h3>
+                <div className="mt-3.5 flex flex-wrap items-center gap-2">
+                  <h3
+                    className={cn(
+                      "font-bold tracking-[-.01em]",
+                      wide ? "text-[16px] lg:text-[18px]" : "text-[16px]",
+                    )}
+                  >
+                    {f.title}
+                  </h3>
+                  {comingSoon ? (
+                    <span className="rounded-full border border-[#DCD6FF] bg-white px-2.5 py-1 text-[11px] font-extrabold uppercase tracking-[.06em] text-[#6A5AE0]">
+                      Pride kmalu
+                    </span>
+                  ) : null}
+                </div>
                 <p className="mt-1.5 text-[13px] leading-[1.55] text-[#6A6775]">{f.desc}</p>
               </div>
             </div>

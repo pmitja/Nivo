@@ -12,6 +12,7 @@ import {
   Settings,
   Star,
   Users,
+  WalletCards,
 } from "lucide-react";
 import { logoutAction } from "@/app/prijava/actions";
 import { Logo } from "@/components/logo";
@@ -31,8 +32,12 @@ const adminNav: NavItem[] = [
   { href: "/admin/stranke", label: "Stranke", icon: Building2 },
   { href: "/admin/povprasevanja", label: "Povpraševanja", icon: FileText },
   { href: "/admin/sms-log", label: "SMS log", icon: MessageSquareText },
+  { href: "/admin/google-ocene", label: "Google ocene", icon: Star },
+  { href: "/admin/kampanje", label: "Kampanje", icon: Megaphone },
   { href: "/admin/zahtevki", label: "Zahtevki", icon: LifeBuoy },
   { href: "/admin/storitve", label: "Storitve", icon: CreditCard },
+  { href: "/admin/placila", label: "Plačila", icon: WalletCards },
+  { href: "/admin/nastavitve", label: "Nastavitve", icon: Settings },
 ];
 
 const clientNav: NavItem[] = [

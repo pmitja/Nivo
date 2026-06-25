@@ -38,9 +38,9 @@ const monthlyIncludedCards = [
   },
   {
     num: "04",
-    title: "CMS, podpora in vzdrževanje",
-    desc: "Vsebino lahko urejate sami, za tehnične stvari pa poskrbimo mi. Brez programerja za vsako majhno spremembo.",
-    features: ["CMS sistem", "Urejanje vsebine", "Podpora", "Vzdrževanje", "Posodobitve"],
+    title: "Spremembe, podpora in vzdrževanje",
+    desc: "Spremembe spletne strani oddate kot zahtevek, ekipa Nivo pa jih ročno uredi. Za tehnične stvari poskrbimo mi.",
+    features: ["Zahtevki za spremembe", "Ročna ureditev vsebine", "Podpora", "Vzdrževanje", "Posodobitve"],
     visual: "cms",
   },
 ];
@@ -50,7 +50,7 @@ const packageHighlights = [
   "Povpraševanja in kontaktni obrazci",
   "SMS obvestila in samodejni odgovor",
   "Google ocene, priporočila in kampanje",
-  "CMS, gostovanje, podpora in vzdrževanje",
+  "Zahtevki, gostovanje, podpora in vzdrževanje",
 ];
 
 export default function ServicesPage() {

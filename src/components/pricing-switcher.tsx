@@ -47,7 +47,7 @@ const plans = {
 const planFeatures = [
   "Spletna stran (do 5 podstrani)",
   "Gostovanje",
-  "CMS sistem",
+  "Zahtevki za spremembe",
   "Kontaktni obrazci",
   "SMS sistem",
   "Avtomatski odgovori",

@@ -1,9 +1,11 @@
-import { and, count, desc, eq, gte, sql } from "drizzle-orm";
+import { and, count, desc, eq, gte, inArray, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
+  auditLogs,
   analyticsEvents,
   campaigns,
   companies,
+  companyDocuments,
   companySmsSettings,
   customers,
   leads,
@@ -12,7 +14,9 @@ import {
   services,
   smsMessages,
   supportTickets,
+  users,
   websiteChangeRequests,
+  websiteChangeRequestComments,
 } from "@/db/schema";
 
 const monthStart = () => {
@@ -115,6 +119,70 @@ export async function getAdminCompanies() {
   return db.select().from(companies).orderBy(desc(companies.createdAt));
 }
 
+export async function getAdminCompanyProfile(companyId: string) {
+  const [company] = await db.select().from(companies).where(eq(companies.id, companyId)).limit(1);
+
+  if (!company) {
+    return null;
+  }
+
+  const [
+    companyUsers,
+    companyLeads,
+    companyCustomers,
+    companySms,
+    companyCampaigns,
+    companyServices,
+    companyDocumentsRows,
+    companyWebsiteRequests,
+    companySupportTickets,
+    companyReviewRequests,
+    companyReviewFeedbacks,
+    companyAuditLogs,
+  ] = await Promise.all([
+    db.select().from(users).where(eq(users.companyId, companyId)).orderBy(desc(users.createdAt)).limit(10),
+    db.select().from(leads).where(eq(leads.companyId, companyId)).orderBy(desc(leads.createdAt)).limit(10),
+    db.select().from(customers).where(eq(customers.companyId, companyId)).orderBy(desc(customers.createdAt)).limit(10),
+    db.select().from(smsMessages).where(eq(smsMessages.companyId, companyId)).orderBy(desc(smsMessages.createdAt)).limit(10),
+    db.select().from(campaigns).where(eq(campaigns.companyId, companyId)).orderBy(desc(campaigns.createdAt)).limit(10),
+    db.select().from(services).where(eq(services.companyId, companyId)).orderBy(desc(services.startedAt)).limit(20),
+    db.select().from(companyDocuments).where(eq(companyDocuments.companyId, companyId)).orderBy(desc(companyDocuments.createdAt)).limit(30),
+    db
+      .select()
+      .from(websiteChangeRequests)
+      .where(eq(websiteChangeRequests.companyId, companyId))
+      .orderBy(desc(websiteChangeRequests.createdAt))
+      .limit(10),
+    db.select().from(supportTickets).where(eq(supportTickets.companyId, companyId)).orderBy(desc(supportTickets.createdAt)).limit(10),
+    db.select().from(reviewRequests).where(eq(reviewRequests.companyId, companyId)).orderBy(desc(reviewRequests.createdAt)).limit(10),
+    db.select().from(reviewFeedbacks).where(eq(reviewFeedbacks.companyId, companyId)).orderBy(desc(reviewFeedbacks.createdAt)).limit(10),
+    db.select().from(auditLogs).where(eq(auditLogs.companyId, companyId)).orderBy(desc(auditLogs.createdAt)).limit(12),
+  ]);
+
+  return {
+    company,
+    users: companyUsers,
+    leads: companyLeads,
+    customers: companyCustomers,
+    sms: companySms,
+    campaigns: companyCampaigns,
+    services: companyServices,
+    documents: companyDocumentsRows,
+    websiteRequests: companyWebsiteRequests,
+    supportTickets: companySupportTickets,
+    reviewRequests: companyReviewRequests,
+    reviewFeedbacks: companyReviewFeedbacks,
+    auditLogs: companyAuditLogs,
+    stats: {
+      leads: companyLeads.length,
+      customers: companyCustomers.length,
+      sms: companySms.length,
+      campaigns: companyCampaigns.length,
+      openRequests: companyWebsiteRequests.filter((request) => !["completed", "closed"].includes(request.status)).length,
+    },
+  };
+}
+
 export async function getAdminLeads() {
   return db
     .select({
@@ -124,9 +192,12 @@ export async function getAdminLeads() {
       email: leads.email,
       location: leads.location,
       service: leads.service,
+      message: leads.message,
       status: leads.status,
+      aiSummary: leads.aiSummary,
       createdAt: leads.createdAt,
       companyName: companies.name,
+      companyHasAiAddon: companies.hasAiAddon,
     })
     .from(leads)
     .innerJoin(companies, eq(companies.id, leads.companyId))
@@ -151,20 +222,79 @@ export async function getAdminSms() {
     .orderBy(desc(smsMessages.createdAt));
 }
 
+export async function getAdminSmsPage(page = 1, pageSize = 10) {
+  const safePage = Math.max(1, page);
+  const offset = (safePage - 1) * pageSize;
+  const [total] = await db.select({ value: count() }).from(smsMessages);
+  const messages = await db
+    .select({
+      id: smsMessages.id,
+      phone: smsMessages.phone,
+      message: smsMessages.message,
+      type: smsMessages.type,
+      status: smsMessages.status,
+      provider: smsMessages.provider,
+      cost: smsMessages.cost,
+      createdAt: smsMessages.createdAt,
+      companyName: companies.name,
+    })
+    .from(smsMessages)
+    .innerJoin(companies, eq(companies.id, smsMessages.companyId))
+    .orderBy(desc(smsMessages.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+
+  return {
+    messages,
+    total: total.value,
+    page: safePage,
+    pageSize,
+    pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
+  };
+}
+
 export async function getAdminWebsiteRequests() {
-  return db
+  const requests = await db
     .select({
       id: websiteChangeRequests.id,
+      companyId: websiteChangeRequests.companyId,
       title: websiteChangeRequests.title,
       message: websiteChangeRequests.message,
       status: websiteChangeRequests.status,
       priority: websiteChangeRequests.priority,
       createdAt: websiteChangeRequests.createdAt,
+      resolvedAt: websiteChangeRequests.resolvedAt,
       companyName: companies.name,
     })
     .from(websiteChangeRequests)
     .innerJoin(companies, eq(companies.id, websiteChangeRequests.companyId))
     .orderBy(desc(websiteChangeRequests.createdAt));
+
+  const comments = await getWebsiteRequestComments(requests.map((request) => request.id));
+  return requests.map((request) => ({
+    ...request,
+    comments: comments.filter((comment) => comment.requestId === request.id),
+  }));
+}
+
+export async function getAdminSupportTickets() {
+  return db
+    .select({
+      id: supportTickets.id,
+      companyId: supportTickets.companyId,
+      category: supportTickets.category,
+      title: supportTickets.title,
+      message: supportTickets.message,
+      status: supportTickets.status,
+      createdAt: supportTickets.createdAt,
+      resolvedAt: supportTickets.resolvedAt,
+      companyName: companies.name,
+      userName: users.name,
+    })
+    .from(supportTickets)
+    .innerJoin(companies, eq(companies.id, supportTickets.companyId))
+    .leftJoin(users, eq(users.id, supportTickets.userId))
+    .orderBy(desc(supportTickets.createdAt));
 }
 
 export async function getAdminServices() {
@@ -181,6 +311,88 @@ export async function getAdminServices() {
     .from(services)
     .innerJoin(companies, eq(companies.id, services.companyId))
     .orderBy(desc(services.startedAt));
+}
+
+export async function getAdminReviewOverview() {
+  const [requestCount] = await db.select({ value: count() }).from(reviewRequests);
+  const [feedbackCount] = await db.select({ value: count() }).from(reviewFeedbacks);
+  const requests = await db
+    .select({
+      id: reviewRequests.id,
+      phone: reviewRequests.phone,
+      status: reviewRequests.status,
+      createdAt: reviewRequests.createdAt,
+      companyName: companies.name,
+      leadService: leads.service,
+    })
+    .from(reviewRequests)
+    .innerJoin(companies, eq(companies.id, reviewRequests.companyId))
+    .leftJoin(leads, eq(leads.id, reviewRequests.leadId))
+    .orderBy(desc(reviewRequests.createdAt))
+    .limit(20);
+  const feedbacks = await db
+    .select({
+      id: reviewFeedbacks.id,
+      rating: reviewFeedbacks.rating,
+      name: reviewFeedbacks.name,
+      feedback: reviewFeedbacks.feedback,
+      createdAt: reviewFeedbacks.createdAt,
+      companyName: companies.name,
+      leadService: leads.service,
+    })
+    .from(reviewFeedbacks)
+    .innerJoin(companies, eq(companies.id, reviewFeedbacks.companyId))
+    .leftJoin(leads, eq(leads.id, reviewFeedbacks.leadId))
+    .orderBy(desc(reviewFeedbacks.createdAt))
+    .limit(20);
+
+  return { requestCount: requestCount.value, feedbackCount: feedbackCount.value, requests, feedbacks };
+}
+
+export async function getAdminCampaigns() {
+  return db
+    .select({
+      id: campaigns.id,
+      name: campaigns.name,
+      type: campaigns.type,
+      channel: campaigns.channel,
+      status: campaigns.status,
+      message: campaigns.message,
+      createdAt: campaigns.createdAt,
+      companyName: companies.name,
+      companyId: companies.id,
+    })
+    .from(campaigns)
+    .innerJoin(companies, eq(companies.id, campaigns.companyId))
+    .orderBy(desc(campaigns.createdAt));
+}
+
+export async function getAdminBillingOverview() {
+  const companyRows = await db.select().from(companies).orderBy(desc(companies.createdAt));
+  const serviceRows = await db
+    .select({
+      id: services.id,
+      companyId: services.companyId,
+      companyName: companies.name,
+      name: services.name,
+      price: services.price,
+      billingType: services.billingType,
+      status: services.status,
+      startedAt: services.startedAt,
+    })
+    .from(services)
+    .innerJoin(companies, eq(companies.id, services.companyId))
+    .orderBy(desc(services.startedAt));
+
+  const monthlyServices = serviceRows.filter((service) => service.billingType === "monthly" && service.status === "active");
+  const waitingForPayment = companyRows.filter((company) => company.status === "waiting_for_payment");
+
+  return {
+    activeCompanies: companyRows.filter((company) => company.status === "active").length,
+    mrr: monthlyServices.reduce((sum, service) => sum + Number(service.price ?? 0), 0),
+    waitingForPayment,
+    services: serviceRows,
+  };
 }
 
 export async function getClientLeads(companyId: string) {
@@ -388,14 +600,82 @@ export async function getClientCampaigns(companyId: string) {
   return db.select().from(campaigns).where(eq(campaigns.companyId, companyId)).orderBy(desc(campaigns.createdAt));
 }
 
-export async function getClientWebsiteRequests(companyId: string) {
+export async function getClientCampaignRequests(companyId: string) {
   return db
+    .select()
+    .from(supportTickets)
+    .where(and(eq(supportTickets.companyId, companyId), eq(supportTickets.category, "pomoč pri kampanji")))
+    .orderBy(desc(supportTickets.createdAt))
+    .limit(10);
+}
+
+export async function getClientCompanyDocuments(companyId: string) {
+  return db
+    .select()
+    .from(companyDocuments)
+    .where(eq(companyDocuments.companyId, companyId))
+    .orderBy(desc(companyDocuments.createdAt))
+    .limit(30);
+}
+
+export async function getClientAnalyticsDetails(companyId: string) {
+  const since = last30Days();
+  const [leadRows, smsRows, reviewRows] = await Promise.all([
+    db.select().from(leads).where(and(eq(leads.companyId, companyId), gte(leads.createdAt, since))).orderBy(desc(leads.createdAt)),
+    db.select().from(smsMessages).where(and(eq(smsMessages.companyId, companyId), gte(smsMessages.createdAt, since))).orderBy(desc(smsMessages.createdAt)),
+    db.select().from(reviewRequests).where(and(eq(reviewRequests.companyId, companyId), gte(reviewRequests.createdAt, since))).orderBy(desc(reviewRequests.createdAt)),
+  ]);
+
+  const days = Array.from({ length: 30 }).map((_, index) => {
+    const date = new Date();
+    date.setDate(date.getDate() - (29 - index));
+    const key = date.toISOString().slice(0, 10);
+    return {
+      key,
+      date,
+      leads: leadRows.filter((lead) => lead.createdAt.toISOString().slice(0, 10) === key).length,
+      sms: smsRows.filter((sms) => sms.createdAt.toISOString().slice(0, 10) === key).length,
+      reviews: reviewRows.filter((review) => review.createdAt.toISOString().slice(0, 10) === key).length,
+    };
+  });
+
+  return { days, leadRows, smsRows, reviewRows };
+}
+
+export async function getClientWebsiteRequests(companyId: string) {
+  const requests = await db
     .select()
     .from(websiteChangeRequests)
     .where(eq(websiteChangeRequests.companyId, companyId))
     .orderBy(desc(websiteChangeRequests.createdAt));
+
+  const comments = await getWebsiteRequestComments(requests.map((request) => request.id));
+  return requests.map((request) => ({
+    ...request,
+    comments: comments.filter((comment) => comment.requestId === request.id),
+  }));
 }
 
 export async function getClientSupportTickets(companyId: string) {
   return db.select().from(supportTickets).where(eq(supportTickets.companyId, companyId)).orderBy(desc(supportTickets.createdAt));
+}
+
+async function getWebsiteRequestComments(requestIds: string[]) {
+  if (!requestIds.length) {
+    return [];
+  }
+
+  return db
+    .select({
+      id: websiteChangeRequestComments.id,
+      requestId: websiteChangeRequestComments.requestId,
+      message: websiteChangeRequestComments.message,
+      createdAt: websiteChangeRequestComments.createdAt,
+      senderName: users.name,
+      senderRole: users.role,
+    })
+    .from(websiteChangeRequestComments)
+    .leftJoin(users, eq(users.id, websiteChangeRequestComments.senderId))
+    .where(inArray(websiteChangeRequestComments.requestId, requestIds))
+    .orderBy(desc(websiteChangeRequestComments.createdAt));
 }

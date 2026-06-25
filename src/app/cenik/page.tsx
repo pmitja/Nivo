@@ -7,9 +7,9 @@ import { priceFaqs } from "@/lib/site-data";
 const addons = [
   {
     title: "AI Pomočnik",
-    price: "20 €",
-    unit: "/ mesec",
-    features: ["Povzetki sporočil", "Osnutki ponudb", "Manj administracije"],
+    price: "Pride kmalu",
+    unit: "",
+    features: ["Povzetki sporočil", "Osnutki ponudb", "V pripravi"],
   },
   {
     title: "Google Business Profil",

@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { requireClientUser } from "@/lib/auth";
 import { getClientSupportTickets } from "@/lib/dashboard-data";
-import { formatDate } from "@/lib/labels";
+import { formatDate, supportTicketStatusLabels } from "@/lib/labels";
 
 export default async function ClientSupportPage() {
   const user = await requireClientUser();
@@ -54,8 +54,9 @@ export default async function ClientSupportPage() {
                     <div className="font-extrabold">{ticket.title}</div>
                     <div className="mt-1 text-sm font-semibold text-[#777382]">{ticket.category} · {formatDate(ticket.createdAt)}</div>
                   </div>
-                  <StatusPill>{ticket.status}</StatusPill>
+                  <StatusPill>{supportTicketStatusLabels[ticket.status]}</StatusPill>
                 </div>
+                <p className="mt-3 text-sm leading-6 text-[#55515F]">{ticket.message}</p>
               </div>
             )) : <EmptyState text="Vprašanj še ni." />}
           </div>

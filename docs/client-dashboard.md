@@ -21,11 +21,11 @@ Prikaži nova povpraševanja, neodgovorjena povpraševanja, poslane SMS-e, zahte
 
 ## Povpraševanja
 
-Povpraševanje vsebuje ime, telefon, email, lokacijo, storitev, sporočilo, datum, status, SMS status in AI povzetek, če ima AI dodatek.
+Povpraševanje vsebuje ime, telefon, email, lokacijo, storitev, sporočilo, datum, status in SMS status. AI povzetki so označeni kot »Pride kmalu«.
 
 Statusi: Novo, Kontaktirano, Ponudba poslana, Dogovorjeno, Zaključeno, Izgubljeno.
 
-Akcije: Pokliči stranko, Pošlji SMS, Spremeni status, Dodaj opombo, Pošlji zahtevo za Google oceno, Pripravi ponudbo z AI.
+Akcije: Pokliči stranko, Pošlji SMS, Spremeni status, Dodaj opombo, Pošlji zahtevo za Google oceno. AI priprava ponudbe pride kmalu.
 
 ## Stranke / CRM
 

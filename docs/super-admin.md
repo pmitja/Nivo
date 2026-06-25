@@ -8,11 +8,11 @@ Prikazuj: aktivne stranke, nove stranke ta mesec, MRR, poslane SMS-e, nova povpr
 
 ## Stranke / Companies
 
-Super Admin lahko doda novo stranko, uredi stranko, deaktivira stranko, pregleda profil, odpre dashboard kot stranka, doda storitev, spremeni paket, vklopi AI dodatek in nastavi Google review link.
+Super Admin lahko doda novo stranko, uredi stranko, deaktivira stranko, pregleda profil, odpre dashboard kot stranka, doda storitev, spremeni paket in nastavi Google review link. AI dodatek je zaenkrat označen kot »Pride kmalu«.
 
 ### Dodajanje nove stranke
 
-Polja: ime podjetja, kontaktna oseba, email, telefon, dejavnost, lokacija, domena, status spletne strani, paket, AI dodatek, Google review link, Google Business Profile status, SEO status, oglaševanje status, interni zapiski.
+Polja: ime podjetja, kontaktna oseba, email, telefon, dejavnost, lokacija, domena, status spletne strani, paket, Google review link, Google Business Profile status, SEO status, oglaševanje status, interni zapiski.
 
 Statusi stranke: Aktivna, V pripravi, Čaka na vsebino, Čaka na plačilo, Začasno ustavljena, Odpovedana.
 
@@ -34,7 +34,7 @@ Zahtevek vsebuje podjetje, naslov, opis, priloge, prioriteto, status, komentarje
 
 Super Admin vidi vsa povpraševanja vseh strank.
 
-Povpraševanje vsebuje ime, telefon, email, lokacijo, storitev, sporočilo, podjetje, status, datum, vir, SMS status in AI povzetek, če je AI dodatek aktiven.
+Povpraševanje vsebuje ime, telefon, email, lokacijo, storitev, sporočilo, podjetje, status, datum, vir in SMS status. AI povzetki pridejo kasneje.
 
 Statusi: Novo, Kontaktirano, Ponudba poslana, Dogovorjeno, Zaključeno, Izgubljeno.
 
@@ -50,6 +50,6 @@ Marketinški SMS se lahko pošlje samo kontaktom, ki imajo `marketing_consent = 
 
 ## Storitve
 
-Storitve: Osnovni paket, AI dodatek, Google Business Profil, SEO, Oglaševanje, Dodatne spremembe spletne strani, Kampanje, Referral sistem.
+Storitve: Osnovni paket, Google Business Profil, SEO, Oglaševanje, Dodatne spremembe spletne strani, Kampanje, Referral sistem. AI dodatek je označen kot »Pride kmalu«.
 
 Za vsako storitev shrani ime, podjetje, ceno, tip plačila, status, datum začetka, datum zaključka in opombe.

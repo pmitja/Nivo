@@ -52,16 +52,16 @@ Brez vezave. Če stranka odpove, se spletna stran odstrani ali deaktivira, siste
 
 ### AI dodatek
 
-Cena: 20 €/mesec.
+Status: pride kmalu.
 
-AI funkcije:
+Prihodnje AI funkcije:
 
 - AI očisti sporočilo stranke
 - AI naredi povzetek
 - AI pripravi osnutek ponudbe
 - AI skrajša administracijo
 
-AI ne sme avtomatsko pošiljati ponudb brez potrditve uporabnika.
+AI ne sme avtomatsko pošiljati ponudb brez potrditve uporabnika. Dokler funkcija ni pripravljena, jo v UI prikazujemo kot »Pride kmalu«.
 
 ### Dodatne storitve
 

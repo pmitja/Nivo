@@ -24,20 +24,26 @@ export default async function AdminLeadsPage() {
                 </div>
                 <StatusPill>{leadStatusLabels[lead.status]}</StatusPill>
               </div>
-              <form action={updateLeadStatusAction} className="mt-3 flex flex-wrap gap-2">
-                <input type="hidden" name="leadId" value={lead.id} />
-                <Select name="status" defaultValue={lead.status}>
-                  <SelectTrigger className="h-10 min-w-[190px] py-0">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(leadStatusLabels).map(([value, label]) => (
-                      <SelectItem key={value} value={value}>{label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button size="sm" className="bg-[#16151D] hover:bg-[#2B2933]">Shrani status</Button>
-              </form>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <form action={updateLeadStatusAction} className="flex flex-wrap gap-2">
+                  <input type="hidden" name="leadId" value={lead.id} />
+                  <Select name="status" defaultValue={lead.status}>
+                    <SelectTrigger className="h-10 min-w-[190px] py-0">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(leadStatusLabels).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>{label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Button size="sm" className="bg-[#16151D] hover:bg-[#2B2933]">Shrani status</Button>
+                </form>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-[#55515F]">{lead.message}</p>
+              <div className="mt-4 rounded-[14px] border border-[#EEEAF5] bg-[#FBFAFF] p-4 text-sm font-semibold text-[#686473]">
+                AI povzetki in osnutki ponudb: <span className="font-extrabold text-[#6A5AE0]">pride kmalu</span>
+              </div>
             </div>
           ))}
         </div>
