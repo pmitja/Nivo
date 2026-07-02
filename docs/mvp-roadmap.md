@@ -2,7 +2,7 @@
 
 ## Cilj MVP
 
-Zgraditi prvo verzijo SaaS dashboarda, ki omogoča dodajanje strank, upravljanje povpraševanj, SMS obvestila, avtomatski SMS odgovor, Google review SMS, osnovni CRM, zahtevke za spremembe spletne strani in osnovno analitiko.
+Zgraditi prvo verzijo platforme, katere jedro so spletne strani, prilagodljivi kontaktni obrazci in zanesljivo zbiranje povpraševanj. Super Admin pripravi obrazec za posamezno stranko, spletna stran pa ga uporabi kot vdelan obrazec ali prek API endpointa.
 
 ## Faza 1 — Osnova
 
@@ -37,10 +37,11 @@ Zgraditi prvo verzijo SaaS dashboarda, ki omogoča dodajanje strank, upravljanje
 
 ## Faza 4 — Lead sistem
 
+- admin urejevalnik kontaktnega obrazca za posamezno stranko
+- embed skripta za vdelavo obrazca
+- company-specific endpoint za lasten obrazec na spletni strani
 - javna kontaktna forma
 - shranjevanje leada
-- SMS obrtniku
-- SMS stranki
 - lead v dashboardu
 - statusi leadov
 
@@ -70,8 +71,10 @@ Zgraditi prvo verzijo SaaS dashboarda, ki omogoča dodajanje strank, upravljanje
 ## Kasneje
 
 - AI dodatek
+- SMS obvestila in avtomatski SMS odgovor po izbiri ponudnika
 - SMS kampanje
 - referral kampanje
+- kampanje
 - billing
 - napredna analitika
 - file uploads

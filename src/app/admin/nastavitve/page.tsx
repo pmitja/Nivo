@@ -18,7 +18,7 @@ export default async function AdminSettingsPage() {
         <Panel title="MVP pravila">
           <div className="grid gap-3 text-sm font-semibold leading-6 text-[#686473]">
             <p>Client uporabnik vidi samo zapise svojega podjetja.</p>
-            <p>Super Admin lahko vidi vse stranke, povpraševanja, SMS-e, kampanje, zahtevke in storitve.</p>
+            <p>Super Admin lahko vidi vse stranke, povpraševanja, obrazce, SMS-e, zahtevke in storitve.</p>
             <p>AI pomočnik je označen kot »Pride kmalu« in trenutno ni aktivna funkcija.</p>
           </div>
         </Panel>

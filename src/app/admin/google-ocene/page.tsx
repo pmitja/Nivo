@@ -1,17 +1,28 @@
 import { DashboardShell, EmptyState, Panel, StatCard, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { requireSuperAdmin } from "@/lib/auth";
 import { getAdminReviewOverview } from "@/lib/dashboard-data";
 import { formatDate } from "@/lib/labels";
 
-export default async function AdminReviewsPage() {
+export default async function AdminReviewsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ requestsPage?: string; feedbacksPage?: string }>;
+}) {
   const user = await requireSuperAdmin();
-  const data = await getAdminReviewOverview();
+  const params = await searchParams;
+  const requestsPage = Number(params.requestsPage ?? "1");
+  const feedbacksPage = Number(params.feedbacksPage ?? "1");
+  const data = await getAdminReviewOverview(
+    Number.isFinite(requestsPage) ? requestsPage : 1,
+    Number.isFinite(feedbacksPage) ? feedbacksPage : 1,
+  );
 
   return (
     <DashboardShell user={user} mode="admin" title="Google ocene" subtitle="Zahteve za ocene in interne povratne informacije vseh strank.">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Zahteve za ocene" value={data.requestCount} helper="Skupaj poslano" />
-        <StatCard label="Interne povratne informacije" value={data.feedbackCount} helper="Ocene 1-3" tone="amber" />
+        <StatCard label="Prejete ocene" value={data.feedbackCount} helper="Vse ocene 1-5" tone="amber" />
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
@@ -29,6 +40,15 @@ export default async function AdminReviewsPage() {
               </div>
             )) : <EmptyState text="Zahtev za ocene še ni." />}
           </div>
+          <PaginationFooter
+            page={data.requestsPage}
+            pageCount={data.requestsPageCount}
+            pageSize={data.pageSize}
+            total={data.requestCount}
+            basePath="/admin/google-ocene"
+            pageParam="requestsPage"
+            extraParams={{ feedbacksPage: data.feedbacksPage }}
+          />
         </Panel>
 
         <Panel title="Interne povratne informacije">
@@ -42,10 +62,21 @@ export default async function AdminReviewsPage() {
                   </div>
                   <StatusPill>{feedback.rating}/5</StatusPill>
                 </div>
-                <p className="mt-2 line-clamp-2 text-sm leading-5 text-[#55515F]">{feedback.feedback}</p>
+                <p className="mt-2 line-clamp-2 text-sm leading-5 text-[#55515F]">
+                  {feedback.feedback || "Stranka je bila preusmerjena na Google, brez dodatnega komentarja."}
+                </p>
               </div>
-            )) : <EmptyState text="Interne povratne informacije se prikažejo pri ocenah 1-3." />}
+            )) : <EmptyState text="Ocen strank še ni." />}
           </div>
+          <PaginationFooter
+            page={data.feedbacksPage}
+            pageCount={data.feedbacksPageCount}
+            pageSize={data.pageSize}
+            total={data.feedbackCount}
+            basePath="/admin/google-ocene"
+            pageParam="feedbacksPage"
+            extraParams={{ requestsPage: data.requestsPage }}
+          />
         </Panel>
       </div>
     </DashboardShell>

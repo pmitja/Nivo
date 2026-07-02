@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { formatDate } from "@/lib/labels";
 import type { getClientReviewFeedbacksPage } from "@/lib/dashboard-data";
 
@@ -12,11 +13,11 @@ const ratingFilters = [
   { label: "1/5", value: 1 },
   { label: "2/5", value: 2 },
   { label: "3/5", value: 3 },
+  { label: "4/5", value: 4 },
+  { label: "5/5", value: 5 },
 ];
 
 export function ReviewFeedbackTable({ data }: { data: FeedbackPage }) {
-  const queryBase = data.rating ? `feedbackRating=${data.rating}&` : "";
-
   return (
     <div className="grid gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -49,7 +50,7 @@ export function ReviewFeedbackTable({ data }: { data: FeedbackPage }) {
             {data.feedbacks.map((feedback) => (
               <div key={feedback.id} className="grid gap-2 px-4 py-3 md:grid-cols-[.75fr_1fr_1.45fr_auto] md:items-center">
                 <div>
-                  <Badge variant="warning">{feedback.rating}/5</Badge>
+                  <Badge variant={feedback.rating >= 4 ? "success" : "warning"}>{feedback.rating}/5</Badge>
                 </div>
                 <div>
                   <div className="text-sm font-extrabold">{feedback.name || "Stranka brez imena"}</div>
@@ -57,42 +58,28 @@ export function ReviewFeedbackTable({ data }: { data: FeedbackPage }) {
                     {feedback.leadService || "Brez storitve"}
                   </div>
                 </div>
-                <p className="line-clamp-2 text-sm leading-5 text-[#55515F]">{feedback.feedback}</p>
+                <p className="line-clamp-2 text-sm leading-5 text-[#55515F]">
+                  {feedback.feedback || "Stranka je bila preusmerjena na Google, brez dodatnega komentarja."}
+                </p>
                 <div className="text-xs font-semibold text-[#8A8694] md:justify-self-end">
                   {formatDate(feedback.createdAt)}
                 </div>
               </div>
             ))}
           </div>
-          <PaginationFooter data={data} queryBase={queryBase} />
+          <PaginationFooter
+            page={data.page}
+            pageCount={data.pageCount}
+            pageSize={data.pageSize}
+            total={data.total}
+            basePath="/dashboard/google-ocene"
+            pageParam="feedbackPage"
+            extraParams={{ feedbackRating: data.rating }}
+          />
         </div>
       ) : (
         <EmptyState text="Za izbrani filter še ni internih povratnih informacij." />
       )}
-    </div>
-  );
-}
-
-function PaginationFooter({ data, queryBase }: { data: FeedbackPage; queryBase: string }) {
-  const start = data.total === 0 ? 0 : (data.page - 1) * data.pageSize + 1;
-  const end = Math.min(data.page * data.pageSize, data.total);
-
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3">
-      <div className="text-xs font-bold text-[#827E8D]">
-        Prikaz {start}-{end} od {data.total}
-      </div>
-      <div className="flex items-center gap-2">
-        <Button asChild variant="secondary" size="sm" disabled={data.page <= 1}>
-          <Link href={`/dashboard/google-ocene?${queryBase}feedbackPage=${Math.max(1, data.page - 1)}`}>Nazaj</Link>
-        </Button>
-        <span className="text-xs font-extrabold text-[#827E8D]">
-          {data.page}/{data.pageCount}
-        </span>
-        <Button asChild variant="secondary" size="sm" disabled={data.page >= data.pageCount}>
-          <Link href={`/dashboard/google-ocene?${queryBase}feedbackPage=${Math.min(data.pageCount, data.page + 1)}`}>Naprej</Link>
-        </Button>
-      </div>
     </div>
   );
 }

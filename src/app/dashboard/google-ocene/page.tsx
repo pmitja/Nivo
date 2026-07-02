@@ -1,33 +1,42 @@
-import { sendReviewRequestForLeadAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { ReviewFeedbackTable } from "@/components/dashboard/review-feedback-table";
-import { Button } from "@/components/ui/button";
+import { SendReviewRequestButton } from "@/components/dashboard/send-review-request-button";
 import { requireClientUser } from "@/lib/auth";
 import {
   getClientReviewFeedbacksPage,
-  getClientReviewRequests,
+  getClientReviewRequestsPage,
   getCompany,
-  getCompletedReviewCandidates,
+  getCompletedReviewCandidatesPage,
 } from "@/lib/dashboard-data";
 import { formatDate } from "@/lib/labels";
 
 export default async function ClientReviewsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ feedbackPage?: string; feedbackRating?: string }>;
+  searchParams: Promise<{
+    feedbackPage?: string;
+    feedbackRating?: string;
+    candidatesPage?: string;
+    requestsPage?: string;
+  }>;
 }) {
   const user = await requireClientUser();
   const params = await searchParams;
   const feedbackPage = Number(params.feedbackPage ?? "1");
   const feedbackRating = params.feedbackRating ? Number(params.feedbackRating) : undefined;
-  const safeRating = feedbackRating && [1, 2, 3].includes(feedbackRating) ? feedbackRating : undefined;
+  const safeRating = feedbackRating && [1, 2, 3, 4, 5].includes(feedbackRating) ? feedbackRating : undefined;
+  const candidatesPage = Number(params.candidatesPage ?? "1");
+  const requestsPage = Number(params.requestsPage ?? "1");
 
-  const [company, candidates, requests, feedbacks] = await Promise.all([
+  const [company, candidatesData, requestsData, feedbacks] = await Promise.all([
     getCompany(user.companyId!),
-    getCompletedReviewCandidates(user.companyId!),
-    getClientReviewRequests(user.companyId!),
-    getClientReviewFeedbacksPage(user.companyId!, Number.isFinite(feedbackPage) ? feedbackPage : 1, 10, safeRating),
+    getCompletedReviewCandidatesPage(user.companyId!, Number.isFinite(candidatesPage) ? candidatesPage : 1),
+    getClientReviewRequestsPage(user.companyId!, Number.isFinite(requestsPage) ? requestsPage : 1),
+    getClientReviewFeedbacksPage(user.companyId!, Number.isFinite(feedbackPage) ? feedbackPage : 1, 5, safeRating),
   ]);
+  const candidates = candidatesData.candidates;
+  const requests = requestsData.requests;
 
   return (
     <DashboardShell user={user} mode="client" title="Google ocene" subtitle="Pošljite zahtevo za oceno zaključenim strankam.">
@@ -56,10 +65,9 @@ export default async function ClientReviewsPage({
                       <div className="text-sm font-semibold text-[#686473]">
                         {candidate.latestReviewSentAt ? formatDate(candidate.latestReviewSentAt) : "Ni poslano"}
                       </div>
-                      <form action={sendReviewRequestForLeadAction} className="md:justify-self-end">
-                        <input type="hidden" name="leadId" value={candidate.id} />
-                        <Button size="sm">Pošlji zahtevo za oceno</Button>
-                      </form>
+                      <div className="md:justify-self-end">
+                        <SendReviewRequestButton leadId={candidate.id} size="sm" alreadySent={candidate.reviewAlreadySent} />
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -72,12 +80,22 @@ export default async function ClientReviewsPage({
           ) : (
             <EmptyState text="Google review povezava še ni nastavljena. Pošljite nam povezavo ali nas kontaktirajte, da jo uredimo za vas." />
           )}
+          {company?.googleReviewUrl ? (
+            <PaginationFooter
+              page={candidatesData.page}
+              pageCount={candidatesData.pageCount}
+              pageSize={candidatesData.pageSize}
+              total={candidatesData.total}
+              basePath="/dashboard/google-ocene"
+              pageParam="candidatesPage"
+            />
+          ) : null}
         </Panel>
 
         <Panel title="Zadnje zahteve">
           <div className="grid gap-2">
             {requests.length ? (
-              requests.slice(0, 10).map((request) => (
+              requests.map((request) => (
                 <div key={request.id} className="flex flex-wrap items-center justify-between gap-3 rounded-[14px] border border-[#EEEAF5] px-4 py-3">
                   <div>
                     <div className="text-sm font-extrabold">{request.phone}</div>
@@ -90,11 +108,19 @@ export default async function ClientReviewsPage({
               <EmptyState text="Zahtev za ocene še ni." />
             )}
           </div>
+          <PaginationFooter
+            page={requestsData.page}
+            pageCount={requestsData.pageCount}
+            pageSize={requestsData.pageSize}
+            total={requestsData.total}
+            basePath="/dashboard/google-ocene"
+            pageParam="requestsPage"
+          />
         </Panel>
       </div>
 
       <div className="mt-6">
-        <Panel title="Interne povratne informacije">
+        <Panel title="Prejete ocene">
           <ReviewFeedbackTable data={feedbacks} />
         </Panel>
       </div>

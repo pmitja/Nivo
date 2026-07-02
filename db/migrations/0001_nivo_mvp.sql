@@ -1,21 +1,21 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TYPE company_status AS ENUM ('active', 'setup', 'waiting_for_content', 'waiting_for_payment', 'suspended', 'cancelled');
-CREATE TYPE plan AS ENUM ('basic');
-CREATE TYPE user_role AS ENUM ('super_admin', 'client_admin', 'client_user');
-CREATE TYPE lead_status AS ENUM ('new', 'contacted', 'quote_sent', 'won', 'completed', 'lost');
-CREATE TYPE customer_status AS ENUM ('new_contact', 'prospect', 'customer', 'past_customer', 'inactive');
-CREATE TYPE sms_type AS ENUM ('contractor_new_lead', 'customer_auto_reply', 'google_review_request', 'campaign_sms', 'test_sms');
-CREATE TYPE sms_status AS ENUM ('pending', 'sent', 'delivered', 'failed');
-CREATE TYPE review_request_status AS ENUM ('pending', 'sent', 'failed');
-CREATE TYPE campaign_type AS ENUM ('sms', 'referral', 'google_ads', 'facebook_ads', 'instagram_ads', 'tiktok_ads');
-CREATE TYPE campaign_status AS ENUM ('draft', 'prepared', 'active', 'paused', 'completed', 'cancelled');
-CREATE TYPE website_request_status AS ENUM ('new', 'in_progress', 'waiting_for_info', 'waiting_for_approval', 'completed', 'closed');
-CREATE TYPE request_priority AS ENUM ('low', 'normal', 'high', 'urgent');
-CREATE TYPE support_ticket_status AS ENUM ('new', 'in_progress', 'waiting_for_info', 'completed', 'closed');
-CREATE TYPE service_type AS ENUM ('basic_plan', 'ai_addon', 'google_business_profile', 'seo', 'advertising', 'website_changes', 'campaigns', 'referral_system');
-CREATE TYPE billing_type AS ENUM ('monthly', 'one_time', 'custom');
-CREATE TYPE service_status AS ENUM ('not_ordered', 'ordered', 'setup', 'waiting_for_data', 'active', 'completed', 'cancelled');
+DO $$ BEGIN CREATE TYPE company_status AS ENUM ('active', 'setup', 'waiting_for_content', 'waiting_for_payment', 'suspended', 'cancelled'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE plan AS ENUM ('basic'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE user_role AS ENUM ('super_admin', 'client_admin', 'client_user'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE lead_status AS ENUM ('new', 'contacted', 'quote_sent', 'won', 'completed', 'lost'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE customer_status AS ENUM ('new_contact', 'prospect', 'customer', 'past_customer', 'inactive'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE sms_type AS ENUM ('contractor_new_lead', 'customer_auto_reply', 'google_review_request', 'campaign_sms', 'test_sms'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE sms_status AS ENUM ('pending', 'sent', 'delivered', 'failed'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE review_request_status AS ENUM ('pending', 'sent', 'failed'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE campaign_type AS ENUM ('sms', 'referral', 'google_ads', 'facebook_ads', 'instagram_ads', 'tiktok_ads'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE campaign_status AS ENUM ('draft', 'prepared', 'active', 'paused', 'completed', 'cancelled'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE website_request_status AS ENUM ('new', 'in_progress', 'waiting_for_info', 'waiting_for_approval', 'completed', 'closed'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE request_priority AS ENUM ('low', 'normal', 'high', 'urgent'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE support_ticket_status AS ENUM ('new', 'in_progress', 'waiting_for_info', 'completed', 'closed'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE service_type AS ENUM ('basic_plan', 'ai_addon', 'google_business_profile', 'seo', 'advertising', 'website_changes', 'campaigns', 'referral_system'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE billing_type AS ENUM ('monthly', 'one_time', 'custom'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+DO $$ BEGIN CREATE TYPE service_status AS ENUM ('not_ordered', 'ordered', 'setup', 'waiting_for_data', 'active', 'completed', 'cancelled'); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 CREATE TABLE IF NOT EXISTS companies (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),

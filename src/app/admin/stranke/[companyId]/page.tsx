@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   createCompanyServiceAction,
+  updateContactFormAction,
   updateCompanyAction,
   updateCompanyServiceStatusAction,
   uploadCompanyDocumentAction,
@@ -9,15 +10,16 @@ import {
 } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatCard, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import type { ContactFormField } from "@/db/schema";
 import { requireSuperAdmin } from "@/lib/auth";
 import { getAdminCompanyProfile } from "@/lib/dashboard-data";
 import {
   billingTypeLabels,
-  campaignStatusLabels,
   companyStatusLabels,
   formatCurrency,
   formatDate,
@@ -39,6 +41,8 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
   }
 
   const { company } = data;
+  const formFields = data.contactForm?.fields ?? defaultContactFormFields;
+  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://app.nivo.si").replace(/\/$/, "");
 
   return (
     <DashboardShell
@@ -54,11 +58,76 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-        <StatCard label="Povpraševanja" value={data.stats.leads} helper="Zadnjih 10" />
-        <StatCard label="CRM kontakti" value={data.stats.customers} helper="Zadnjih 10" />
-        <StatCard label="SMS" value={data.stats.sms} helper="Zadnjih 10" />
-        <StatCard label="Kampanje" value={data.stats.campaigns} helper="Zadnjih 10" />
+        <StatCard label="Povpraševanja" value={data.stats.leads} helper="Zadnjih 5" />
+        <StatCard label="CRM kontakti" value={data.stats.customers} helper="Zadnjih 5" />
+        <StatCard label="SMS" value={data.stats.sms} helper="Zadnjih 5" />
+        <StatCard label="Kontaktni obrazec" value={data.contactForm?.active === false ? "Izklopljen" : "Aktiven"} helper="Spletna stran" tone={data.contactForm?.active === false ? "amber" : "green"} />
         <StatCard label="Odprti zahtevki" value={data.stats.openRequests} helper="Spletna stran" tone="amber" />
+      </div>
+
+      <div className="mt-6">
+        <Panel title="Kontaktni obrazec za spletno stran">
+          <form action={updateContactFormAction} className="grid gap-5">
+            <input type="hidden" name="companyId" value={company.id} />
+            <div className="grid gap-3 md:grid-cols-2">
+              <Field id="form-title" label="Naslov obrazca">
+                <Input id="form-title" name="title" defaultValue={data.contactForm?.title ?? "Pošljite povpraševanje"} />
+              </Field>
+              <Field id="form-submit-label" label="Besedilo gumba">
+                <Input id="form-submit-label" name="submitLabel" defaultValue={data.contactForm?.submitLabel ?? "Pošlji povpraševanje"} />
+              </Field>
+              <Field id="form-intro" label="Uvodno besedilo">
+                <Textarea id="form-intro" name="intro" defaultValue={data.contactForm?.intro ?? "Opišite, kaj potrebujete, in kontaktirali vas bomo v najkrajšem možnem času."} />
+              </Field>
+              <Field id="form-success" label="Potrditev po oddaji">
+                <Textarea id="form-success" name="successMessage" defaultValue={data.contactForm?.successMessage ?? "Hvala za povpraševanje. Prejeli smo vaše sporočilo."} />
+              </Field>
+            </div>
+            <div>
+              <h3 className="text-sm font-extrabold">Polja obrazca</h3>
+              <p className="mt-1 text-sm text-[#777382]">Ime, telefon, e-pošta in sporočilo so vedno vključeni.</p>
+              <div className="mt-3 grid gap-3 md:grid-cols-2">
+                {formFields.map((field) => {
+                  const locked = ["name", "phone", "email", "message"].includes(field.name);
+                  return (
+                    <div key={field.name} className="rounded-[14px] border border-[#EEEAF5] p-4">
+                      <Label htmlFor={`${field.name}-label`}>Naziv polja</Label>
+                      <Input id={`${field.name}-label`} name={`${field.name}Label`} className="mt-2" defaultValue={field.label} />
+                      <div className="mt-3 flex flex-wrap gap-5">
+                        <label className="flex items-center gap-2 text-sm font-bold text-[#55515F]">
+                          <Checkbox name={`${field.name}Enabled`} defaultChecked={locked || field.enabled} disabled={locked} />
+                          Prikaži
+                        </label>
+                        <label className="flex items-center gap-2 text-sm font-bold text-[#55515F]">
+                          <Checkbox name={`${field.name}Required`} defaultChecked={locked || field.required} disabled={locked} />
+                          Obvezno
+                        </label>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <label className="flex items-center gap-3 text-sm font-extrabold">
+              <Checkbox name="active" defaultChecked={data.contactForm?.active ?? true} />
+              Obrazec je aktiven
+            </label>
+            <div className="grid gap-3 rounded-[16px] bg-[#F7F5FF] p-4">
+              <div>
+                <div className="text-xs font-extrabold uppercase tracking-[.08em] text-[#6A5AE0]">Vdelava na spletno stran</div>
+                <code className="mt-2 block overflow-x-auto rounded-[10px] bg-[#201D2A] p-3 text-xs text-white">{`<script src="${appUrl}/api/forms/${company.id}/embed.js" async></script>`}</code>
+              </div>
+              <div>
+                <div className="text-xs font-extrabold uppercase tracking-[.08em] text-[#6A5AE0]">Endpoint za lasten obrazec</div>
+                <code className="mt-2 block overflow-x-auto rounded-[10px] bg-[#201D2A] p-3 text-xs text-white">{`POST ${appUrl}/api/forms/${company.id}/submissions`}</code>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Button>Shrani obrazec</Button>
+              <Button asChild variant="secondary"><Link href={`/obrazec/${company.id}`} target="_blank">Predogled</Link></Button>
+            </div>
+          </form>
+        </Panel>
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_.85fr]">
@@ -416,20 +485,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
         </Panel>
 
         <Panel title="Kampanje">
-          <div className="grid gap-2">
-            {data.campaigns.length ? (
-              data.campaigns.map((campaign) => (
-                <CompactRow
-                  key={campaign.id}
-                  title={campaign.name}
-                  meta={`${campaign.channel} · ${formatDate(campaign.createdAt)}`}
-                  status={campaignStatusLabels[campaign.status]}
-                />
-              ))
-            ) : (
-              <EmptyState text="Kampanj še ni." />
-            )}
-          </div>
+          <EmptyState text="Kampanje so del druge faze in pridejo kmalu." />
         </Panel>
 
         <Panel title="Ocene in feedback">
@@ -440,7 +496,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
               <CompactRow
                 key={feedback.id}
                 title={`${feedback.rating}/5 · ${feedback.name || "Brez imena"}`}
-                meta={feedback.feedback}
+                meta={feedback.feedback || "Preusmerjeno na Google"}
                 status={formatDate(feedback.createdAt)}
               />
             ))}
@@ -488,3 +544,12 @@ function CompactRow({ title, meta, status }: { title: string; meta: string; stat
     </div>
   );
 }
+
+const defaultContactFormFields: ContactFormField[] = [
+  { name: "name", label: "Ime in priimek", type: "text", required: true, enabled: true },
+  { name: "phone", label: "Telefon", type: "tel", required: true, enabled: true },
+  { name: "email", label: "E-pošta", type: "email", required: false, enabled: true },
+  { name: "location", label: "Lokacija", type: "text", required: false, enabled: true },
+  { name: "service", label: "Kaj potrebujete?", type: "text", required: true, enabled: true },
+  { name: "message", label: "Sporočilo", type: "textarea", required: true, enabled: true },
+];

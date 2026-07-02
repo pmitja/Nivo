@@ -7,31 +7,32 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { ContactFormField } from "@/db/schema";
 
-export function PublicLeadForm({ companyId }: { companyId: string }) {
+export function PublicLeadForm({
+  companyId,
+  fields,
+  submitLabel,
+  successMessage,
+}: {
+  companyId: string;
+  fields: ContactFormField[];
+  submitLabel: string;
+  successMessage: string;
+}) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [message, setMessage] = useState("");
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setStatus("sending");
     setMessage("");
 
-    const formData = new FormData(event.currentTarget);
-    const response = await fetch("/api/leads", {
+    const formData = new FormData(form);
+    const response = await fetch(`/api/forms/${companyId}/submissions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        companyId,
-        name: formData.get("name"),
-        phone: formData.get("phone"),
-        email: formData.get("email"),
-        location: formData.get("location"),
-        service: formData.get("service"),
-        message: formData.get("message"),
-        privacyConsent: formData.get("privacyConsent") === "on",
-        marketingConsent: formData.get("marketingConsent") === "on",
-      }),
+      body: formData,
     });
 
     if (!response.ok) {
@@ -41,29 +42,32 @@ export function PublicLeadForm({ companyId }: { companyId: string }) {
       return;
     }
 
-    event.currentTarget.reset();
+    form.reset();
     setStatus("sent");
-    setMessage("Hvala za povpraševanje. Prejeli smo vaše sporočilo in se vam javimo v najkrajšem možnem času.");
+    setMessage(successMessage);
   }
 
   return (
     <form onSubmit={onSubmit} className="grid gap-4">
       <div className="grid gap-4 md:grid-cols-2">
-        <Field name="name" label="Ime in priimek" required />
-        <Field name="phone" label="Telefon" required />
-        <Field name="email" label="Email" type="email" />
-        <Field name="location" label="Lokacija" />
+        {fields.filter((field) => field.enabled && field.type !== "textarea").map((field) => (
+          <Field key={field.name} name={field.name} label={field.label} type={field.type} required={field.required} />
+        ))}
       </div>
-      <Field name="service" label="Kaj potrebujete?" required />
+      {fields.filter((field) => field.enabled && field.type === "textarea").map((field) => (
+        <div key={field.name} className="grid gap-2">
+          <Label htmlFor={field.name}>{field.label}</Label>
+          <Textarea id={field.name} name={field.name} required={field.required} minLength={10} className="min-h-36 text-[15px]" />
+        </div>
+      ))}
       <div className="grid gap-2">
-        <Label htmlFor="message">Sporočilo</Label>
-        <Textarea
-          id="message"
-          name="message"
-          required
-          minLength={10}
-          className="min-h-36 text-[15px]"
-          placeholder="Na kratko opišite, kaj želite urediti."
+        <Label htmlFor="attachment">Popis del (Excel) — neobvezno</Label>
+        <Input
+          id="attachment"
+          name="attachment"
+          type="file"
+          accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+          className="h-12 text-[15px] file:mr-3 file:h-full file:border-0 file:bg-transparent file:text-sm file:font-semibold"
         />
       </div>
       <div className="flex items-start gap-3">
@@ -87,7 +91,7 @@ export function PublicLeadForm({ companyId }: { companyId: string }) {
         disabled={status === "sending"}
         className="h-12"
       >
-        {status === "sending" ? "Pošiljam..." : "Pošlji povpraševanje"}
+        {status === "sending" ? "Pošiljam..." : submitLabel}
         <Send className="h-4 w-4" />
       </Button>
     </form>

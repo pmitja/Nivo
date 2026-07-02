@@ -1,20 +1,23 @@
 import { createSupportTicketAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { requireClientUser } from "@/lib/auth";
-import { getClientSupportTickets } from "@/lib/dashboard-data";
+import { getClientSupportTicketsPage } from "@/lib/dashboard-data";
 import { formatDate, supportTicketStatusLabels } from "@/lib/labels";
 
-export default async function ClientSupportPage() {
+export default async function ClientSupportPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const user = await requireClientUser();
-  const tickets = await getClientSupportTickets(user.companyId!);
+  const params = await searchParams;
+  const page = Number(params.page ?? "1");
+  const data = await getClientSupportTicketsPage(user.companyId!, Number.isFinite(page) ? page : 1);
 
   return (
-    <DashboardShell user={user} mode="client" title="Podpora" subtitle="Vprašanja, težave in pomoč pri kampanjah.">
+    <DashboardShell user={user} mode="client" title="Podpora" subtitle="Vprašanja, težave in pomoč pri uporabi platforme.">
       <div className="grid gap-6 xl:grid-cols-[.9fr_1.1fr]">
         <Panel title="Novo vprašanje">
           <form action={createSupportTicketAction} className="grid gap-3">
@@ -28,7 +31,6 @@ export default async function ClientSupportPage() {
                   <SelectItem value="splošno vprašanje">splošno vprašanje</SelectItem>
                   <SelectItem value="tehnična težava">tehnična težava</SelectItem>
                   <SelectItem value="sprememba spletne strani">sprememba spletne strani</SelectItem>
-                  <SelectItem value="pomoč pri kampanji">pomoč pri kampanji</SelectItem>
                   <SelectItem value="pomoč pri Google ocenah">pomoč pri Google ocenah</SelectItem>
                   <SelectItem value="pomoč pri oglaševanju">pomoč pri oglaševanju</SelectItem>
                 </SelectContent>
@@ -47,7 +49,7 @@ export default async function ClientSupportPage() {
         </Panel>
         <Panel title="Moja vprašanja">
           <div className="grid gap-3">
-            {tickets.length ? tickets.map((ticket) => (
+            {data.tickets.length ? data.tickets.map((ticket) => (
               <div key={ticket.id} className="rounded-[14px] border border-[#EEEAF5] p-4">
                 <div className="flex flex-wrap justify-between gap-3">
                   <div>
@@ -60,6 +62,13 @@ export default async function ClientSupportPage() {
               </div>
             )) : <EmptyState text="Vprašanj še ni." />}
           </div>
+          <PaginationFooter
+            page={data.page}
+            pageCount={data.pageCount}
+            pageSize={data.pageSize}
+            total={data.total}
+            basePath="/dashboard/podpora"
+          />
         </Panel>
       </div>
     </DashboardShell>

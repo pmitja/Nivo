@@ -1,18 +1,21 @@
 import { DashboardShell, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { createCompanyAction } from "@/app/actions";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { requireSuperAdmin } from "@/lib/auth";
-import { getAdminCompanies } from "@/lib/dashboard-data";
+import { getAdminCompaniesPage } from "@/lib/dashboard-data";
 import { companyStatusLabels, formatDate } from "@/lib/labels";
 import Link from "next/link";
 
-export default async function AdminCompaniesPage() {
+export default async function AdminCompaniesPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const user = await requireSuperAdmin();
-  const companies = await getAdminCompanies();
+  const params = await searchParams;
+  const page = Number(params.page ?? "1");
+  const data = await getAdminCompaniesPage(Number.isFinite(page) ? page : 1);
 
   return (
     <DashboardShell user={user} mode="admin" title="Stranke" subtitle="Dodajanje in pregled podjetij.">
@@ -83,7 +86,7 @@ export default async function AdminCompaniesPage() {
 
         <Panel title="Vse stranke">
           <div className="grid gap-3">
-            {companies.map((company) => (
+            {data.companies.map((company) => (
               <div key={company.id} className="rounded-[14px] border border-[#EEEAF5] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
@@ -106,6 +109,13 @@ export default async function AdminCompaniesPage() {
               </div>
             ))}
           </div>
+          <PaginationFooter
+            page={data.page}
+            pageCount={data.pageCount}
+            pageSize={data.pageSize}
+            total={data.total}
+            basePath="/admin/stranke"
+          />
         </Panel>
       </div>
     </DashboardShell>

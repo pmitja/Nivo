@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -31,7 +32,10 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-white text-[#16151D]">{children}</body>
+      <body className="min-h-full bg-white text-[#16151D]">
+        {children}
+        <Toaster richColors position="top-center" />
+      </body>
     </html>
   );
 }

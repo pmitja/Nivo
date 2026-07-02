@@ -1,17 +1,20 @@
 import { addWebsiteRequestCommentAction, createWebsiteRequestAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { requireClientUser } from "@/lib/auth";
-import { getClientWebsiteRequests } from "@/lib/dashboard-data";
+import { getClientWebsiteRequestsPage } from "@/lib/dashboard-data";
 import { formatDate, priorityLabels, websiteRequestStatusLabels } from "@/lib/labels";
 
-export default async function ClientWebsitePage() {
+export default async function ClientWebsitePage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const user = await requireClientUser();
-  const requests = await getClientWebsiteRequests(user.companyId!);
+  const params = await searchParams;
+  const page = Number(params.page ?? "1");
+  const data = await getClientWebsiteRequestsPage(user.companyId!, Number.isFinite(page) ? page : 1);
 
   return (
     <DashboardShell user={user} mode="client" title="Spletna stran" subtitle="Spremembe spletne strani uredimo na podlagi zahtevka.">
@@ -49,7 +52,7 @@ export default async function ClientWebsitePage() {
 
         <Panel title="Moji zahtevki">
           <div className="grid gap-3">
-            {requests.length ? requests.map((request) => (
+            {data.requests.length ? data.requests.map((request) => (
               <div key={request.id} className="rounded-[14px] border border-[#EEEAF5] p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
@@ -86,6 +89,13 @@ export default async function ClientWebsitePage() {
               </div>
             )) : <EmptyState text="Oddajte prvi zahtevek za spremembo spletne strani." />}
           </div>
+          <PaginationFooter
+            page={data.page}
+            pageCount={data.pageCount}
+            pageSize={data.pageSize}
+            total={data.total}
+            basePath="/dashboard/spletna-stran"
+          />
         </Panel>
       </div>
     </DashboardShell>

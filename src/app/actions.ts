@@ -11,6 +11,7 @@ import {
   campaigns,
   companies,
   companyDocuments,
+  contactForms,
   companySmsSettings,
   leads,
   reviewFeedbacks,
@@ -22,15 +23,25 @@ import {
   websiteChangeRequests,
   websiteChangeRequestComments,
 } from "@/db/schema";
+import type { ContactFormField } from "@/db/schema";
 import { requireClientUser, requireSuperAdmin, requireUser } from "@/lib/auth";
 import { googleReviewSms } from "@/lib/sms-copy";
-import { markSmsAsSent } from "@/lib/sms";
+import { sendSms } from "@/lib/sms";
 import {
   isUploadableCompanyDocument,
   prepareDocumentFile,
   prepareLogoFile,
   uploadPreparedFile,
 } from "@/lib/uploadthing";
+
+const defaultContactFormFields: ContactFormField[] = [
+  { name: "name", label: "Ime in priimek", type: "text", required: true, enabled: true },
+  { name: "phone", label: "Telefon", type: "tel", required: true, enabled: true },
+  { name: "email", label: "E-pošta", type: "email", required: true, enabled: true },
+  { name: "location", label: "Lokacija", type: "text", required: false, enabled: true },
+  { name: "service", label: "Kaj potrebujete?", type: "text", required: true, enabled: true },
+  { name: "message", label: "Sporočilo", type: "textarea", required: true, enabled: true },
+];
 
 export async function createCompanyAction(formData: FormData) {
   const admin = await requireSuperAdmin();
@@ -72,6 +83,11 @@ export async function createCompanyAction(formData: FormData) {
     startedAt: new Date(),
   });
 
+  await db.insert(contactForms).values({
+    companyId: company.id,
+    fields: defaultContactFormFields,
+  });
+
   await db.insert(auditLogs).values({
     companyId: company.id,
     userId: admin.id,
@@ -84,6 +100,54 @@ export async function createCompanyAction(formData: FormData) {
   revalidatePath("/admin");
   revalidatePath("/admin/stranke");
   redirect(`/admin/stranke?created=${company.id}`);
+}
+
+export async function updateContactFormAction(formData: FormData) {
+  const admin = await requireSuperAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+  if (!companyId) return;
+
+  const fields = defaultContactFormFields.map((field) => ({
+    ...field,
+    label: String(formData.get(`${field.name}Label`) ?? field.label).trim() || field.label,
+    enabled: field.name === "name" || field.name === "phone" || field.name === "email" || field.name === "message"
+      ? true
+      : formData.get(`${field.name}Enabled`) === "on",
+    required: field.name === "name" || field.name === "phone" || field.name === "email" || field.name === "message"
+      ? true
+      : formData.get(`${field.name}Required`) === "on",
+  }));
+
+  await db.insert(contactForms).values({
+    companyId,
+    title: String(formData.get("title") ?? "").trim() || "Pošljite povpraševanje",
+    intro: String(formData.get("intro") ?? "").trim() || "Opišite, kaj potrebujete.",
+    submitLabel: String(formData.get("submitLabel") ?? "").trim() || "Pošlji povpraševanje",
+    successMessage: String(formData.get("successMessage") ?? "").trim() || "Hvala za povpraševanje.",
+    active: formData.get("active") === "on",
+    fields,
+  }).onConflictDoUpdate({
+    target: contactForms.companyId,
+    set: {
+      title: String(formData.get("title") ?? "").trim() || "Pošljite povpraševanje",
+      intro: String(formData.get("intro") ?? "").trim() || "Opišite, kaj potrebujete.",
+      submitLabel: String(formData.get("submitLabel") ?? "").trim() || "Pošlji povpraševanje",
+      successMessage: String(formData.get("successMessage") ?? "").trim() || "Hvala za povpraševanje.",
+      active: formData.get("active") === "on",
+      fields,
+      updatedAt: new Date(),
+    },
+  });
+
+  await db.insert(auditLogs).values({
+    companyId,
+    userId: admin.id,
+    action: "contact_form_updated",
+    entityType: "contact_form",
+    metadata: { source: "super_admin_company_profile" },
+  });
+  revalidatePath(`/admin/stranke/${companyId}`);
+  revalidatePath(`/obrazec/${companyId}`);
 }
 
 export async function updateCompanyAction(formData: FormData) {
@@ -370,13 +434,59 @@ export async function updateLeadStatusAction(formData: FormData) {
     user.role === "super_admin" ? eq(leads.id, leadId) : and(eq(leads.id, leadId), eq(leads.companyId, user.companyId!));
 
   await db.update(leads).set({ status, updatedAt: new Date() }).where(where);
-  revalidatePath("/dashboard/povprasevanja");
-  revalidatePath("/admin/povprasevanja");
+  revalidateLeadPaths();
 }
 
 async function requireUserForLeadAction() {
   const { requireUser } = await import("@/lib/auth");
   return requireUser();
+}
+
+function revalidateLeadPaths() {
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/povprasevanja");
+  revalidatePath("/dashboard/povprasevanja/kontaktirano");
+  revalidatePath("/dashboard/povprasevanja/ponudbe-poslane");
+  revalidatePath("/dashboard/povprasevanja/dogovorjeno");
+  revalidatePath("/dashboard/povprasevanja/zakljuceno");
+  revalidatePath("/dashboard/povprasevanja/izgubljeno");
+  revalidatePath("/admin/povprasevanja");
+}
+
+export type CreateManualLeadState = { ok: boolean; message: string } | null;
+
+export async function createManualLeadAction(
+  _prevState: CreateManualLeadState,
+  formData: FormData,
+): Promise<CreateManualLeadState> {
+  const user = await requireClientUser();
+
+  const name = String(formData.get("name") ?? "").trim();
+  const phone = String(formData.get("phone") ?? "").trim();
+  const email = String(formData.get("email") ?? "").trim();
+  const location = String(formData.get("location") ?? "").trim();
+  const service = String(formData.get("service") ?? "").trim();
+  const message = String(formData.get("message") ?? "").trim();
+  const status = String(formData.get("status") ?? "new") as "new";
+
+  if (!name || !phone || !service || !message) {
+    return { ok: false, message: "Izpolnite ime, telefon, vrsto dela in opis dela." };
+  }
+
+  await db.insert(leads).values({
+    companyId: user.companyId!,
+    name,
+    phone,
+    email: email || null,
+    location: location || null,
+    service,
+    message,
+    status,
+    source: "ročni vnos",
+  });
+
+  revalidateLeadPaths();
+  return { ok: true, message: "Povpraševanje je dodano." };
 }
 
 export async function createWebsiteRequestAction(formData: FormData) {
@@ -668,13 +778,18 @@ export async function sendReviewRequestAction(formData: FormData) {
     })
     .returning();
 
-  await markSmsAsSent(sms.id);
+  await sendSms(sms.id, phone, sms.message);
   await db.update(reviewRequests).set({ status: "sent", sentAt: new Date() }).where(eq(reviewRequests.id, request.id));
 
   revalidatePath("/dashboard/google-ocene");
 }
 
-export async function sendReviewRequestForLeadAction(formData: FormData) {
+export type SendReviewRequestState = { ok: boolean; message: string } | null;
+
+export async function sendReviewRequestForLeadAction(
+  _prevState: SendReviewRequestState,
+  formData: FormData,
+): Promise<SendReviewRequestState> {
   const user = await requireClientUser();
   const leadId = String(formData.get("leadId") ?? "");
 
@@ -682,7 +797,7 @@ export async function sendReviewRequestForLeadAction(formData: FormData) {
   const [company] = await db.select().from(companies).where(eq(companies.id, user.companyId!)).limit(1);
 
   if (!lead || !company?.googleReviewUrl || lead.status !== "completed") {
-    return;
+    return { ok: false, message: "Zahteve za oceno trenutno ni mogoče poslati." };
   }
 
   const [request] = await db
@@ -693,8 +808,7 @@ export async function sendReviewRequestForLeadAction(formData: FormData) {
       leadId: lead.id,
       phone: lead.phone,
       reviewUrl: company.googleReviewUrl,
-      status: "sent",
-      sentAt: new Date(),
+      status: "pending",
     })
     .returning();
 
@@ -713,8 +827,18 @@ export async function sendReviewRequestForLeadAction(formData: FormData) {
     })
     .returning();
 
-  await markSmsAsSent(sms.id);
-  revalidatePath("/dashboard/google-ocene");
+  try {
+    await sendSms(sms.id, lead.phone, sms.message);
+    await db.update(reviewRequests).set({ status: "sent", sentAt: new Date() }).where(eq(reviewRequests.id, request.id));
+    revalidatePath("/dashboard/google-ocene");
+    revalidatePath("/dashboard/povprasevanja");
+    return { ok: true, message: "Zahteva za oceno je bila poslana." };
+  } catch {
+    await db.update(reviewRequests).set({ status: "failed" }).where(eq(reviewRequests.id, request.id));
+    revalidatePath("/dashboard/google-ocene");
+    revalidatePath("/dashboard/povprasevanja");
+    return { ok: false, message: "Pošiljanje ni uspelo. Poskusite znova kasneje." };
+  }
 }
 
 export async function submitPublicReviewAction(_: unknown, formData: FormData) {
@@ -731,6 +855,17 @@ export async function submitPublicReviewAction(_: unknown, formData: FormData) {
   }
 
   if (rating >= 4) {
+    await db.insert(reviewFeedbacks).values({
+      companyId: request.companyId,
+      reviewRequestId: request.id,
+      customerId: request.customerId,
+      leadId: request.leadId,
+      rating,
+      name: name || null,
+      email: email || null,
+      feedback: feedback || null,
+    });
+
     redirect(request.reviewUrl);
   }
 

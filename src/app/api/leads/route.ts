@@ -2,15 +2,19 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
-import { analyticsEvents, companies, companySmsSettings, customers, leads, smsMessages } from "@/db/schema";
-import { contractorLeadSms, customerAutoReplySms } from "@/lib/sms-copy";
-import { markSmsAsSent } from "@/lib/sms";
+import { analyticsEvents, companies, contactForms, customers, leads, smsMessages } from "@/db/schema";
+import { sendLeadConfirmationEmail } from "@/lib/email";
+import { contractorLeadSms } from "@/lib/sms-copy";
+import { sendSms } from "@/lib/sms";
+import { isUploadableLeadAttachment, prepareLeadAttachment, uploadPreparedFile } from "@/lib/uploadthing";
+
+const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024;
 
 const leadSchema = z.object({
   companyId: z.string().uuid(),
   name: z.string().min(2),
   phone: z.string().min(5),
-  email: z.string().email().optional().or(z.literal("")),
+  email: z.string().email(),
   location: z.string().optional(),
   service: z.string().min(2),
   message: z.string().min(10),
@@ -20,10 +24,25 @@ const leadSchema = z.object({
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const parsed = leadSchema.safeParse(body);
+  return submitLead(body);
+}
+
+export async function submitLead(body: unknown, companyId?: string, attachment?: File | null) {
+  const parsed = leadSchema.safeParse(
+    typeof body === "object" && body !== null ? { ...body, companyId: companyId ?? (body as { companyId?: string }).companyId } : body,
+  );
 
   if (!parsed.success) {
     return NextResponse.json({ message: "Preverite obvezna polja obrazca." }, { status: 400 });
+  }
+
+  if (attachment && attachment.size > 0) {
+    if (attachment.size > MAX_ATTACHMENT_SIZE) {
+      return NextResponse.json({ message: "Priloga je lahko velika največ 10 MB." }, { status: 400 });
+    }
+    if (!isUploadableLeadAttachment(attachment)) {
+      return NextResponse.json({ message: "Priloga mora biti Excel (XLS, XLSX) ali CSV datoteka." }, { status: 400 });
+    }
   }
 
   const data = parsed.data;
@@ -33,11 +52,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Obrazec trenutno ni aktiven." }, { status: 404 });
   }
 
-  const [smsSettings] = await db
-    .select()
-    .from(companySmsSettings)
-    .where(eq(companySmsSettings.companyId, company.id))
-    .limit(1);
+  const [contactForm] = await db.select().from(contactForms).where(eq(contactForms.companyId, company.id)).limit(1);
+  if (contactForm?.active === false) {
+    return NextResponse.json({ message: "Obrazec trenutno ni aktiven." }, { status: 404 });
+  }
+
+  const missingRequiredField = contactForm?.fields.some((field) => {
+    if (!field.enabled || !field.required) return false;
+    return String(data[field.name] ?? "").trim().length === 0;
+  });
+  if (missingRequiredField) {
+    return NextResponse.json({ message: "Izpolnite vsa obvezna polja." }, { status: 400 });
+  }
 
   const [customer] = await db
     .insert(customers)
@@ -54,6 +80,24 @@ export async function POST(request: Request) {
     })
     .returning();
 
+  let attachmentFields: {
+    attachmentUrl: string;
+    attachmentKey: string;
+    attachmentName: string;
+    attachmentSize: number;
+  } | null = null;
+
+  if (attachment && attachment.size > 0) {
+    const prepared = prepareLeadAttachment(company.id, attachment);
+    const uploaded = await uploadPreparedFile(prepared.file);
+    attachmentFields = {
+      attachmentUrl: uploaded.url,
+      attachmentKey: uploaded.key,
+      attachmentName: uploaded.name,
+      attachmentSize: uploaded.size,
+    };
+  }
+
   const [lead] = await db
     .insert(leads)
     .values({
@@ -66,35 +110,45 @@ export async function POST(request: Request) {
       service: data.service,
       message: data.message,
       source: "spletni obrazec",
+      ...attachmentFields,
     })
     .returning();
 
   const contractorMessage = contractorLeadSms(data.name, data.location, data.service);
-  const customerMessage = customerAutoReplySms(smsSettings?.autoReplyMessage);
 
-  const createdSms = await db
+  const [contractorSms] = await db
     .insert(smsMessages)
-    .values([
-      {
-        companyId: company.id,
-        customerId: customer.id,
-        leadId: lead.id,
-        phone: company.phone,
-        message: contractorMessage,
-        type: "contractor_new_lead",
-      },
-      {
-        companyId: company.id,
-        customerId: customer.id,
-        leadId: lead.id,
-        phone: data.phone,
-        message: customerMessage,
-        type: "customer_auto_reply",
-      },
-    ])
+    .values({
+      companyId: company.id,
+      customerId: customer.id,
+      leadId: lead.id,
+      phone: company.phone,
+      message: contractorMessage,
+      type: "contractor_new_lead",
+    })
     .returning();
 
-  await Promise.all(createdSms.map((sms) => markSmsAsSent(sms.id)));
+  const notifications: Promise<unknown>[] = [
+    sendSms(contractorSms.id, company.phone, contractorMessage),
+  ];
+
+  if (data.email) {
+    notifications.push(
+      sendLeadConfirmationEmail({
+        customerEmail: data.email,
+        customerName: data.name,
+        companyName: company.name,
+        service: data.service,
+      }),
+    );
+  }
+
+  const notificationResults = await Promise.allSettled(notifications);
+  notificationResults.forEach((result) => {
+    if (result.status === "rejected") {
+      console.error("Obvestilo po oddaji povpraševanja ni uspelo:", result.reason);
+    }
+  });
 
   await db.insert(analyticsEvents).values({
     companyId: company.id,

@@ -1,0 +1,44 @@
+"use client";
+
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import { sendReviewRequestForLeadAction, type SendReviewRequestState } from "@/app/actions";
+import { Button, type ButtonProps } from "@/components/ui/button";
+
+export function SendReviewRequestButton({
+  leadId,
+  alreadySent = false,
+  ...buttonProps
+}: { leadId: string; alreadySent?: boolean } & ButtonProps) {
+  const [state, formAction, isPending] = useActionState<SendReviewRequestState, FormData>(
+    sendReviewRequestForLeadAction,
+    null,
+  );
+  const sent = alreadySent || state?.ok === true;
+
+  useEffect(() => {
+    if (!state) return;
+    if (state.ok) {
+      toast.success(state.message);
+    } else {
+      toast.error(state.message);
+    }
+  }, [state]);
+
+  if (sent) {
+    return (
+      <Button {...buttonProps} disabled>
+        Zahteva poslana
+      </Button>
+    );
+  }
+
+  return (
+    <form action={formAction}>
+      <input type="hidden" name="leadId" value={leadId} />
+      <Button {...buttonProps} disabled={isPending || buttonProps.disabled}>
+        {isPending ? "Pošiljam..." : "Pošlji zahtevo za oceno"}
+      </Button>
+    </form>
+  );
+}
