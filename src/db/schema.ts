@@ -192,6 +192,10 @@ export const leads = pgTable(
     status: leadStatusEnum("status").default("new").notNull(),
     source: text("source").default("spletni obrazec").notNull(),
     aiSummary: text("ai_summary"),
+    attachmentUrl: text("attachment_url"),
+    attachmentKey: text("attachment_key"),
+    attachmentName: text("attachment_name"),
+    attachmentSize: integer("attachment_size"),
     ...timestamps,
   },
   (table) => [
@@ -233,6 +237,30 @@ export const companySmsSettings = pgTable("company_sms_settings", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
+export type ContactFormField = {
+  name: "name" | "phone" | "email" | "location" | "service" | "message";
+  label: string;
+  type: "text" | "email" | "tel" | "textarea";
+  required: boolean;
+  enabled: boolean;
+};
+
+export const contactForms = pgTable(
+  "contact_forms",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    companyId: uuid("company_id").notNull().unique().references(() => companies.id, { onDelete: "cascade" }),
+    title: text("title").default("Pošljite povpraševanje").notNull(),
+    intro: text("intro").default("Opišite, kaj potrebujete, in kontaktirali vas bomo v najkrajšem možnem času.").notNull(),
+    submitLabel: text("submit_label").default("Pošlji povpraševanje").notNull(),
+    successMessage: text("success_message").default("Hvala za povpraševanje. Prejeli smo vaše sporočilo.").notNull(),
+    fields: jsonb("fields").$type<ContactFormField[]>().notNull(),
+    active: boolean("active").default(true).notNull(),
+    ...timestamps,
+  },
+  (table) => [index("contact_forms_company_id_idx").on(table.companyId)],
+);
+
 export const reviewRequests = pgTable(
   "review_requests",
   {
@@ -260,7 +288,7 @@ export const reviewFeedbacks = pgTable(
     rating: integer("rating").notNull(),
     name: text("name"),
     email: text("email"),
-    feedback: text("feedback").notNull(),
+    feedback: text("feedback"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [

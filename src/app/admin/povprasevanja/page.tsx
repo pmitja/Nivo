@@ -1,20 +1,23 @@
 import { updateLeadStatusAction } from "@/app/actions";
 import { DashboardShell, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { requireSuperAdmin } from "@/lib/auth";
-import { getAdminLeads } from "@/lib/dashboard-data";
+import { getAdminLeadsPage } from "@/lib/dashboard-data";
 import { formatDate, leadStatusLabels } from "@/lib/labels";
 
-export default async function AdminLeadsPage() {
+export default async function AdminLeadsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const user = await requireSuperAdmin();
-  const leads = await getAdminLeads();
+  const params = await searchParams;
+  const page = Number(params.page ?? "1");
+  const data = await getAdminLeadsPage(Number.isFinite(page) ? page : 1);
 
   return (
     <DashboardShell user={user} mode="admin" title="Povpraševanja" subtitle="Vsa povpraševanja vseh strank.">
       <Panel title="Povpraševanja">
         <div className="grid gap-3">
-          {leads.map((lead) => (
+          {data.leads.map((lead) => (
             <div key={lead.id} className="rounded-[14px] border border-[#EEEAF5] p-4">
               <div className="flex flex-wrap justify-between gap-3">
                 <div>
@@ -41,12 +44,29 @@ export default async function AdminLeadsPage() {
                 </form>
               </div>
               <p className="mt-3 text-sm leading-6 text-[#55515F]">{lead.message}</p>
+              {lead.attachmentUrl ? (
+                <a
+                  href={lead.attachmentUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex items-center gap-2 rounded-[11px] border border-[#E2DFEA] px-3 py-2 text-sm font-extrabold text-[#16151D]"
+                >
+                  📎 {lead.attachmentName || "Priloga"}
+                </a>
+              ) : null}
               <div className="mt-4 rounded-[14px] border border-[#EEEAF5] bg-[#FBFAFF] p-4 text-sm font-semibold text-[#686473]">
                 AI povzetki in osnutki ponudb: <span className="font-extrabold text-[#6A5AE0]">pride kmalu</span>
               </div>
             </div>
           ))}
         </div>
+        <PaginationFooter
+          page={data.page}
+          pageCount={data.pageCount}
+          pageSize={data.pageSize}
+          total={data.total}
+          basePath="/admin/povprasevanja"
+        />
       </Panel>
     </DashboardShell>
   );

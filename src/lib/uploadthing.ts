@@ -20,7 +20,7 @@ function slugifyFileName(name: string) {
   return extension ? `${safeBase}.${extension.replace(/[^a-z0-9]/g, "")}` : safeBase;
 }
 
-export function companyUploadCustomId(companyId: string, folder: "logo" | "dokumenti", fileName: string) {
+export function companyUploadCustomId(companyId: string, folder: "logo" | "dokumenti" | "povprasevanja", fileName: string) {
   return `companies/${companyId}/${folder}/${crypto.randomUUID()}-${slugifyFileName(fileName)}`;
 }
 
@@ -96,6 +96,29 @@ export function isUploadableCompanyDocument(file: File) {
 export function prepareDocumentFile(companyId: string, file: File) {
   const safeName = slugifyFileName(file.name || "dokument");
   const customId = companyUploadCustomId(companyId, "dokumenti", safeName);
+
+  const preparedFile = fileWithCustomId([file], safeName, {
+    customId,
+    type: file.type || "application/octet-stream",
+  });
+
+  return { file: preparedFile, customId };
+}
+
+const leadAttachmentTypes = new Set([
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "text/csv",
+]);
+
+export function isUploadableLeadAttachment(file: File) {
+  if (leadAttachmentTypes.has(file.type)) return true;
+  return /\.(xlsx|xls|csv)$/i.test(file.name || "");
+}
+
+export function prepareLeadAttachment(companyId: string, file: File) {
+  const safeName = slugifyFileName(file.name || "popis-del.xlsx");
+  const customId = companyUploadCustomId(companyId, "povprasevanja", safeName);
 
   const preparedFile = fileWithCustomId([file], safeName, {
     customId,

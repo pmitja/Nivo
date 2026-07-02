@@ -25,6 +25,8 @@ type NavItem = {
   href: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
+  comingSoon?: boolean;
+  children?: { href: string; label: string }[];
 };
 
 const adminNav: NavItem[] = [
@@ -33,7 +35,7 @@ const adminNav: NavItem[] = [
   { href: "/admin/povprasevanja", label: "Povpraševanja", icon: FileText },
   { href: "/admin/sms-log", label: "SMS log", icon: MessageSquareText },
   { href: "/admin/google-ocene", label: "Google ocene", icon: Star },
-  { href: "/admin/kampanje", label: "Kampanje", icon: Megaphone },
+  { href: "/admin/kampanje", label: "Kampanje", icon: Megaphone, comingSoon: true },
   { href: "/admin/zahtevki", label: "Zahtevki", icon: LifeBuoy },
   { href: "/admin/storitve", label: "Storitve", icon: CreditCard },
   { href: "/admin/placila", label: "Plačila", icon: WalletCards },
@@ -42,11 +44,23 @@ const adminNav: NavItem[] = [
 
 const clientNav: NavItem[] = [
   { href: "/dashboard", label: "Pregled", icon: Home },
-  { href: "/dashboard/povprasevanja", label: "Povpraševanja", icon: FileText },
+  {
+    href: "/dashboard/povprasevanja",
+    label: "Povpraševanja",
+    icon: FileText,
+    children: [
+      { href: "/dashboard/povprasevanja", label: "Nova" },
+      { href: "/dashboard/povprasevanja/kontaktirano", label: "Kontaktirano" },
+      { href: "/dashboard/povprasevanja/ponudbe-poslane", label: "Ponudbe poslane" },
+      { href: "/dashboard/povprasevanja/dogovorjeno", label: "Dogovorjeno" },
+      { href: "/dashboard/povprasevanja/zakljuceno", label: "Zaključeno" },
+      { href: "/dashboard/povprasevanja/izgubljeno", label: "Izgubljeno" },
+    ],
+  },
   { href: "/dashboard/stranke", label: "Stranke", icon: Users },
   { href: "/dashboard/sms", label: "SMS", icon: MessageSquareText },
   { href: "/dashboard/google-ocene", label: "Google ocene", icon: Star },
-  { href: "/dashboard/kampanje", label: "Kampanje", icon: Megaphone },
+  { href: "/dashboard/kampanje", label: "Kampanje", icon: Megaphone, comingSoon: true },
   { href: "/dashboard/spletna-stran", label: "Spletna stran", icon: Building2 },
   { href: "/dashboard/analitika", label: "Analitika", icon: BarChart3 },
   { href: "/dashboard/podpora", label: "Podpora", icon: LifeBuoy },
@@ -81,15 +95,35 @@ export function DashboardShell({
           <Logo markClassName="h-9 w-9 rounded-[10px]" textClassName="text-lg" />
         </Link>
         <nav className="mt-8 grid gap-1">
-          {nav.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group flex items-center gap-3 rounded-[12px] px-3 py-2.5 text-[14px] font-bold text-[#615E6B] transition hover:bg-[#F1EFF8] hover:text-[#16151D]"
-            >
-              <item.icon className="h-4 w-4 text-[#8D8999] transition group-hover:text-[#6A5AE0]" />
+          {nav.map((item) => item.comingSoon ? (
+            <div key={item.href} className="flex cursor-not-allowed items-center gap-3 rounded-[12px] px-3 py-2.5 text-[14px] font-bold text-[#AAA6B3]">
+              <item.icon className="h-4 w-4" />
               {item.label}
-            </Link>
+              <Badge className="ml-auto text-[10px]">Pride kmalu</Badge>
+            </div>
+          ) : (
+            <div key={item.href}>
+              <Link
+                href={item.href}
+                className="group flex items-center gap-3 rounded-[12px] px-3 py-2.5 text-[14px] font-bold text-[#615E6B] transition hover:bg-[#F1EFF8] hover:text-[#16151D]"
+              >
+                <item.icon className="h-4 w-4 text-[#8D8999] transition group-hover:text-[#6A5AE0]" />
+                {item.label}
+              </Link>
+              {item.children ? (
+                <div className="ml-[15px] grid gap-0.5 border-l border-[#EEEAF5] pl-[21px]">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className="rounded-[10px] px-3 py-1.5 text-[13px] font-semibold text-[#8A8694] transition hover:bg-[#F1EFF8] hover:text-[#16151D]"
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           ))}
         </nav>
       </aside>
@@ -117,7 +151,12 @@ export function DashboardShell({
             </div>
           </div>
           <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden">
-            {nav.map((item) => (
+          {nav.map((item) => item.comingSoon ? (
+              <div key={item.href} className="flex shrink-0 cursor-not-allowed items-center gap-2 rounded-[999px] border border-[#E2DFEA] bg-[#F7F6FB] px-3 py-2 text-sm font-bold text-[#AAA6B3]">
+                <item.icon className="h-4 w-4" />
+                {item.label} · Pride kmalu
+              </div>
+            ) : (
               <Link
                 key={item.href}
                 href={item.href}

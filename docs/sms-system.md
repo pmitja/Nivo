@@ -5,7 +5,6 @@ SMS sistem je ena glavnih funkcij platforme.
 Uporaba:
 
 - obvestilo obrtniku o novem povpraševanju
-- avtomatski SMS odgovor stranki
 - SMS za Google oceno
 - SMS kampanje kasneje
 
@@ -14,16 +13,16 @@ Uporaba:
 1. Stranka izpolni kontaktni obrazec.
 2. Sistem shrani lead v bazo.
 3. Sistem pošlje SMS obrtniku.
-4. Sistem pošlje avtomatski SMS stranki.
+4. Sistem pošlje potrditveno e-pošto stranki.
 5. Lead se prikaže v dashboardu.
 
 ## SMS obrtniku
 
 > Novo povpraševanje: Marko, Ljubljana, menjava strehe. Odprite dashboard za več informacij.
 
-## SMS stranki
+## E-pošta stranki
 
-> Hvala za povpraševanje. Prejeli smo vaše sporočilo in se vam javimo v najkrajšem možnem času.
+Stranka po oddaji prejme e-poštno potrdilo. SMS se stranki ob oddaji povpraševanja ne pošilja.
 
 ## SMS za Google oceno
 
@@ -39,7 +38,7 @@ Marketinški SMS se lahko pošlje samo kontaktom z `marketing_consent = true`.
 
 Ločimo servisno komunikacijo in marketinško komunikacijo.
 
-Servisna komunikacija: potrditev povpraševanja, obvestilo o terminu, zahteva za oceno po opravljeni storitvi.
+Servisna komunikacija: e-poštno potrdilo povpraševanja, obvestilo o terminu, zahteva za oceno po opravljeni storitvi.
 
 Marketinška komunikacija: akcije, popusti, sezonske ponudbe, množični SMS-i. Za to je potreben ločen marketing consent.
 
@@ -83,6 +82,6 @@ Vsak SMS mora biti shranjen v `sms_messages`.
 
 ## Provider
 
-Za MVP lahko uporabimo Twilio, Infobip, MessageBird ali slovenski SMS provider.
+Za MVP uporabljamo Twilio. SMS ob novem povpraševanju prejme samo obrtnik.
 
 Pričakovan strošek za Slovenijo: približno 0,03 € do 0,08 € na SMS.

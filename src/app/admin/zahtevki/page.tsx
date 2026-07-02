@@ -1,24 +1,37 @@
 import { addWebsiteRequestCommentAction, updateSupportTicketStatusAction, updateWebsiteRequestStatusAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { requireSuperAdmin } from "@/lib/auth";
-import { getAdminSupportTickets, getAdminWebsiteRequests } from "@/lib/dashboard-data";
+import { getAdminSupportTicketsPage, getAdminWebsiteRequestsPage } from "@/lib/dashboard-data";
 import { formatDate, priorityLabels, supportTicketStatusLabels, websiteRequestStatusLabels } from "@/lib/labels";
 
-export default async function AdminRequestsPage() {
+export default async function AdminRequestsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string; websitePage?: string; supportPage?: string }>;
+}) {
   const user = await requireSuperAdmin();
-  const [requests, tickets] = await Promise.all([getAdminWebsiteRequests(), getAdminSupportTickets()]);
+  const params = await searchParams;
+  const websitePage = Number(params.websitePage ?? "1");
+  const supportPage = Number(params.supportPage ?? "1");
+  const [websiteData, supportData] = await Promise.all([
+    getAdminWebsiteRequestsPage(Number.isFinite(websitePage) ? websitePage : 1),
+    getAdminSupportTicketsPage(Number.isFinite(supportPage) ? supportPage : 1),
+  ]);
+  const requests = websiteData.requests;
+  const tickets = supportData.tickets;
 
   return (
     <DashboardShell user={user} mode="admin" title="Zahtevki" subtitle="Spremembe spletnih strani in podporna vprašanja strank.">
-      <Tabs defaultValue="website">
+      <Tabs defaultValue={params.tab === "support" ? "support" : "website"}>
         <TabsList>
-          <TabsTrigger value="website">Spletna stran ({requests.length})</TabsTrigger>
-          <TabsTrigger value="support">Podpora ({tickets.length})</TabsTrigger>
+          <TabsTrigger value="website">Spletna stran ({websiteData.total})</TabsTrigger>
+          <TabsTrigger value="support">Podpora ({supportData.total})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="website">
@@ -91,6 +104,15 @@ export default async function AdminRequestsPage() {
             </div>
               )) : <EmptyState text="Zahtevkov za spletno stran še ni." />}
             </div>
+            <PaginationFooter
+              page={websiteData.page}
+              pageCount={websiteData.pageCount}
+              pageSize={websiteData.pageSize}
+              total={websiteData.total}
+              basePath="/admin/zahtevki"
+              pageParam="websitePage"
+              extraParams={{ tab: "website", supportPage }}
+            />
           </Panel>
         </TabsContent>
 
@@ -140,6 +162,15 @@ export default async function AdminRequestsPage() {
                 </div>
               )) : <EmptyState text="Podpornih vprašanj še ni." />}
             </div>
+            <PaginationFooter
+              page={supportData.page}
+              pageCount={supportData.pageCount}
+              pageSize={supportData.pageSize}
+              total={supportData.total}
+              basePath="/admin/zahtevki"
+              pageParam="supportPage"
+              extraParams={{ tab: "support", websitePage }}
+            />
           </Panel>
         </TabsContent>
       </Tabs>
