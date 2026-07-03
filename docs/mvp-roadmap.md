@@ -71,7 +71,7 @@ Zgraditi prvo verzijo platforme, katere jedro so spletne strani, prilagodljivi k
 ## Kasneje
 
 - AI dodatek
-- SMS obvestila in avtomatski SMS odgovor po izbiri ponudnika
+- SMS obvestilo obrtniku in e-poštno potrdilo stranki
 - SMS kampanje
 - referral kampanje
 - kampanje

@@ -16,6 +16,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://nivo.si"),
   title: "Nivo",
   description:
     "Sistem za obrtnike in lokalna podjetja: spletna stran, SMS obvestila, Google ocene in kampanje.",

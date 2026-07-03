@@ -1,7 +1,8 @@
 import { AddonPricingCards } from "@/components/addon-pricing-cards";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { PricingSwitcher } from "@/components/pricing-switcher";
-import { CtaBand, Eyebrow, PageShell, SectionHeading } from "@/components/site-shell";
+import { CtaBand, PageShell, SectionHeading } from "@/components/site-shell";
+import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 import { priceFaqs } from "@/lib/site-data";
 
 const addons = [
@@ -34,18 +35,15 @@ const addons = [
 export default function PricingPage() {
   return (
     <PageShell active="cenik">
-      <section className="relative overflow-hidden bg-[linear-gradient(180deg,#FBFAFF_0%,#fff_78%)] px-5 pb-10 pt-[68px] text-center md:px-8 md:pt-[78px]">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[linear-gradient(90deg,rgba(106,90,224,.08)_1px,transparent_1px),linear-gradient(180deg,rgba(106,90,224,.06)_1px,transparent_1px)] bg-[size:118px_118px] [mask-image:linear-gradient(180deg,black,transparent_76%)]" />
-        <div className="relative mx-auto max-w-[760px]">
-          <Eyebrow>Cenik</Eyebrow>
-          <h1 className="mt-4 text-balance text-[42px] font-extrabold leading-[1.04] tracking-[-.035em] md:text-[60px]">
-            Preprost cenik, <span className="rounded-[12px] border border-[#E2DFF0] bg-white px-2 text-[#6A6775] shadow-[0_8px_24px_rgba(20,19,29,.06)] [-webkit-box-decoration-break:clone] [box-decoration-break:clone]">brez skritih stroškov</span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-[600px] text-[18px] leading-[1.6] text-[#54515E]">
-            Spletna stran, SMS sistem, Google ocene, kampanje, gostovanje in podpora v enem paketu.
-          </p>
-        </div>
-      </section>
+      <SubpageHero
+        badge="Cenik"
+        title={
+          <>
+            Preprost cenik, <HeroHighlight>brez skritih stroškov</HeroHighlight>
+          </>
+        }
+        text="Spletna stran, SMS sistem, Google ocene, kampanje, gostovanje in podpora v enem paketu."
+      />
 
       <PricingSwitcher />
 

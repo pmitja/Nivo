@@ -62,8 +62,8 @@ export function CheckList({ items, dark = false }: { items: string[]; dark?: boo
 }
 
 export function PhonePair({
-  contractorLabel = "Vi prejmete",
-  customerLabel = "Stranka prejme",
+  contractorLabel = "Vi prejmete SMS",
+  customerLabel = "Stranka prejme e-pošto",
 }: {
   contractorLabel?: string;
   customerLabel?: string;
@@ -100,7 +100,7 @@ function PhoneCard({ label, side }: { label: string; side: "left" | "right" }) {
           </div>
         ) : null}
         <div className={cn("text-[11px] text-[#A9A6B3]", isRight ? "self-end" : "self-start")}>
-          {isRight ? "Nivo · samodejno ✓✓" : "zdaj"}
+          {isRight ? "E-poštno potrdilo · poslano ✓" : "SMS · zdaj"}
         </div>
       </div>
     </div>

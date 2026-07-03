@@ -1,5 +1,6 @@
 import { ContactForm } from "@/components/contact-form";
-import { Eyebrow, PageShell } from "@/components/site-shell";
+import { PageShell } from "@/components/site-shell";
+import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 
 const nextSteps = [
   { num: "1", title: "Brezplačen posvet", desc: "20-minutni pogovor o vašem podjetju in ciljih." },
@@ -10,14 +11,15 @@ const nextSteps = [
 export default function ContactPage() {
   return (
     <PageShell active="kontakt">
-      <section className="relative bg-[linear-gradient(180deg,#FBFAFF,#fff_90%)] px-5 py-16 pb-9 text-center md:px-8">
-        <div className="pointer-events-none absolute right-[-60px] top-[-120px] h-[460px] w-[460px] rounded-full bg-[radial-gradient(circle,#EFEBFF_0%,rgba(255,255,255,0)_70%)]" />
-        <div className="relative mx-auto max-w-[760px]">
-          <Eyebrow>Kontakt</Eyebrow>
-          <h1 className="mt-4 text-balance text-[40px] font-extrabold leading-[1.07] tracking-[-.035em] md:text-[50px]">Rezerviraj brezplačen posvet</h1>
-          <p className="mx-auto mt-[18px] max-w-[520px] text-lg leading-[1.55] text-[#54515E]">20 minut, brez obveznosti. Povejte nam, kje izgubljate stranke — predlagamo rešitev.</p>
-        </div>
-      </section>
+      <SubpageHero
+        badge="Kontakt"
+        title={
+          <>
+            Rezerviraj <HeroHighlight>brezplačen posvet</HeroHighlight>
+          </>
+        }
+        text="20 minut, brez obveznosti. Povejte nam, kje izgubljate stranke — predlagamo rešitev."
+      />
 
       <section className="bg-white px-5 pb-[88px] pt-8 md:px-8">
         <div className="mx-auto grid max-w-[1040px] items-start gap-8 lg:grid-cols-[1.15fr_.85fr]">

@@ -26,7 +26,7 @@ export function HeroVisual({
       </div>
       {!roofers ? (
         <div className="nv-float absolute bottom-4 left-0 w-[228px] rounded-[14px] bg-[#6A5AE0] px-4 py-3 text-white shadow-[0_16px_40px_rgba(106,90,224,.30)] sm:-left-[22px]">
-          <div className="text-[11px] font-bold uppercase tracking-[.04em] opacity-80">Samodejni odgovor</div>
+          <div className="text-[11px] font-bold uppercase tracking-[.04em] opacity-80">E-poštno potrdilo</div>
           <div className="mt-1.5 text-[12.5px] leading-[1.45]">
             Hvala za povpraševanje. Odgovorimo vam takoj, ko bo mogoče.
           </div>

@@ -50,8 +50,9 @@ export function CampaignsSection() {
 
 export function ReviewsSection() {
   return (
-    <section className="bg-[#16151D] px-5 py-24 text-white md:px-8">
-      <div className="mx-auto grid max-w-[1100px] items-center gap-14 lg:grid-cols-2">
+    <section className="relative overflow-hidden bg-[#16151D] px-5 py-24 text-white md:px-8">
+      <div className="pointer-events-none absolute left-1/2 top-[-200px] h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(140,123,240,.22),rgba(140,123,240,0))]" />
+      <div className="relative mx-auto grid max-w-[1100px] items-center gap-14 lg:grid-cols-2">
         <div className="lg:order-2">
           <Eyebrow className="text-[#8C7BF0]">Več zaupanja</Eyebrow>
           <h2 className="mt-3 text-[32px] font-extrabold leading-[1.14] tracking-[-.03em] md:text-[38px]">
@@ -63,17 +64,30 @@ export function ReviewsSection() {
           </p>
           <CheckList items={reviewBullets} dark />
         </div>
-        <div className="rounded-[18px] border border-white/10 bg-white/[.05] p-6">
-          <div className="flex items-center gap-3">
-            <div className="h-[46px] w-[46px] rounded-full bg-[repeating-linear-gradient(135deg,#3A3850,#3A3850_5px,#44425C_5px,#44425C_10px)]" />
-            <div>
-              <div className="text-sm font-bold">Andreja P.</div>
-              <div className="text-[13px] text-[#F5A623]">★★★★★</div>
+        <div className="flex flex-col gap-4">
+          <div className="rounded-[18px] border border-white/10 bg-white/[.06] p-6 backdrop-blur">
+            <div className="flex items-center gap-3">
+              <div className="flex h-[46px] w-[46px] items-center justify-center rounded-full bg-[#8C7BF0]/25 text-[15px] font-extrabold text-[#C9BFFA]">
+                AP
+              </div>
+              <div>
+                <div className="text-sm font-bold">Andreja P.</div>
+                <div className="text-[13px] text-[#F5A623]">★★★★★</div>
+              </div>
+              <span className="ml-auto rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[.05em] text-[#C9BFFA]">
+                Google
+              </span>
             </div>
+            <p className="mt-4 text-[15px] leading-[1.6] text-[#CFCDD9]">
+              »Hitro so se odzvali, prišli na dogovorjen termin in delo opravili profesionalno.«
+            </p>
           </div>
-          <p className="mt-4 text-[15px] leading-[1.6] text-[#CFCDD9]">
-            »Hitro so se odzvali, prišli na dogovorjen termin in delo opravili profesionalno.«
-          </p>
+          <div className="flex items-center gap-3 rounded-[16px] border border-white/10 bg-white/[.04] px-5 py-4">
+            <span className="nv-pulse h-2 w-2 shrink-0 rounded-full bg-[#7BE2B0]" />
+            <span className="text-[13.5px] font-semibold text-[#CFCDD9]">
+              Zahteva za oceno poslana stranki — po zaključenem delu
+            </span>
+          </div>
         </div>
       </div>
     </section>

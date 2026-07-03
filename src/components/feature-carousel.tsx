@@ -8,8 +8,8 @@ import {
   Globe2,
   Mail,
   Megaphone,
-  Pencil,
   RefreshCw,
+  ShieldCheck,
   Star,
   UsersRound,
   type LucideIcon,
@@ -34,8 +34,8 @@ const featureMedia: Record<string, FeatureMedia> = {
     icon: Mail,
     image: "/features/sms.webp",
   },
-  "Samodejni odgovori": {
-    alt: "Generičen prikaz avtomatiziranega odgovora s pogovornimi oblački.",
+  "E-poštno potrdilo": {
+    alt: "Generičen prikaz e-poštnega potrdila po oddanem povpraševanju.",
     icon: RefreshCw,
     image: "/features/auto-replies.webp",
   },
@@ -59,9 +59,9 @@ const featureMedia: Record<string, FeatureMedia> = {
     icon: Bot,
     image: "/features/ai-assistant.webp",
   },
-  "Spremembe spletne strani": {
-    alt: "Generičen prikaz zahtevkov za spremembe spletne strani.",
-    icon: Pencil,
+  "Popolna skrb za spletno stran": {
+    alt: "Generičen prikaz popolne skrbi za vsebino in delovanje spletne strani.",
+    icon: ShieldCheck,
     image: "/features/editor.webp",
   },
   "SEO osnova": {

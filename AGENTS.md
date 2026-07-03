@@ -36,12 +36,12 @@ Cena: 99 €/mesec ali 950 € za 12 mesecev.
 Vključuje:
 
 - profesionalna spletna stran do 5 podstrani
-- urejanje vsebine prek zahtevkov
+- popolna skrb ekipe Nivo za vsebino in delovanje spletne strani
 - gostovanje
 - vzdrževanje
 - kontaktni obrazci
-- SMS obvestila
-- avtomatski SMS odgovor stranki
+- SMS obvestilo obrtniku
+- e-poštno potrdilo stranki
 - sistem za zbiranje Google ocen
 - marketinške kampanje
 - referral kampanje
@@ -81,7 +81,7 @@ Uporabimo:
 - Drizzle ORM ali Prisma
 - Tailwind CSS za UI
 
-Payload CMS zaenkrat ne uporabljamo. Namesto CMS-a ima dashboard modul »Spremembe spletne strani«, kjer stranka odda zahtevek, interna ekipa pa spremembo ročno uredi.
+Payload CMS zaenkrat ne uporabljamo. Stranka spletne strani ne ureja sama; za vsebino, slike, posodobitve, gostovanje in tehnično vzdrževanje v celoti skrbi interna ekipa.
 
 ## Uporabniške vloge
 
@@ -132,7 +132,7 @@ Najprej zgraditi:
 3. Client dashboard overview
 4. Povpraševanja
 5. SMS obvestilo obrtniku
-6. Avtomatski SMS odgovor stranki
+6. E-poštno potrdilo stranki
 7. Google review request SMS
 8. Zahtevki za spremembe spletne strani
 9. Osnovni CRM za stranke

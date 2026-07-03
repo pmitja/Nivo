@@ -44,6 +44,7 @@ export function SiteFooter() {
           links={[
             ["Kako deluje", "/kako-deluje"],
             ["Cenik", "/cenik"],
+            ["Imenik izvajalcev", "/izvajalci"],
             ["Kontakt", "/kontakt"],
           ]}
         />

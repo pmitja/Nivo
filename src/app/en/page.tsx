@@ -119,10 +119,10 @@ export default function EnglishLandingPage() {
             <Eyebrow>SMS system</Eyebrow>
             <h2 className="mt-3.5 text-[36px] font-extrabold leading-[1.12] tracking-[-.03em] md:text-[42px]">No lead slips through the cracks</h2>
             <p className="mt-[18px] text-[17px] leading-[1.6] text-[#54515E]">
-              {"The moment a customer submits your form, the system fires off two texts — one to them, one to you. You're on the job site; the system is already replying for you."}
+              {"The moment a customer submits your form, you get an SMS alert and they receive an email confirmation. You're on the job site; the system keeps everyone informed."}
             </p>
           </div>
-          <PhonePair contractorLabel="You get" customerLabel="Customer gets" />
+          <PhonePair contractorLabel="You get an SMS" customerLabel="Customer gets an email" />
         </div>
       </section>
 

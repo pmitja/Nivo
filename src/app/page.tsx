@@ -1,41 +1,26 @@
 import { FaqAccordion } from "@/components/faq-accordion";
 import { CtaBand, Eyebrow, PageShell, SectionHeading } from "@/components/site-shell";
 import { CheckList, PhonePair } from "@/components/feature-sections";
-import { FeatureCarousel } from "@/components/feature-carousel";
-import { PromoVideoPlayer } from "@/components/promo-video-player";
-import { Card, CardContent } from "@/components/ui/card";
 import { HeroSection } from "@/components/home/hero-section";
+import { StatsBand } from "@/components/home/stats-band";
+import { FeatureBento } from "@/components/home/feature-bento";
+import { StepsSection } from "@/components/home/steps-section";
 import { ProblemSection } from "@/components/home/problem-section";
 import { CampaignsSection, ReviewsSection } from "@/components/home/campaigns-section";
 import { CompareSection } from "@/components/home/compare-section";
 import { PricingSection } from "@/components/home/pricing-section";
-import { aiQuestions, cmsItems, faqsLanding, features, smsBullets, steps } from "@/lib/site-data";
+import { aiQuestions, cmsItems, faqsLanding, smsBullets } from "@/lib/site-data";
 
 export default function Home() {
   return (
     <PageShell>
       <HeroSection />
 
-      <section className="bg-white px-5 pb-20 pt-4 md:px-8">
-        <div className="mx-auto max-w-[920px]">
-          <div className="relative aspect-video overflow-hidden rounded-[22px] border border-[#ECEAF3] bg-[repeating-linear-gradient(135deg,#ECEAF5,#ECEAF5_11px,#F4F3FA_11px,#F4F3FA_22px)] shadow-[0_30px_70px_rgba(20,19,29,.10)]">
-            <PromoVideoPlayer />
-          </div>
-        </div>
-      </section>
+      <StatsBand />
 
       <ProblemSection />
 
-      <section id="storitve" className="bg-white px-5 py-24 md:px-8">
-        <div className="mx-auto max-w-[1200px]">
-          <SectionHeading
-            eyebrow="Rešitev"
-            title="Vse, kar potrebujete za več povpraševanj — brez kompliciranja"
-            text="Nivo združuje spletno stran, obvestila, avtomatizacijo, Google ocene, kampanje in urejanje vsebine v en enostaven sistem."
-          />
-          <FeatureCarousel features={features} />
-        </div>
-      </section>
+      <FeatureBento />
 
       <section className="bg-[linear-gradient(180deg,#FBFAFF,#F6F4FC)] px-5 py-24 md:px-8">
         <div className="mx-auto grid max-w-[1100px] items-center gap-14 lg:grid-cols-[.92fr_1.08fr]">
@@ -104,43 +89,22 @@ export default function Home() {
           </div>
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <Eyebrow>Spremembe spletne strani</Eyebrow>
+              <Eyebrow>Popolna skrb za spletno stran</Eyebrow>
               <span className="rounded-full border border-[#DCD6FF] bg-white px-3 py-1.5 text-xs font-extrabold uppercase tracking-[.06em] text-[#6A5AE0]">
-                Stage 2
+                Vključeno
               </span>
             </div>
             <h2 className="mt-3 text-[32px] font-extrabold leading-[1.14] tracking-[-.03em] md:text-[38px]">
-              Spremembe prek zahtevka
+              Vi delate. Za spletno stran skrbimo mi.
             </h2>
             <p className="mt-4 text-[16.5px] leading-[1.6] text-[#54515E]">
-              V dashboardu oddate zahtevek za spremembo, ekipa Nivo pa ročno uredi vsebino, slike, storitve ali kontaktne podatke.
+              Poskrbimo za vsebino, slike, posodobitve, gostovanje in tehnično vzdrževanje. S spletno stranjo se vam ni treba ukvarjati.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="bg-white px-5 py-24 md:px-8">
-        <div className="mx-auto max-w-[1100px]">
-          <SectionHeading
-            eyebrow="Kako deluje"
-            title="Od posveta do delujočega sistema"
-            text="Vse postavimo namesto vas, vi pa dobite jasen sistem za odziv na povpraševanja."
-          />
-          <div className="mt-12 grid gap-5 lg:grid-cols-3">
-            {steps.map((step) => (
-              <Card key={step.num}>
-                <CardContent className="p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#6A5AE0] text-[21px] font-extrabold text-white shadow-[0_8px_18px_rgba(106,90,224,.30)]">
-                    {step.num}
-                  </div>
-                  <h3 className="mt-[22px] text-xl font-bold tracking-[-.01em]">{step.title}</h3>
-                  <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#6A6775]">{step.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <StepsSection />
 
       <CompareSection />
 

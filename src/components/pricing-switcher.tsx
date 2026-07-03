@@ -47,10 +47,10 @@ const plans = {
 const planFeatures = [
   "Spletna stran (do 5 podstrani)",
   "Gostovanje",
-  "Zahtevki za spremembe",
+  "Popolna skrb za spletno stran",
   "Kontaktni obrazci",
   "SMS sistem",
-  "Avtomatski odgovori",
+  "E-poštna potrdila strankam",
   "Sistem za ocene",
   "Marketinške kampanje",
   "Kampanje za priporočila",

@@ -55,7 +55,7 @@ function MainPlanCard() {
           <span className="text-[17px] font-medium opacity-85">/ mesec</span>
         </div>
         <p className="mt-1.5 text-[14.5px] text-white/80">
-          Vključuje spletno stran, sistem za povpraševanja, SMS obvestila, osnovni CRM in urejanje vsebine.
+          Vključuje spletno stran, popolno skrb zanjo, sistem za povpraševanja, SMS obvestila in osnovni CRM.
         </p>
         <div className="mt-6 grid gap-x-4 gap-y-3 sm:grid-cols-2">
           {planFeaturesLanding.map((feature) => (

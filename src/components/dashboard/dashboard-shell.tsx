@@ -1,71 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import {
-  BarChart3,
-  Building2,
-  CreditCard,
-  FileText,
-  Home,
-  LifeBuoy,
-  Megaphone,
-  MessageSquareText,
-  Settings,
-  Star,
-  Users,
-  WalletCards,
-} from "lucide-react";
 import { logoutAction } from "@/app/prijava/actions";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { MobileTabs, SidebarNav } from "@/components/dashboard/dashboard-nav";
 import { cn } from "@/lib/utils";
 import type { AuthUser } from "@/lib/auth";
-
-type NavItem = {
-  href: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  comingSoon?: boolean;
-  children?: { href: string; label: string }[];
-};
-
-const adminNav: NavItem[] = [
-  { href: "/admin", label: "Pregled", icon: Home },
-  { href: "/admin/stranke", label: "Stranke", icon: Building2 },
-  { href: "/admin/povprasevanja", label: "Povpraševanja", icon: FileText },
-  { href: "/admin/sms-log", label: "SMS log", icon: MessageSquareText },
-  { href: "/admin/google-ocene", label: "Google ocene", icon: Star },
-  { href: "/admin/kampanje", label: "Kampanje", icon: Megaphone, comingSoon: true },
-  { href: "/admin/zahtevki", label: "Zahtevki", icon: LifeBuoy },
-  { href: "/admin/storitve", label: "Storitve", icon: CreditCard },
-  { href: "/admin/placila", label: "Plačila", icon: WalletCards },
-  { href: "/admin/nastavitve", label: "Nastavitve", icon: Settings },
-];
-
-const clientNav: NavItem[] = [
-  { href: "/dashboard", label: "Pregled", icon: Home },
-  {
-    href: "/dashboard/povprasevanja",
-    label: "Povpraševanja",
-    icon: FileText,
-    children: [
-      { href: "/dashboard/povprasevanja", label: "Nova" },
-      { href: "/dashboard/povprasevanja/kontaktirano", label: "Kontaktirano" },
-      { href: "/dashboard/povprasevanja/ponudbe-poslane", label: "Ponudbe poslane" },
-      { href: "/dashboard/povprasevanja/dogovorjeno", label: "Dogovorjeno" },
-      { href: "/dashboard/povprasevanja/zakljuceno", label: "Zaključeno" },
-      { href: "/dashboard/povprasevanja/izgubljeno", label: "Izgubljeno" },
-    ],
-  },
-  { href: "/dashboard/stranke", label: "Stranke", icon: Users },
-  { href: "/dashboard/sms", label: "SMS", icon: MessageSquareText },
-  { href: "/dashboard/google-ocene", label: "Google ocene", icon: Star },
-  { href: "/dashboard/kampanje", label: "Kampanje", icon: Megaphone, comingSoon: true },
-  { href: "/dashboard/spletna-stran", label: "Spletna stran", icon: Building2 },
-  { href: "/dashboard/analitika", label: "Analitika", icon: BarChart3 },
-  { href: "/dashboard/podpora", label: "Podpora", icon: LifeBuoy },
-  { href: "/dashboard/nastavitve", label: "Nastavitve", icon: Settings },
-];
 
 export function DashboardShell({
   user,
@@ -80,52 +21,42 @@ export function DashboardShell({
   subtitle?: string;
   children: React.ReactNode;
 }) {
-  const nav = mode === "admin" ? adminNav : clientNav;
-
   async function signOut() {
     "use server";
     await logoutAction();
     redirect("/prijava");
   }
 
+  const initials = user.name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
     <div className="min-h-screen bg-[#F7F6FB] text-[#16151D]">
-      <aside className="fixed inset-y-0 left-0 z-20 hidden w-[264px] border-r border-[#E8E5EF] bg-white px-4 py-5 lg:block">
+      <aside className="fixed inset-y-0 left-0 z-20 hidden w-[264px] flex-col border-r border-[#E8E5EF] bg-white px-4 py-5 lg:flex">
         <Link href={mode === "admin" ? "/admin" : "/dashboard"} className="flex items-center gap-3 px-2">
           <Logo markClassName="h-9 w-9 rounded-[10px]" textClassName="text-lg" />
         </Link>
-        <nav className="mt-8 grid gap-1">
-          {nav.map((item) => item.comingSoon ? (
-            <div key={item.href} className="flex cursor-not-allowed items-center gap-3 rounded-[12px] px-3 py-2.5 text-[14px] font-bold text-[#AAA6B3]">
-              <item.icon className="h-4 w-4" />
-              {item.label}
-              <Badge className="ml-auto text-[10px]">Pride kmalu</Badge>
-            </div>
-          ) : (
-            <div key={item.href}>
-              <Link
-                href={item.href}
-                className="group flex items-center gap-3 rounded-[12px] px-3 py-2.5 text-[14px] font-bold text-[#615E6B] transition hover:bg-[#F1EFF8] hover:text-[#16151D]"
-              >
-                <item.icon className="h-4 w-4 text-[#8D8999] transition group-hover:text-[#6A5AE0]" />
-                {item.label}
-              </Link>
-              {item.children ? (
-                <div className="ml-[15px] grid gap-0.5 border-l border-[#EEEAF5] pl-[21px]">
-                  {item.children.map((child) => (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      className="rounded-[10px] px-3 py-1.5 text-[13px] font-semibold text-[#8A8694] transition hover:bg-[#F1EFF8] hover:text-[#16151D]"
-                    >
-                      {child.label}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </nav>
+        <div className="flex-1 overflow-y-auto">
+          <SidebarNav mode={mode} />
+        </div>
+        <div className="mt-4 rounded-[16px] bg-[linear-gradient(160deg,#6A5AE0,#4B3BC9)] p-4 text-white">
+          <div className="text-[13px] font-extrabold">Potrebujete pomoč?</div>
+          <p className="mt-1 text-[12px] leading-[1.45] text-white/80">
+            {mode === "admin" ? "Interna dokumentacija in postopki." : "Pišite nam in uredimo namesto vas."}
+          </p>
+          {mode === "client" ? (
+            <Link
+              href="/dashboard/podpora"
+              className="mt-3 inline-flex rounded-[9px] bg-white px-3 py-1.5 text-[12px] font-extrabold text-[#4B3BC9]"
+            >
+              Odpri podporo
+            </Link>
+          ) : null}
+        </div>
       </aside>
 
       <div className="lg:pl-[264px]">
@@ -139,6 +70,9 @@ export function DashboardShell({
               {subtitle ? <p className="mt-1 text-[15px] text-[#65616F]">{subtitle}</p> : null}
             </div>
             <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[linear-gradient(160deg,#6A5AE0,#4B3BC9)] text-[13px] font-extrabold text-white">
+                {initials}
+              </div>
               <div className="hidden text-right sm:block">
                 <div className="text-sm font-extrabold">{user.name}</div>
                 <div className="text-xs font-semibold text-[#827E8D]">{user.email}</div>
@@ -150,23 +84,7 @@ export function DashboardShell({
               </form>
             </div>
           </div>
-          <nav className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden">
-          {nav.map((item) => item.comingSoon ? (
-              <div key={item.href} className="flex shrink-0 cursor-not-allowed items-center gap-2 rounded-[999px] border border-[#E2DFEA] bg-[#F7F6FB] px-3 py-2 text-sm font-bold text-[#AAA6B3]">
-                <item.icon className="h-4 w-4" />
-                {item.label} · Pride kmalu
-              </div>
-            ) : (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex shrink-0 items-center gap-2 rounded-[999px] border border-[#E2DFEA] bg-white px-3 py-2 text-sm font-bold text-[#5F5B68]"
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          <MobileTabs mode={mode} />
         </header>
         <main className="px-5 py-6 md:px-8 md:py-8">{children}</main>
       </div>
@@ -186,8 +104,18 @@ export function StatCard({
   tone?: "default" | "green" | "amber" | "red";
 }) {
   return (
-    <div className="rounded-[18px] border border-[#E8E5EF] bg-white p-5 shadow-[0_10px_30px_rgba(20,19,29,.04)]">
-      <div className="text-sm font-bold text-[#777382]">{label}</div>
+    <div className="rounded-[20px] border border-[#E8E5EF] bg-white p-5 shadow-[0_10px_30px_rgba(20,19,29,.04)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CFC9F8] hover:shadow-[0_18px_40px_rgba(106,90,224,.10)]">
+      <div className="flex items-center gap-2">
+        <span
+          className={cn("h-2 w-2 rounded-full", {
+            "bg-[#6A5AE0]": tone === "default",
+            "bg-[#22B07D]": tone === "green",
+            "bg-[#F5A623]": tone === "amber",
+            "bg-[#E5484D]": tone === "red",
+          })}
+        />
+        <div className="text-sm font-bold text-[#777382]">{label}</div>
+      </div>
       <div
         className={cn("mt-3 text-[30px] font-extrabold tracking-[-.03em]", {
           "text-[#167E53]": tone === "green",
