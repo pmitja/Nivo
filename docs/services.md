@@ -2,7 +2,7 @@
 
 ## Osnovni paket — 99 €/mesec ali 950 € za 12 mesecev
 
-Vključuje profesionalno spletno stran do 5 podstrani, urejanje vsebine prek zahtevkov, gostovanje, vzdrževanje, kontaktne obrazce, SMS obvestila, avtomatski SMS odgovor stranki, sistem za zbiranje Google ocen, marketinške kampanje, referral kampanje, analitiko in podporo.
+Vključuje profesionalno spletno stran do 5 podstrani, popolno skrb ekipe Nivo za vsebino in delovanje strani, gostovanje, vzdrževanje, kontaktne obrazce, SMS obvestilo obrtniku, e-poštno potrdilo stranki, sistem za zbiranje Google ocen, marketinške kampanje, referral kampanje, analitiko in podporo.
 
 Brez vezave. Če stranka odpove, se spletna stran odstrani ali deaktivira, dashboard se deaktivira, avtomatizacije se izklopijo in SMS sistem se izklopi.
 
@@ -16,7 +16,7 @@ Spletna stran mora imeti jasen hero, CTA gumb, kontaktni obrazec, seznam storite
 
 Obrazec zbira ime, telefon, email, lokacijo, tip storitve, sporočilo, soglasje za obdelavo podatkov in opcijsko marketinško soglasje.
 
-Ko je obrazec oddan, se lead shrani v dashboard, obrtnik prejme SMS, stranka prejme avtomatski SMS in lead se prikaže v modulu Povpraševanja.
+Ko je obrazec oddan, se povpraševanje shrani v dashboard, obrtnik prejme SMS, stranka prejme e-poštno potrdilo in povpraševanje se prikaže v modulu Povpraševanja.
 
 ## AI dodatek — pride kmalu
 

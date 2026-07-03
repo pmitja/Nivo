@@ -11,19 +11,20 @@ import { roofers } from "@/lib/site-data";
 export default function RoofersPage() {
   return (
     <PageShell>
-      <section className="relative bg-[linear-gradient(180deg,#FBFAFF_0%,#fff_70%)]">
-        <div className="pointer-events-none absolute right-[-80px] top-[-120px] h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,#EFEBFF_0%,rgba(255,255,255,0)_70%)]" />
+      <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#F3F0FF_0%,#FAF9FE_58%,#fff_100%)]">
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-full bg-[linear-gradient(90deg,rgba(106,90,224,.07)_1px,transparent_1px),linear-gradient(180deg,rgba(106,90,224,.05)_1px,transparent_1px)] bg-[size:96px_96px] [mask-image:linear-gradient(180deg,black,transparent_82%)]" />
+        <div className="pointer-events-none absolute right-[-80px] top-[-120px] -z-10 h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,rgba(106,90,224,.14)_0%,rgba(255,255,255,0)_70%)]" />
         <div className="relative mx-auto grid max-w-[1200px] items-center gap-12 px-5 py-[60px] pb-20 md:px-8 lg:grid-cols-[1.05fr_.95fr]">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#E8E6F0] bg-white px-[13px] py-1.5 text-[13px] font-semibold text-[#56535F] shadow-[0_2px_8px_rgba(20,19,29,.04)]">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#E4E0F4] bg-white px-[13px] py-1.5 text-[13px] font-semibold text-[#56535F] shadow-[0_2px_8px_rgba(20,19,29,.05)]">
               <span className="nv-pulse h-[7px] w-[7px] rounded-full bg-[#22B07D]" />
               Za krovce in krovska podjetja
             </div>
             <h1 className="mt-[22px] text-balance text-[42px] font-extrabold leading-[1.05] tracking-[-.035em] md:text-[54px]">
-              Spletna stran za krovce, ki polni vaš koledar
+              Spletna stran za krovce, ki <span className="rounded-[14px] bg-[#E7E1FE] px-2.5 text-[#5A48D6] [-webkit-box-decoration-break:clone] [box-decoration-break:clone]">polni vaš koledar</span>
             </h1>
             <p className="mt-5 max-w-[490px] text-[18.5px] leading-[1.55] text-[#54515E]">
-              Profesionalna stran, takojšnji SMS odgovori in več Google ocen — da vas najdejo lastniki streh v vaši okolici.
+              Profesionalna stran, SMS obvestila za vas, e-poštna potrdila za stranke in več Google ocen — da vas najdejo lastniki streh v vaši okolici.
             </p>
             <p className="mt-2.5 text-[18.5px] font-semibold leading-[1.5]">
               Vse za samo <span className="text-[#6A5AE0]">99 € na mesec.</span>

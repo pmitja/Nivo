@@ -3,7 +3,9 @@ import { ArrowRight } from "lucide-react";
 
 import { FaqAccordion } from "@/components/faq-accordion";
 import { CtaBand, Eyebrow, PageShell, SectionHeading } from "@/components/site-shell";
-import { BrowserMockup, PhonePair } from "@/components/feature-sections";
+import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
+import { PhonePair } from "@/components/feature-sections";
+import { PromoVideoPlayer } from "@/components/promo-video-player";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { flow, processFaqs, processSteps, setup } from "@/lib/site-data";
@@ -11,27 +13,24 @@ import { flow, processFaqs, processSteps, setup } from "@/lib/site-data";
 export default function HowItWorksPage() {
   return (
     <PageShell active="kako">
-      <section className="relative bg-[linear-gradient(180deg,#FBFAFF,#fff_75%)] px-5 py-[72px] pb-[60px] text-center md:px-8">
-        <div className="pointer-events-none absolute right-[-60px] top-[-120px] h-[480px] w-[480px] rounded-full bg-[radial-gradient(circle,#EFEBFF_0%,rgba(255,255,255,0)_70%)]" />
-        <div className="relative mx-auto max-w-[780px]">
-          <Eyebrow>Kako deluje</Eyebrow>
-          <h1 className="mt-4 text-balance text-[40px] font-extrabold leading-[1.07] tracking-[-.035em] md:text-[52px]">
-            Od pogovora do prvih povpraševanj v 10 dneh
-          </h1>
-          <p className="mx-auto mt-5 max-w-[600px] text-[18.5px] leading-[1.55] text-[#54515E]">
-            Postavimo sistem, ki stranke obvesti, vas opozori in poskrbi, da nobeno povpraševanje ne ostane pozabljeno.
-          </p>
-        </div>
-      </section>
+      <SubpageHero
+        badge="Kako deluje"
+        title={
+          <>
+            Od pogovora do prvih povpraševanj v <HeroHighlight>10 dneh</HeroHighlight>
+          </>
+        }
+        text="Postavimo sistem, ki stranki pošlje e-poštno potrdilo, vas opozori z SMS-om in poskrbi, da nobeno povpraševanje ne ostane pozabljeno."
+      />
 
       <section className="bg-white px-5 py-10 pb-[88px] md:px-8">
         <div className="mx-auto grid max-w-[1100px] gap-5 lg:grid-cols-3">
-          {processSteps.map((step) => (
-            <Card key={step.num}>
+          {processSteps.map((step, i) => (
+            <Card key={step.num} className="rounded-[22px] border-[#ECEAF3] bg-[#FBFAFF] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CFC9F8] hover:bg-white hover:shadow-[0_24px_56px_rgba(106,90,224,.12)]">
               <CardContent className="p-8">
                 <div className="flex items-center justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-[#6A5AE0] text-[21px] font-extrabold text-white shadow-[0_8px_18px_rgba(106,90,224,.30)]">{step.num}</div>
-                  <span className="rounded-full bg-[#EFEBFF] px-3 py-1.5 font-mono text-xs font-medium text-[#6A5AE0]">{step.time}</span>
+                  <div className="flex h-11 w-11 items-center justify-center rounded-[13px] bg-[#6A5AE0] text-[15px] font-extrabold text-white shadow-[0_8px_18px_rgba(106,90,224,.30)]">0{i + 1}</div>
+                  <span className="rounded-full border border-[#DCD6FF] bg-white px-3 py-1.5 font-mono text-xs font-medium text-[#6A5AE0]">{step.time}</span>
                 </div>
                 <h3 className="mt-[22px] text-xl font-bold tracking-[-.01em]">{step.title}</h3>
                 <p className="mt-2.5 text-[14.5px] leading-[1.6] text-[#6A6775]">{step.desc}</p>
@@ -43,7 +42,7 @@ export default function HowItWorksPage() {
 
       <section className="bg-[linear-gradient(180deg,#FBFAFF,#F6F4FC)] px-5 py-[88px] md:px-8">
         <div className="mx-auto max-w-[1100px]">
-          <SectionHeading eyebrow="SMS sistem" title="Pot vsakega povpraševanja" text="Od oddanega obrazca do prevzetega posla — samodejno, v nekaj sekundah." />
+          <SectionHeading eyebrow="Obvestila" title="Pot vsakega povpraševanja" text="Od oddanega obrazca do e-poštnega potrdila stranki in SMS obvestila obrtniku." />
           <div className="mt-[46px] grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
             {flow.map((item) => (
               <Card key={item.step}>
@@ -57,7 +56,7 @@ export default function HowItWorksPage() {
             ))}
           </div>
           <div className="mt-6">
-            <PhonePair contractorLabel="Izvajalec prejme" customerLabel="Stranka prejme" />
+            <PhonePair contractorLabel="Izvajalec prejme SMS" customerLabel="Stranka prejme e-pošto" />
           </div>
         </div>
       </section>
@@ -94,7 +93,19 @@ export default function HowItWorksPage() {
 
       <section className="bg-[#FBFAFF] px-5 py-[88px] md:px-8">
         <div className="mx-auto grid max-w-[1080px] items-center gap-12 lg:grid-cols-[1.15fr_.85fr]">
-          <BrowserMockup label="[ predogled: sistem za povpraševanja ]" />
+          <div className="overflow-hidden rounded-[18px] border border-[#E4E2EC] bg-white shadow-[0_30px_70px_rgba(38,28,92,.16)]">
+            <div className="flex items-center gap-[7px] border-b border-[#ECEAF3] bg-[#F6F5FA] px-4 py-3">
+              <span className="h-[11px] w-[11px] rounded-full bg-[#E5867E]" />
+              <span className="h-[11px] w-[11px] rounded-full bg-[#E8C16B]" />
+              <span className="h-[11px] w-[11px] rounded-full bg-[#7FC08C]" />
+              <div className="ml-2.5 flex-1 rounded-[7px] border border-[#E4E2EC] bg-white px-3 py-1.5 font-mono text-xs text-[#8C8898]">
+                nivo.si — sistem za povpraševanja
+              </div>
+            </div>
+            <div className="relative aspect-video bg-[#EDE8F8]">
+              <PromoVideoPlayer />
+            </div>
+          </div>
           <div>
             <Eyebrow>Predogled</Eyebrow>
             <h2 className="mt-3 text-[34px] font-extrabold leading-[1.15] tracking-[-.03em]">Sistem je pripravljen, preden ga potrebujete</h2>

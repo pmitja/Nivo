@@ -37,13 +37,13 @@ Za marketinške SMS kampanje se lahko uporabljajo samo kontakti z `marketing_con
 
 ## SMS
 
-SMS modul omogoča pregled SMS zgodovine, avtomatski SMS ob novem povpraševanju, avtomatski SMS odgovor stranki, SMS za Google oceno in kasneje SMS kampanje.
+SMS modul omogoča pregled SMS zgodovine, SMS obvestilo obrtniku ob novem povpraševanju, SMS za Google oceno in kasneje SMS kampanje. Stranka po oddaji povpraševanja prejme e-poštno potrdilo.
 
 Primer SMS obrtniku:
 
 > Novo povpraševanje: Marko, Ljubljana, menjava strehe. Odprite dashboard za več informacij.
 
-Primer SMS stranki:
+Primer e-poštnega potrdila stranki:
 
 > Hvala za povpraševanje. Prejeli smo vaše sporočilo in se vam javimo v najkrajšem možnem času.
 
@@ -65,9 +65,9 @@ Za MVP naj stranka vidi aktivne kampanje, pripravljene kampanje, rezultate, mož
 
 ## Spletna stran
 
-Payload CMS zaenkrat ne uporabljamo. Stranka ne ureja spletne strani direktno.
+Payload CMS zaenkrat ne uporabljamo. Stranka spletne strani ne ureja sama; za vsebino in tehnično delovanje v celoti skrbi ekipa Nivo.
 
-Modul: Spremembe spletne strani.
+Modul omogoča, da stranka ekipi Nivo preprosto sporoči novo željo ali podatek, izvedbo pa v celoti prevzame ekipa.
 
 Opis:
 

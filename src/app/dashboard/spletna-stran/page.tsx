@@ -17,11 +17,11 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
   const data = await getClientWebsiteRequestsPage(user.companyId!, Number.isFinite(page) ? page : 1);
 
   return (
-    <DashboardShell user={user} mode="client" title="Spletna stran" subtitle="Spremembe spletne strani uredimo na podlagi zahtevka.">
+    <DashboardShell user={user} mode="client" title="Spletna stran" subtitle="Za vašo spletno stran v celoti skrbi ekipa Nivo.">
       <div className="grid gap-6 xl:grid-cols-[.9fr_1.1fr]">
-        <Panel title="Nov zahtevek">
+        <Panel title="Sporočite nam spremembo">
           <p className="mb-4 text-sm leading-6 text-[#666271]">
-            Napišite, kaj želite spremeniti na spletni strani. Naša ekipa bo spremembo uredila in vas obvestila, ko bo objavljena.
+            Samo napišite, kaj potrebujete. Naša ekipa poskrbi za vsebino, slike in tehnično izvedbo ter vas obvesti, ko je sprememba objavljena.
           </p>
           <form action={createWebsiteRequestAction} className="grid gap-3">
             <div className="grid gap-2">
@@ -87,7 +87,7 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
                   </form>
                 </div>
               </div>
-            )) : <EmptyState text="Oddajte prvi zahtevek za spremembo spletne strani." />}
+            )) : <EmptyState text="Ko boste kaj potrebovali, nam to preprosto sporočite tukaj." />}
           </div>
           <PaginationFooter
             page={data.page}

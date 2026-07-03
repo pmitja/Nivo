@@ -6,7 +6,7 @@ import { Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { navLinks } from '@/lib/site-data';
 
-export function MobileNav({ active }: { active?: string }) {
+export function MobileNav({ active, dashboardHref }: { active?: string; dashboardHref?: string | null }) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export function MobileNav({ active }: { active?: string }) {
             </Link>
           ))}
           <Link
-            href="/prijava"
+            href={dashboardHref ?? '/prijava'}
             onClick={() => setOpen(false)}
             className={cn(
               'pt-4 text-[16px] font-semibold text-[#16151D] no-underline transition-all duration-300 hover:text-[#6A5AE0]',
@@ -73,7 +73,7 @@ export function MobileNav({ active }: { active?: string }) {
             )}
             style={{ transitionDelay: open ? `${50 + navLinks.length * 40}ms` : '0ms' }}
           >
-            Prijava
+            {dashboardHref ? 'Sistem' : 'Prijava'}
           </Link>
         </div>
       </div>

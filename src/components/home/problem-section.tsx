@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-import { Eyebrow } from "@/components/site-shell";
+import { Eyebrow } from "@/components/site-primitives";
 import { cn } from "@/lib/utils";
 import { painsCards } from "@/lib/site-data";
 

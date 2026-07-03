@@ -2,6 +2,7 @@ export const navLinks = [
   { label: "Storitve", href: "/storitve", key: "storitve" },
   { label: "Kako deluje", href: "/kako-deluje", key: "kako" },
   { label: "Cenik", href: "/cenik", key: "cenik" },
+  { label: "Izvajalci", href: "/izvajalci", key: "izvajalci" },
   { label: "Kontakt", href: "/kontakt", key: "kontakt" },
 ];
 
@@ -69,8 +70,8 @@ export const features = [
   },
   {
     icon: "↺",
-    title: "Samodejni odgovori",
-    desc: "Stranka takoj prejme potrditev, da ste prejeli povpraševanje in ji boste odgovorili.",
+    title: "E-poštno potrdilo",
+    desc: "Stranka po oddaji povpraševanja takoj prejme potrdilo po e-pošti.",
   },
   {
     icon: "★",
@@ -94,8 +95,8 @@ export const features = [
   },
   {
     icon: "✎",
-    title: "Spremembe spletne strani",
-    desc: "Oddate zahtevek, ekipa Nivo pa ročno uredi vsebino, slike ali kontaktne podatke.",
+    title: "Popolna skrb za spletno stran",
+    desc: "Za vsebino, slike, posodobitve in tehnično vzdrževanje v celoti skrbi ekipa Nivo.",
   },
   {
     icon: "◎",
@@ -105,8 +106,8 @@ export const features = [
 ];
 
 export const smsBullets = [
-  "SMS obvestilo ob vsakem novem povpraševanju",
-  "Samodejni odgovor stranki",
+  "SMS obrtniku ob vsakem novem povpraševanju",
+  "E-poštno potrdilo stranki",
   "Manj zamujenih kontaktov",
   "Hitrejši odziv kot konkurenca",
 ];
@@ -136,14 +137,14 @@ export const aiQuestions = [
 ];
 
 export const cmsItems = [
-  "Zahtevek za spremembo",
+  "Vsebina in besedila",
   "Slike in reference",
-  "Storitve",
+  "Storitve in ponudba",
   "Kontaktni podatki",
-  "Delovni čas",
-  "Lokacije",
-  "Pogosta vprašanja",
-  "Objava po pregledu",
+  "Tehnično vzdrževanje",
+  "Varnostne posodobitve",
+  "Mobilna optimizacija",
+  "Zanesljivo delovanje",
 ];
 
 export const steps = [
@@ -160,7 +161,7 @@ export const steps = [
   {
     num: "3",
     title: "Začnete prejemati povpraševanja",
-    desc: "Sistem začne delovati. Vi dobite obvestila, stranke dobijo odgovore, vse je na enem mestu.",
+    desc: "Sistem začne delovati. Vi dobite SMS obvestila, stranke e-poštna potrdila, vse pa je na enem mestu.",
   },
 ];
 
@@ -177,22 +178,22 @@ export const compareOld = [
 export const compareNew = [
   "Stranka odda povpraševanje",
   "Takoj prejmete SMS",
-  "Stranka dobi samodejni odgovor",
+  "Stranka dobi e-poštno potrdilo",
   "Povpraševanje se shrani",
   "Lahko pošljete kampanje",
   "Lažje zbirate Google ocene",
-  "Spremembe oddate kot zahtevek",
+  "Za spletno stran skrbimo mi",
 ];
 
 export const planFeaturesLanding = [
   "Profesionalna spletna stran",
   "Kontaktni obrazci",
   "SMS obvestila",
-  "Samodejni odgovori",
+  "E-poštna potrdila strankam",
   "Pregled povpraševanj",
   "Google review sistem",
   "Kampanje za stranke",
-  "Zahtevki za spremembe",
+  "Popolna skrb za spletno stran",
   "Gostovanje",
   "Tehnično vzdrževanje",
   "Osnovna SEO priprava",
@@ -232,8 +233,8 @@ export const faqsLanding = [
     a: "Da. V mesečno ceno je vključena profesionalna spletna stran, postavitev sistema, gostovanje, vzdrževanje in osnovne funkcije za povpraševanja.",
   },
   {
-    q: "Kako uredim spremembe na spletni strani?",
-    a: "V dashboardu oddate zahtevek za spremembo. Ekipa Nivo nato ročno uredi vsebino, slike, storitve ali kontaktne podatke.",
+    q: "Kdo skrbi za spletno stran?",
+    a: "Za spletno stran v celoti skrbi ekipa Nivo — od vsebine in slik do gostovanja, posodobitev in tehničnega vzdrževanja. Vam se s tem ni treba ukvarjati.",
   },
   {
     q: "Ali potrebujem tehnično znanje?",
@@ -241,7 +242,7 @@ export const faqsLanding = [
   },
   {
     q: "Kaj se zgodi, ko nekdo pošlje povpraševanje?",
-    a: "Vi prejmete SMS obvestilo, stranka prejme samodejni odgovor, povpraševanje pa se shrani v sistem.",
+    a: "Vi prejmete SMS obvestilo, stranka prejme e-poštno potrdilo, povpraševanje pa se shrani v sistem.",
   },
   {
     q: "Za koga je to primerno?",
@@ -256,10 +257,10 @@ export const faqsLanding = [
 export const includedServices = [
   { title: "Spletna stran", desc: "Do 5 podstrani, profesionalen dizajn, mobilna optimizacija." },
   { title: "Gostovanje", desc: "Hitro in zanesljivo gostovanje — brez vaših skrbi." },
-  { title: "Zahtevki za spremembe", desc: "Spremembe oddate v dashboardu, ekipa Nivo pa jih uredi za vas." },
+  { title: "Popolna skrb za spletno stran", desc: "Vsebino, posodobitve in tehnične podrobnosti uredimo mi." },
   { title: "Kontaktni obrazci", desc: "Povpraševanja prihajajo naravnost do vas." },
   { title: "SMS obvestila", desc: "Takoj veste za vsako novo povpraševanje." },
-  { title: "Avtomatski SMS odgovor", desc: "Stranka prejme takojšnjo potrditev, tudi ko ste na terenu." },
+  { title: "E-poštno potrdilo", desc: "Stranka po oddaji povpraševanja takoj prejme potrdilo po e-pošti." },
   { title: "Sistem za zbiranje ocen", desc: "Samodejne prošnje za oceno zadovoljnim strankam." },
   { title: "Marketinške kampanje", desc: "Akcije obstoječim strankam z enim klikom." },
   { title: "Kampanje za priporočila", desc: "Stranke spodbudimo, da vas priporočijo naprej." },
@@ -329,7 +330,7 @@ export const processSteps = [
 
 export const flow = [
   { icon: "✎", step: "01", title: "Stranka odda obrazec", desc: "Na vaši novi spletni strani, v nekaj klikih." },
-  { icon: "✉", step: "02", title: "Stranka prejme SMS", desc: "Samodejna potrditev v isti sekundi." },
+  { icon: "✉", step: "02", title: "Stranka prejme e-pošto", desc: "Potrdilo, da je bilo povpraševanje uspešno poslano." },
   { icon: "🔔", step: "03", title: "Vi prejmete SMS", desc: "Z imenom in ključnimi podatki stranke." },
   { icon: "✓", step: "04", title: "Vi prevzamete posel", desc: "Pokličete nazaj, ko vam ustreza." },
 ];
@@ -356,10 +357,10 @@ export const processFaqs = [
 export const pricePlanFeatures = [
   "Spletna stran (do 5 podstrani)",
   "Gostovanje",
-  "Zahtevki za spremembe",
+  "Popolna skrb za spletno stran",
   "Kontaktni obrazci",
   "SMS sistem",
-  "Avtomatski odgovori",
+  "E-poštna potrdila",
   "Sistem za ocene",
   "Marketinške kampanje",
   "Kampanje za priporočila",
@@ -379,7 +380,7 @@ export const priceFaqs = [
   { q: "Ali so kakšni začetni stroški?", a: "Ne. Plačate 99 € mesečno ali 950 € za 12 mesecev. Postavitev sistema je vključena." },
   {
     q: "Kaj je vključeno v ceno?",
-    a: "Spletna stran, gostovanje, CMS, SMS sistem, kontaktni obrazci, marketinške kampanje, zbiranje Google ocen, analitika, podpora in vzdrževanje.",
+    a: "Spletna stran, popolna skrb zanjo, gostovanje, SMS obvestila obrtniku, e-poštna potrdila strankam, kontaktni obrazci, marketinške kampanje, zbiranje Google ocen, analitika in podpora.",
   },
   { q: "Kaj se zgodi, če prekličem?", a: "Sistem se deaktivira in spletna stran se odstrani. Brez skritih stroškov." },
   { q: "Ali lahko dodam storitve kasneje?", a: "Seveda. SEO optimizacijo, Google profil ali oglase dodate kadarkoli. AI pomočnik pride kmalu." },
@@ -388,7 +389,7 @@ export const priceFaqs = [
 export const roofers = {
   pains: ["Zamujeni klici z višine", "Sezonska konica", "Počasni odgovori", "Premalo ocen", "Zastarela stran"],
   benefits: [
-    { icon: "✉", title: "Takojšen SMS odgovor", desc: "Stranka dobi odgovor tudi ko ste na strehi. Nikoli več zamujen posel." },
+    { icon: "✉", title: "Takojšnja obvestila", desc: "Vi prejmete SMS, stranka pa e-poštno potrdilo — tudi ko ste na strehi." },
     { icon: "◳", title: "Galerija vaših streh", desc: "Pokažite končane projekte. Slike streh prodajo bolje kot besede." },
     { icon: "◎", title: "Najdejo vas lokalno", desc: "Optimizirano za »krovec + vaš kraj«. Vidnost na Googlu in Zemljevidu." },
     { icon: "★", title: "Več Google ocen", desc: "Samodejne prošnje zadovoljnim strankam. Zaupanje, ki prinaša posel." },
@@ -417,8 +418,8 @@ export const english = {
   trades: ["Roofers", "Electricians", "Plumbers", "HVAC", "Landscapers", "Solar installers", "General contractors", "Remodelers"],
   solutions: [
     { icon: "◷", title: "Website", desc: "A clean, fast website built around your services and location." },
-    { icon: "✉", title: "SMS system", desc: "Instant texts to you and your customer whenever a lead comes in." },
-    { icon: "↺", title: "Auto replies", desc: "Customers get a professional response while you're on the job." },
+    { icon: "✉", title: "SMS alerts", desc: "You get an instant text whenever a new inquiry comes in." },
+    { icon: "↺", title: "Email confirmations", desc: "Customers get an email confirming their inquiry was received." },
     { icon: "★", title: "Google reviews", desc: "Ask happy customers for reviews with less awkward follow-up." },
     { icon: "⚡", title: "Campaigns", desc: "One-click promos to past customers." },
     { icon: "⤳", title: "Referrals", desc: "The system nudges customers to refer you." },

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
+import { submitContactInquiry } from "@/app/kontakt/actions";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -30,12 +32,14 @@ type Errors = Partial<Record<"name" | "email" | "phone", string>>;
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [pending, startTransition] = useTransition();
   const [values, setValues] = useState({
     name: "",
     email: "",
     phone: "",
     panoga: "",
     message: "",
+    website: "",
   });
   const [errors, setErrors] = useState<Errors>({});
 
@@ -57,7 +61,14 @@ export function ContactForm() {
       return;
     }
     setErrors({});
-    setSubmitted(true);
+    startTransition(async () => {
+      const result = await submitContactInquiry(values);
+      if (result.ok) {
+        setSubmitted(true);
+      } else {
+        toast.error(result.error);
+      }
+    });
   }
 
   function update(field: keyof typeof values, value: string) {
@@ -82,7 +93,7 @@ export function ContactForm() {
             variant="secondary"
             size="sm"
             onClick={() => {
-              setValues({ name: "", email: "", phone: "", panoga: "", message: "" });
+              setValues({ name: "", email: "", phone: "", panoga: "", message: "", website: "" });
               setErrors({});
               setSubmitted(false);
             }}
@@ -137,8 +148,24 @@ export function ContactForm() {
           className="w-full resize-y rounded-[11px] border border-[#E1DEEC] bg-white px-[15px] py-[13px] font-sans text-[15px] leading-[1.5] text-[#16151D] outline-none transition-shadow focus:border-[#6A5AE0] focus:shadow-[0_0_0_3px_rgba(106,90,224,.12)]"
         />
       </label>
-      <Button type="button" onClick={submit} className="mt-6 w-full rounded-[13px] py-4 text-base">
-        Rezerviraj brezplačen posvet
+      <input
+        type="text"
+        name="website"
+        value={values.website}
+        onChange={(event) => update("website", event.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
+      <Button type="button" onClick={submit} disabled={pending} className="mt-6 w-full rounded-[13px] py-4 text-base">
+        {pending ? (
+          <>
+            <Loader2 size={18} className="animate-spin" /> Pošiljam …
+          </>
+        ) : (
+          "Rezerviraj brezplačen posvet"
+        )}
       </Button>
       <div className="mt-3.5 text-center text-[12.5px] text-[#9A97A5]">20 minut · brez obveznosti · brez vezave</div>
     </div>
