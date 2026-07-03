@@ -10,10 +10,65 @@ import { CampaignsSection, ReviewsSection } from "@/components/home/campaigns-se
 import { CompareSection } from "@/components/home/compare-section";
 import { PricingSection } from "@/components/home/pricing-section";
 import { aiQuestions, cmsItems, faqsLanding, smsBullets } from "@/lib/site-data";
+import { createMetadata, SITE_URL } from "@/lib/seo";
+
+export const metadata = createMetadata({
+  title: "Nivo — več povpraševanj za obrtnike",
+  description:
+    "Nivo obrtnikom postavi spletno stran in sistem za povpraševanja, SMS obvestila, Google ocene ter kampanje. Že od 99 € na mesec.",
+  path: "/",
+  keywords: [
+    "spletna stran za obrtnike",
+    "povpraševanja za obrtnike",
+    "marketing za obrtnike",
+    "SMS obvestila",
+    "Google ocene",
+  ],
+});
 
 export default function Home() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: "Nivo",
+        url: SITE_URL,
+        logo: `${SITE_URL}/nivo-logo-mark.svg`,
+        email: "pozdravljeni@nivo.si",
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: "Nivo",
+        inLanguage: "sl-SI",
+        publisher: { "@id": `${SITE_URL}/#organization` },
+      },
+      {
+        "@type": "Service",
+        name: "Nivo sistem za obrtnike",
+        provider: { "@id": `${SITE_URL}/#organization` },
+        areaServed: { "@type": "Country", name: "Slovenija" },
+        description:
+          "Spletna stran, sistem za povpraševanja, SMS obvestila, Google ocene in kampanje za obrtnike.",
+        offers: {
+          "@type": "Offer",
+          price: "99",
+          priceCurrency: "EUR",
+          url: `${SITE_URL}/cenik`,
+        },
+      },
+    ],
+  };
+
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <HeroSection />
 
       <StatsBand />

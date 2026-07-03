@@ -3,7 +3,16 @@ import { FaqAccordion } from "@/components/faq-accordion";
 import { PricingSwitcher } from "@/components/pricing-switcher";
 import { CtaBand, PageShell, SectionHeading } from "@/components/site-shell";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
+import { createMetadata } from "@/lib/seo";
 import { priceFaqs } from "@/lib/site-data";
+
+export const metadata = createMetadata({
+  title: "Cenik — spletna stran in sistem od 99 €",
+  description:
+    "Spletna stran, SMS obvestila, Google ocene, kampanje, gostovanje in podpora za 99 € na mesec ali 950 € na leto. Brez vezave.",
+  path: "/cenik",
+  keywords: ["cena spletne strani", "spletna stran 99 €", "cenik za obrtnike"],
+});
 
 const addons = [
   {

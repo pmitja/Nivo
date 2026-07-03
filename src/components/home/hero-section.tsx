@@ -13,7 +13,7 @@ export function HeroSection() {
       <div className="pointer-events-none absolute left-1/2 top-[-260px] -z-10 h-[560px] w-[880px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(106,90,224,.16),rgba(106,90,224,0))]" />
 
       <div className="relative mx-auto max-w-[1240px] px-5 md:px-8">
-        <div className="mx-auto max-w-[820px] pt-[52px] text-center md:pt-[64px]">
+        <div className="nv-enter mx-auto max-w-[820px] pt-[52px] text-center md:pt-[64px]">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#E4E0F4] bg-white px-[13px] py-1.5 text-[13px] font-semibold text-[#56535F] shadow-[0_2px_8px_rgba(20,19,29,.05)]">
             <span className="nv-pulse h-[7px] w-[7px] rounded-full bg-[#22B07D]" />
             Sistem za obrtnike in lokalna podjetja

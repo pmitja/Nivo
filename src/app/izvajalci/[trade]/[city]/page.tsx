@@ -7,6 +7,7 @@ import { PageShell } from "@/components/site-shell";
 import { CtaBand } from "@/components/site-primitives";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 import { getCompaniesForTrade, getDirectoryCompanies, getTrade, groupByCity, siteUrl } from "@/lib/directory";
+import { createMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -35,21 +36,19 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const cityName = companies[0]?.city ?? citySlug.replace(/-/g, " ");
 
   const singular = trade.singular.charAt(0).toUpperCase() + trade.singular.slice(1);
-  const title = `${singular} ${cityName} in okolica — preverjeni izvajalci | Nivo`;
+  const title = `${singular} ${cityName} in okolica`;
   const description = `Iščete ${trade.searchPhrase} v kraju ${cityName} in okolici? Preverjeni lokalni izvajalci, ki hitro odgovorijo na povpraševanje. ${trade.intro}`;
 
-  return {
+  return createMetadata({
     title,
     description,
-    alternates: { canonical: `${siteUrl}/izvajalci/${trade.slug}/${citySlug}` },
-    openGraph: {
-      title,
-      description,
-      url: `${siteUrl}/izvajalci/${trade.slug}/${citySlug}`,
-      locale: "sl_SI",
-      type: "website",
-    },
-  };
+    path: `/izvajalci/${trade.slug}/${citySlug}`,
+    keywords: [
+      `${trade.singular} ${cityName}`,
+      `${trade.plural.toLowerCase()} ${cityName}`,
+      `${trade.singular} v bližini`,
+    ],
+  });
 }
 
 export default async function TradeCityPage({ params }: { params: Promise<Params> }) {

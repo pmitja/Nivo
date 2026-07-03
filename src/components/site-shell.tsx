@@ -51,7 +51,7 @@ export async function SiteNav({ active }: { active?: string }) {
 
 export function PageShell({ active, children }: { active?: string; children: React.ReactNode }) {
   return (
-    <div className="w-full overflow-x-clip bg-white">
+    <div className="marketing-page w-full overflow-x-clip bg-white">
       <SiteNav active={active} />
       {children}
       <SiteFooter />

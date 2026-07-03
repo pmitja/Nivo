@@ -1,6 +1,15 @@
 import { ContactForm } from "@/components/contact-form";
 import { PageShell } from "@/components/site-shell";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
+import { createMetadata } from "@/lib/seo";
+
+export const metadata = createMetadata({
+  title: "Kontakt in brezplačen posvet",
+  description:
+    "Rezervirajte brezplačen 20-minutni posvet. Pokažemo vam, kako lahko Nivo uredi spletno stran, povpraševanja in pridobivanje Google ocen.",
+  path: "/kontakt",
+  keywords: ["brezplačen posvet", "Nivo kontakt", "spletna stran za obrtnike"],
+});
 
 const nextSteps = [
   { num: "1", title: "Brezplačen posvet", desc: "20-minutni pogovor o vašem podjetju in ciljih." },

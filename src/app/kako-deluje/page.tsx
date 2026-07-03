@@ -8,7 +8,16 @@ import { PhonePair } from "@/components/feature-sections";
 import { PromoVideoPlayer } from "@/components/promo-video-player";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { createMetadata } from "@/lib/seo";
 import { flow, processFaqs, processSteps, setup } from "@/lib/site-data";
+
+export const metadata = createMetadata({
+  title: "Kako deluje sistem Nivo",
+  description:
+    "Od brezplačnega posveta do nove spletne strani in sistema za povpraševanja v 10 dneh. Nivo poskrbi za postavitev, obvestila in podporo.",
+  path: "/kako-deluje",
+  keywords: ["sistem za obrtnike", "izdelava spletne strani", "SMS za povpraševanja"],
+});
 
 export default function HowItWorksPage() {
   return (

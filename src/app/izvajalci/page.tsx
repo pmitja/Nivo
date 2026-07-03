@@ -6,23 +6,18 @@ import { ArrowRight } from "lucide-react";
 import { PageShell } from "@/components/site-shell";
 import { CtaBand } from "@/components/site-primitives";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
-import { getDirectoryCompanies, groupByCity, siteUrl, trades } from "@/lib/directory";
+import { getDirectoryCompanies, groupByCity, trades } from "@/lib/directory";
+import { createMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: "Preverjeni izvajalci po Sloveniji | Nivo",
+export const metadata: Metadata = createMetadata({
+  title: "Preverjeni izvajalci po Sloveniji",
   description:
     "Poiščite preverjenega električarja, vodovodarja, krovca ali drugega izvajalca v svojem kraju. Vsi izvajalci odgovarjajo hitro in imajo urejeno spletno stran.",
-  alternates: { canonical: `${siteUrl}/izvajalci` },
-  openGraph: {
-    title: "Preverjeni izvajalci po Sloveniji | Nivo",
-    description: "Poiščite preverjenega izvajalca v svojem kraju in mu pošljite povpraševanje v minuti.",
-    url: `${siteUrl}/izvajalci`,
-    locale: "sl_SI",
-    type: "website",
-  },
-};
+  path: "/izvajalci",
+  keywords: ["izvajalci Slovenija", "lokalni izvajalci", "preverjeni obrtniki"],
+});
 
 export default async function DirectoryIndexPage() {
   const all = await getDirectoryCompanies();

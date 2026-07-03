@@ -6,7 +6,21 @@ import { CtaBand, PageShell, SectionHeading } from "@/components/site-shell";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 import { Button } from "@/components/ui/button";
 import { AiAddonSection } from "@/components/storitve/ai-addon-section";
+import { createMetadata } from "@/lib/seo";
 import { serviceAddons } from "@/lib/site-data";
+
+export const metadata = createMetadata({
+  title: "Spletna stran, povpraševanja in ocene za obrtnike",
+  description:
+    "Profesionalna spletna stran, SMS obvestila, pregled povpraševanj, Google ocene, kampanje in podpora v enem sistemu za obrtnike.",
+  path: "/storitve",
+  keywords: [
+    "storitve za obrtnike",
+    "spletna stran za podjetje",
+    "sistem za povpraševanja",
+    "Google ocene za podjetje",
+  ],
+});
 
 const serviceAddonCards = serviceAddons.map((addon) => ({
   ...addon,

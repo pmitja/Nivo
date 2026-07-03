@@ -6,7 +6,21 @@ import { BrowserMockup, FeatureGrid } from "@/components/feature-sections";
 import { HeroVisual } from "@/components/hero-visual";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { createMetadata } from "@/lib/seo";
 import { roofers } from "@/lib/site-data";
+
+export const metadata = createMetadata({
+  title: "Spletna stran za krovce od 99 € na mesec",
+  description:
+    "Profesionalna spletna stran za krovce z obrazcem za povpraševanja, SMS obvestili, Google ocenami in popolnim vzdrževanjem.",
+  path: "/spletna-stran-za-krovce",
+  keywords: [
+    "spletna stran za krovce",
+    "marketing za krovce",
+    "povpraševanja za krovce",
+    "izdelava spletne strani za krovsko podjetje",
+  ],
+});
 
 export default function RoofersPage() {
   return (

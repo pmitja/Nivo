@@ -6,11 +6,21 @@ import { FeatureGrid, PhonePair } from "@/components/feature-sections";
 import { HeroVisual } from "@/components/hero-visual";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { createMetadata } from "@/lib/seo";
 import { english } from "@/lib/site-data";
+
+export const metadata = createMetadata({
+  title: "Websites and lead management for contractors",
+  description:
+    "Nivo builds your website and helps you manage leads, SMS alerts, customer reviews and campaigns in one simple system.",
+  path: "/en",
+  locale: "en_US",
+  keywords: ["contractor website", "lead management for contractors", "home service marketing"],
+});
 
 export default function EnglishLandingPage() {
   return (
-    <div className="w-full overflow-x-clip bg-white">
+    <div lang="en" className="marketing-page w-full overflow-x-clip bg-white">
       <header className="sticky top-0 z-50 border-b border-[#ECEAF3] bg-white/80 backdrop-blur-[10px] backdrop-saturate-150">
         <nav className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-5 py-4 md:px-8">
           <Link href="/en" className="flex items-center gap-2.5 text-[#16151D] no-underline">

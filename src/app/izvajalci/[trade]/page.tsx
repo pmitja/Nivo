@@ -7,6 +7,7 @@ import { PageShell } from "@/components/site-shell";
 import { CtaBand, SectionHeading } from "@/components/site-primitives";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 import { getCompaniesForTrade, getTrade, groupByCity, siteUrl, trades } from "@/lib/directory";
+import { createMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -22,15 +23,15 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   if (!trade) return {};
 
   const singular = trade.singular.charAt(0).toUpperCase() + trade.singular.slice(1);
-  const title = `${singular} — preverjeni izvajalci po Sloveniji | Nivo`;
+  const title = `${singular} — preverjeni izvajalci po Sloveniji`;
   const description = `Iščete ${trade.searchPhrase}? Preverjeni izvajalci po Sloveniji, ki hitro odgovorijo na povpraševanje. ${trade.intro}`;
 
-  return {
+  return createMetadata({
     title,
     description,
-    alternates: { canonical: `${siteUrl}/izvajalci/${trade.slug}` },
-    openGraph: { title, description, url: `${siteUrl}/izvajalci/${trade.slug}`, locale: "sl_SI", type: "website" },
-  };
+    path: `/izvajalci/${trade.slug}`,
+    keywords: [trade.plural.toLowerCase(), `${trade.singular} Slovenija`, `preverjeni ${trade.plural.toLowerCase()}`],
+  });
 }
 
 export default async function TradePage({ params }: { params: Promise<Params> }) {

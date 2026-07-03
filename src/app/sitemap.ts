@@ -13,6 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/kontakt`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/spletna-stran-za-krovce`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/izvajalci`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${siteUrl}/en`, changeFrequency: "monthly", priority: 0.5 },
   ];
 
   const tradePages: MetadataRoute.Sitemap = trades.map((trade) => ({
