@@ -18,7 +18,7 @@ export async function SiteNav({ active }: { active?: string }) {
   return (
     <header className="relative sticky top-0 z-50 border-b border-[#ECEAF3] bg-white/80 backdrop-blur-[10px] backdrop-saturate-150">
       <nav className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-5 py-4 md:px-8">
-        <Link href="/" aria-label="Nivo domov">
+        <Link href="/" aria-label="Obrtio domov">
           <Logo />
         </Link>
         <div className="hidden items-center gap-[30px] md:flex">

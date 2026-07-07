@@ -6,7 +6,7 @@ import { createHash, randomBytes } from "node:crypto";
 import { db } from "@/db";
 import { sessions, users, type User } from "@/db/schema";
 
-const sessionCookie = "nivo_session";
+const sessionCookie = "obrtio_session";
 const sessionDays = 14;
 
 function hashToken(token: string) {
@@ -16,8 +16,8 @@ function hashToken(token: string) {
 export type AuthUser = Pick<User, "id" | "companyId" | "name" | "email" | "role">;
 
 export async function maybeBootstrapAdmin() {
-  const email = process.env.NIVO_BOOTSTRAP_EMAIL;
-  const password = process.env.NIVO_BOOTSTRAP_PASSWORD;
+  const email = process.env.OBRTIO_BOOTSTRAP_EMAIL ?? process.env.NIVO_BOOTSTRAP_EMAIL;
+  const password = process.env.OBRTIO_BOOTSTRAP_PASSWORD ?? process.env.NIVO_BOOTSTRAP_PASSWORD;
 
   if (!email || !password) {
     return;
@@ -29,7 +29,7 @@ export async function maybeBootstrapAdmin() {
   }
 
   await db.insert(users).values({
-    name: process.env.NIVO_BOOTSTRAP_NAME ?? "Nivo Admin",
+    name: process.env.OBRTIO_BOOTSTRAP_NAME ?? process.env.NIVO_BOOTSTRAP_NAME ?? "Obrtio Admin",
     email,
     passwordHash: await hash(password, 12),
     role: "super_admin",

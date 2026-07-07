@@ -98,7 +98,7 @@ export default async function TradePage({ params }: { params: Promise<Params> })
           ) : (
             <SectionHeading
               title="Na tem seznamu še ni izvajalcev"
-              text={`Prvi ${trade.singular} bo dodan kmalu. Ste izvajalec? Pridružite se sistemu Nivo in stranke vas bodo našle tukaj.`}
+              text={`Prvi ${trade.singular} bo dodan kmalu. Ste izvajalec? Pridružite se sistemu Obrtio in stranke vas bodo našle tukaj.`}
             />
           )}
           <div className="mt-12 text-center">
@@ -111,7 +111,7 @@ export default async function TradePage({ params }: { params: Promise<Params> })
 
       <CtaBand
         title={`Ste ${trade.singular} in vas še ni na seznamu?`}
-        text="Pridružite se sistemu Nivo — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
+        text="Pridružite se sistemu Obrtio — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
       />
     </PageShell>
   );

@@ -83,7 +83,7 @@ export default async function AdminRequestsPage({
                       request.comments.map((comment) => (
                         <div key={comment.id} className="rounded-[12px] bg-[#FBFAFF] px-4 py-3">
                           <div className="text-xs font-extrabold text-[#8A8694]">
-                            {comment.senderName || "Nivo"} · {formatDate(comment.createdAt)}
+                            {comment.senderName || "Obrtio"} · {formatDate(comment.createdAt)}
                           </div>
                           <p className="mt-1 text-sm leading-5 text-[#55515F]">{comment.message}</p>
                         </div>

@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { companies } from "@/db/schema";
 
 export const metadata: Metadata = {
-  title: "Test povpraševanja | Nivo",
+  title: "Test povpraševanja | Obrtio",
   robots: { index: false, follow: false },
 };
 
@@ -63,7 +63,7 @@ export default async function TestLeadPage() {
               companyId={company.id}
               fields={[...testFields]}
               submitLabel="Pošlji testno povpraševanje"
-              successMessage="Test je oddan. Preveri SMS, e-pošto in Nivo dashboard."
+              successMessage="Test je oddan. Preveri SMS, e-pošto in Obrtio dashboard."
             />
           </div>
         </section>

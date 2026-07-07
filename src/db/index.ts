@@ -8,7 +8,7 @@ if (!connectionString && process.env.NODE_ENV !== "production") {
   console.warn("DATABASE_URL ni nastavljen. Dashboard bo za podatke potreboval Neon povezavo.");
 }
 
-const client = postgres(connectionString ?? "postgres://localhost:5432/nivo", {
+const client = postgres(connectionString ?? "postgres://localhost:5432/obrtio", {
   max: 1,
   prepare: false,
 });

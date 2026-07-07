@@ -9,7 +9,7 @@ export function FeatureBento() {
         <SectionHeading
           eyebrow="Rešitev"
           title="Vse, kar potrebujete za več povpraševanj — brez kompliciranja"
-          text="Nivo združuje spletno stran, obvestila, Google ocene in kampanje v en enostaven sistem. Za spletno stran ves čas skrbimo mi."
+          text="Obrtio združuje spletno stran, obvestila, Google ocene in kampanje v en enostaven sistem. Za spletno stran ves čas skrbimo mi."
         />
 
         <div className="mt-14 grid gap-4 lg:grid-cols-3">

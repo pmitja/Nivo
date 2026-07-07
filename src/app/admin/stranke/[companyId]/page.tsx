@@ -42,7 +42,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
 
   const { company } = data;
   const formFields = data.contactForm?.fields ?? defaultContactFormFields;
-  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://app.nivo.si").replace(/\/$/, "");
+  const appUrl = (process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || "https://app.obrtio.si").replace(/\/$/, "");
 
   return (
     <DashboardShell

@@ -83,7 +83,7 @@ export default function RoofersPage() {
         <div className="mx-auto max-w-[1140px]">
           <div className="mx-auto max-w-[620px] text-center">
             <Eyebrow>Rešitev</Eyebrow>
-            <h2 className="mt-3.5 text-[36px] font-extrabold leading-[1.12] tracking-[-.03em] md:text-[42px]">Zakaj krovci izberejo Nivo</h2>
+            <h2 className="mt-3.5 text-[36px] font-extrabold leading-[1.12] tracking-[-.03em] md:text-[42px]">Zakaj krovci izberejo Obrtio</h2>
             <p className="mt-3.5 text-[17px] leading-[1.55] text-[#54515E]">Sistem, ki ujame vsak klic in vsako povpraševanje — tudi ko ste na terenu.</p>
           </div>
           <FeatureGrid items={roofers.benefits} />
@@ -112,7 +112,7 @@ export default function RoofersPage() {
       <section className="bg-white px-5 py-[90px] md:px-8">
         <div className="mx-auto max-w-[1140px]">
           <div className="mx-auto max-w-[560px] text-center">
-            <Eyebrow>Krovci o Nivo</Eyebrow>
+            <Eyebrow>Krovci o Obrtio</Eyebrow>
             <h2 className="mt-3 text-[36px] font-extrabold leading-[1.12] tracking-[-.03em] md:text-[40px]">Več povpraševanj, manj skrbi</h2>
           </div>
           <div className="mt-11 grid gap-[18px] lg:grid-cols-3">

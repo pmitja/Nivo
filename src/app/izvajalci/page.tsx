@@ -38,7 +38,7 @@ export default async function DirectoryIndexPage() {
             Najdite <HeroHighlight>preverjenega izvajalca</HeroHighlight> v svojem kraju
           </>
         }
-        text="Vsi izvajalci v imeniku uporabljajo sistem Nivo — to pomeni hitre odgovore, urejeno spletno stran in resen odnos do strank."
+        text="Vsi izvajalci v imeniku uporabljajo sistem Obrtio — to pomeni hitre odgovore, urejeno spletno stran in resen odnos do strank."
       />
 
       <section className="bg-white px-5 pb-24 pt-4 md:px-8">
@@ -84,7 +84,7 @@ export default async function DirectoryIndexPage() {
 
       <CtaBand
         title="Ste izvajalec in vas še ni na seznamu?"
-        text="Pridružite se sistemu Nivo — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
+        text="Pridružite se sistemu Obrtio — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
       />
     </PageShell>
   );

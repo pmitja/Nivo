@@ -17,7 +17,7 @@ export default function LoginPage() {
         <Card className="grid w-full overflow-hidden rounded-[28px] border-[#E7E4EF] shadow-[0_28px_70px_rgba(20,19,29,.10)] lg:grid-cols-[1fr_.86fr]">
           <section className="flex min-h-[520px] flex-col justify-between bg-[#16151D] p-8 text-white md:p-10">
             <div>
-              <div className="text-xl font-extrabold">Nivo</div>
+              <div className="text-xl font-extrabold">Obrtio</div>
               <div className="mt-16 max-w-[560px]">
                 <p className="text-sm font-bold uppercase tracking-[.1em] text-[#AFA8FF]">Dashboard</p>
                 <h1 className="mt-4 text-[40px] font-extrabold leading-[1.05] md:text-[56px]">
@@ -38,7 +38,7 @@ export default function LoginPage() {
           <section className="p-7 md:p-10">
             <div className="mx-auto max-w-[390px] py-8">
               <h2 className="text-2xl font-extrabold">Prijava</h2>
-              <p className="mt-2 text-[15px] leading-6 text-[#686573]">Dostop za ekipo Nivo in stranke.</p>
+              <p className="mt-2 text-[15px] leading-6 text-[#686573]">Dostop za ekipo Obrtio in stranke.</p>
 
               <form action={action} className="mt-8 grid gap-4">
                 <div className="grid gap-2">

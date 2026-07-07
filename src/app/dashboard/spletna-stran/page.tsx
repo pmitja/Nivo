@@ -17,7 +17,7 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
   const data = await getClientWebsiteRequestsPage(user.companyId!, Number.isFinite(page) ? page : 1);
 
   return (
-    <DashboardShell user={user} mode="client" title="Spletna stran" subtitle="Za vašo spletno stran v celoti skrbi ekipa Nivo.">
+    <DashboardShell user={user} mode="client" title="Spletna stran" subtitle="Za vašo spletno stran v celoti skrbi ekipa Obrtio.">
       <div className="grid gap-6 xl:grid-cols-[.9fr_1.1fr]">
         <Panel title="Sporočite nam spremembo">
           <p className="mb-4 text-sm leading-6 text-[#666271]">
@@ -71,7 +71,7 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
                       {request.comments.map((comment) => (
                         <div key={comment.id} className="rounded-[12px] bg-[#FBFAFF] px-4 py-3">
                           <div className="text-xs font-extrabold text-[#8A8694]">
-                            {comment.senderName || "Nivo"} · {formatDate(comment.createdAt)}
+                            {comment.senderName || "Obrtio"} · {formatDate(comment.createdAt)}
                           </div>
                           <p className="mt-1 text-sm leading-5 text-[#55515F]">{comment.message}</p>
                         </div>
@@ -80,7 +80,7 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
                   ) : null}
                   <form action={addWebsiteRequestCommentAction} className="grid gap-2">
                     <input type="hidden" name="requestId" value={request.id} />
-                    <Textarea name="message" required placeholder="Dodajte dodatne informacije ali odgovor ekipi Nivo." />
+                    <Textarea name="message" required placeholder="Dodajte dodatne informacije ali odgovor ekipi Obrtio." />
                     <Button size="sm" variant="secondary">
                       Dodaj odgovor
                     </Button>

@@ -2,7 +2,7 @@
 
 ## Osnovni paket — 99 €/mesec ali 950 € za 12 mesecev
 
-Vključuje profesionalno spletno stran do 5 podstrani, popolno skrb ekipe Nivo za vsebino in delovanje strani, gostovanje, vzdrževanje, kontaktne obrazce, SMS obvestilo obrtniku, e-poštno potrdilo stranki, sistem za zbiranje Google ocen, marketinške kampanje, referral kampanje, analitiko in podporo.
+Vključuje profesionalno spletno stran do 5 podstrani, popolno skrb ekipe Obrtio za vsebino in delovanje strani, gostovanje, vzdrževanje, kontaktne obrazce, SMS obvestilo obrtniku, e-poštno potrdilo stranki, sistem za zbiranje Google ocen, marketinške kampanje, referral kampanje, analitiko in podporo.
 
 Brez vezave. Če stranka odpove, se spletna stran odstrani ali deaktivira, dashboard se deaktivira, avtomatizacije se izklopijo in SMS sistem se izklopi.
 

@@ -1,4 +1,4 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://nivo.si";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://obrtio.si";
 const BRAND = "#6A5AE0";
 const BRAND_DARK = "#4B3BC9";
 const INK = "#16151D";
@@ -21,7 +21,7 @@ function layout({ preheader, body }: { preheader: string; body: string }) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nivo</title>
+<title>Obrtio</title>
 </head>
 <body style="margin:0;padding:0;background-color:#F3F1FA;">
 <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">${escapeHtml(preheader)}</div>
@@ -30,7 +30,7 @@ function layout({ preheader, body }: { preheader: string; body: string }) {
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;">
 
 <tr><td style="padding:0 8px 18px;">
-<span style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;color:${INK};">nivo<span style="color:${BRAND};">.</span></span>
+<span style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:22px;font-weight:800;letter-spacing:-0.5px;color:${INK};">obrtio<span style="color:${BRAND};">.</span></span>
 </td></tr>
 
 <tr><td style="background-color:#ffffff;border:1px solid ${BORDER};border-radius:20px;overflow:hidden;">
@@ -43,8 +43,8 @@ ${body}
 </td></tr>
 
 <tr><td style="padding:22px 8px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:12.5px;line-height:1.6;color:${FAINT};">
-Nivo — Vi opravljate delo. Mi poskrbimo za stranke.<br>
-To sporočilo ste prejeli, ker je bil oddan obrazec na spletni strani nivo.si.
+Obrtio — Vi opravljate delo. Mi poskrbimo za stranke.<br>
+To sporočilo ste prejeli, ker je bil oddan obrazec na spletni strani obrtio.si.
 </td></tr>
 
 </table>
@@ -92,7 +92,7 @@ export function contactInquiryNotificationEmail(inquiry: ContactInquiry) {
   const html = layout({
     preheader: `${inquiry.name} · ${inquiry.panoga || "brez panoge"} · ${inquiry.phone}`,
     body: `
-<div style="font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${BRAND};">Novo povpraševanje · nivo.si/kontakt</div>
+<div style="font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${BRAND};">Novo povpraševanje · obrtio.si/kontakt</div>
 <h1 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.5px;color:${INK};line-height:1.2;">${escapeHtml(inquiry.name)} želi brezplačen posvet</h1>
 <p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Oddano prek kontaktnega obrazca na spletni strani. Obljubljen odziv: 24 ur.</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;border:1px solid ${BORDER};border-radius:14px;border-collapse:separate;overflow:hidden;">
@@ -104,7 +104,7 @@ ${ctaButton(`tel:${inquiry.phone.replace(/\s+/g, "")}`, `Pokliči ${inquiry.name
   });
 
   const text = [
-    "Novo povpraševanje — nivo.si/kontakt",
+    "Novo povpraševanje — obrtio.si/kontakt",
     "",
     `Ime: ${inquiry.name}`,
     `E-pošta: ${inquiry.email}`,
@@ -149,8 +149,8 @@ export function contactInquiryConfirmationEmail(inquiry: ContactInquiry) {
 ${steps}
 </table>
 <p style="margin:6px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Medtem si lahko ogledate, kako sistem deluje v praksi.</p>
-${ctaButton(`${SITE_URL}/kako-deluje`, "Kako deluje Nivo")}
-<p style="margin:28px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Lep pozdrav,<br><strong style="color:${INK};">ekipa Nivo</strong></p>
+${ctaButton(`${SITE_URL}/kako-deluje`, "Kako deluje Obrtio")}
+<p style="margin:28px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Lep pozdrav,<br><strong style="color:${INK};">ekipa Obrtio</strong></p>
 `,
   });
 
@@ -164,10 +164,10 @@ ${ctaButton(`${SITE_URL}/kako-deluje`, "Kako deluje Nivo")}
     "2. Pokličemo vas v 24 urah (20 minut, brez obveznosti)",
     "3. Predlagamo rešitev za vašo panogo",
     "",
-    `Kako deluje Nivo: ${SITE_URL}/kako-deluje`,
+    `Kako deluje Obrtio: ${SITE_URL}/kako-deluje`,
     "",
     "Lep pozdrav,",
-    "ekipa Nivo",
+    "ekipa Obrtio",
   ].join("\n");
 
   return { subject: "Prejeli smo vaše povpraševanje — oglasimo se v 24 urah", html, text };

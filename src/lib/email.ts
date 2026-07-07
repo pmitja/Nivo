@@ -34,18 +34,18 @@ export async function sendLeadConfirmationEmail({
   }
 
   const to = process.env.RESEND_DEV_RECIPIENT || customerEmail;
-  const from = process.env.EMAIL_FROM || "Nivo <onboarding@resend.dev>";
+  const from = process.env.EMAIL_FROM || "Obrtio <onboarding@resend.dev>";
   const { error } = await new Resend(apiKey).emails.send({
     from,
     to,
     subject: `Prejeli smo vaše povpraševanje za ${service}`,
-    text: `Pozdravljeni ${customerName},\n\npodjetje ${companyName} je prejelo vaše povpraševanje za ${service}. Kontaktirali vas bodo v najkrajšem možnem času.\n\nLep pozdrav,\nNivo`,
+    text: `Pozdravljeni ${customerName},\n\npodjetje ${companyName} je prejelo vaše povpraševanje za ${service}. Kontaktirali vas bodo v najkrajšem možnem času.\n\nLep pozdrav,\nObrtio`,
     html: `
       <p>Pozdravljeni ${escapeHtml(customerName)},</p>
       <p>podjetje <strong>${escapeHtml(companyName)}</strong> je prejelo vaše povpraševanje za
       <strong>${escapeHtml(service)}</strong>.</p>
       <p>Kontaktirali vas bodo v najkrajšem možnem času.</p>
-      <p>Lep pozdrav,<br>Nivo</p>
+      <p>Lep pozdrav,<br>Obrtio</p>
     `,
   });
 
@@ -61,8 +61,8 @@ export async function sendContactInquiryEmails(inquiry: ContactInquiry) {
   }
 
   const resend = new Resend(apiKey);
-  const from = process.env.EMAIL_FROM || "Nivo <onboarding@resend.dev>";
-  const inbox = process.env.CONTACT_INBOX_EMAIL || "pozdravljeni@nivo.si";
+  const from = process.env.EMAIL_FROM || "Obrtio <onboarding@resend.dev>";
+  const inbox = process.env.CONTACT_INBOX_EMAIL || "pozdravljeni@obrtio.si";
 
   const notification = contactInquiryNotificationEmail(inquiry);
   const { error: notificationError } = await resend.emails.send({

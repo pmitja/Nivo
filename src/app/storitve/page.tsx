@@ -53,7 +53,7 @@ const monthlyIncludedCards = [
     num: "04",
     icon: LifeBuoy,
     title: "Popolna skrb za spletno stran",
-    desc: "Za vsebino, posodobitve, gostovanje in tehnično vzdrževanje v celoti skrbi ekipa Nivo. Vi se lahko posvetite svojemu delu.",
+    desc: "Za vsebino, posodobitve, gostovanje in tehnično vzdrževanje v celoti skrbi ekipa Obrtio. Vi se lahko posvetite svojemu delu.",
     features: ["Urejanje vsebine", "Tehnična podpora", "Gostovanje", "Vzdrževanje", "Posodobitve"],
   },
 ];

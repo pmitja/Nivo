@@ -22,15 +22,15 @@ export function Logo({
         )}
       >
         <Image
-          src="/nivo-logo-mark.svg"
+          src="/obrtio-favicon.png"
           alt=""
           width={30}
           height={30}
-          className="h-full w-full scale-[1.625]"
+          className="h-full w-full scale-[1.85] object-cover"
           priority
         />
       </span>
-      <span className={cn("text-xl font-extrabold tracking-[-.02em]", textClassName)}>Nivo</span>
+      <span className={cn("text-xl font-extrabold tracking-[-.02em]", textClassName)}>Obrtio</span>
     </span>
   );
 }

@@ -13,9 +13,9 @@ import { aiQuestions, cmsItems, faqsLanding, smsBullets } from "@/lib/site-data"
 import { createMetadata, SITE_URL } from "@/lib/seo";
 
 export const metadata = createMetadata({
-  title: "Nivo — več povpraševanj za obrtnike",
+  title: "Obrtio — več povpraševanj za obrtnike",
   description:
-    "Nivo obrtnikom postavi spletno stran in sistem za povpraševanja, SMS obvestila, Google ocene ter kampanje. Že od 99 € na mesec.",
+    "Obrtio obrtnikom postavi spletno stran in sistem za povpraševanja, SMS obvestila, Google ocene ter kampanje. Že od 99 € na mesec.",
   path: "/",
   keywords: [
     "spletna stran za obrtnike",
@@ -33,22 +33,22 @@ export default function Home() {
       {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
-        name: "Nivo",
+        name: "Obrtio",
         url: SITE_URL,
-        logo: `${SITE_URL}/nivo-logo-mark.svg`,
-        email: "pozdravljeni@nivo.si",
+        logo: `${SITE_URL}/obrtio-logo.webp`,
+        email: "pozdravljeni@obrtio.si",
       },
       {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: "Nivo",
+        name: "Obrtio",
         inLanguage: "sl-SI",
         publisher: { "@id": `${SITE_URL}/#organization` },
       },
       {
         "@type": "Service",
-        name: "Nivo sistem za obrtnike",
+        name: "Obrtio sistem za obrtnike",
         provider: { "@id": `${SITE_URL}/#organization` },
         areaServed: { "@type": "Country", name: "Slovenija" },
         description:

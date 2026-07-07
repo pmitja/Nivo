@@ -92,7 +92,7 @@ export function HeroSection() {
               <span className="h-[11px] w-[11px] rounded-full bg-[#E8C16B]" />
               <span className="h-[11px] w-[11px] rounded-full bg-[#7FC08C]" />
               <div className="ml-2.5 flex-1 rounded-[7px] border border-[#E4E2EC] bg-white px-3 py-1.5 font-mono text-xs text-[#8C8898]">
-                nivo.si — sistem za povpraševanja
+                obrtio.si — sistem za povpraševanja
               </div>
             </div>
             <div className="relative aspect-video bg-[#EDE8F8]">

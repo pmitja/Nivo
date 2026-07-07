@@ -12,7 +12,7 @@ import { english } from "@/lib/site-data";
 export const metadata = createMetadata({
   title: "Websites and lead management for contractors",
   description:
-    "Nivo builds your website and helps you manage leads, SMS alerts, customer reviews and campaigns in one simple system.",
+    "Obrtio builds your website and helps you manage leads, SMS alerts, customer reviews and campaigns in one simple system.",
   path: "/en",
   locale: "en_US",
   keywords: ["contractor website", "lead management for contractors", "home service marketing"],
@@ -27,7 +27,7 @@ export default function EnglishLandingPage() {
             <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-[#6A5AE0] shadow-[0_4px_12px_rgba(106,90,224,.35)]">
               <span className="h-[13px] w-[13px] rotate-45 rounded-[3px] border-[2.5px] border-white" />
             </span>
-            <span className="text-xl font-extrabold tracking-[-.02em]">Nivo</span>
+            <span className="text-xl font-extrabold tracking-[-.02em]">Obrtio</span>
           </Link>
           <div className="hidden items-center gap-[30px] md:flex">
             {["Services", "How it works", "Pricing", "Contact"].map((item) => (
@@ -177,7 +177,7 @@ export default function EnglishLandingPage() {
       </section>
 
       <section id="contact">
-        <CtaBand title="Ready to win more jobs?" text="Book a free call and we'll show you how Nivo would work for your trade, city, and customers." />
+        <CtaBand title="Ready to win more jobs?" text="Book a free call and we'll show you how Obrtio would work for your trade, city, and customers." />
       </section>
     </div>
   );

@@ -18,7 +18,7 @@ export function PromoVideoPlayer() {
         playsInline
         muted
         preload="metadata"
-        poster="/home/nivo-demo-still.webp"
+        poster="/home/obrtio-demo-still.webp"
         controls={false}
         onVolumeChange={keepMuted}
         autoPlay

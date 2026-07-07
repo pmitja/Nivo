@@ -9,7 +9,7 @@ export default async function AdminOverviewPage() {
   const data = await getAdminOverview();
 
   return (
-    <DashboardShell user={user} mode="admin" title="Pregled" subtitle="Operativni pregled platforme Nivo.">
+    <DashboardShell user={user} mode="admin" title="Pregled" subtitle="Operativni pregled platforme Obrtio.">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Aktivne stranke" value={data.activeCompanies} helper={`${data.newCompanies} novih ta mesec`} tone="green" />
         <StatCard label="MRR" value={formatCurrency(data.mrr)} helper="Osnovni paket 99 €/mesec" />

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
-import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { DEFAULT_DESCRIPTION, OG_IMAGE, OG_IMAGE_ALT, SITE_NAME, SITE_URL } from "@/lib/seo";
 import "./globals.css";
 
 const jakarta = Plus_Jakarta_Sans({
@@ -20,14 +20,36 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: SITE_NAME,
   title: {
-    default: "Nivo — več povpraševanj za obrtnike",
-    template: "%s | Nivo",
+    default: "Obrtio — več povpraševanj za obrtnike",
+    template: "%s | Obrtio",
   },
   description: DEFAULT_DESCRIPTION,
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   publisher: SITE_NAME,
   category: "business",
+  openGraph: {
+    title: "Obrtio — več povpraševanj za obrtnike",
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: "sl_SI",
+    type: "website",
+    images: [
+      {
+        url: OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: OG_IMAGE_ALT,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Obrtio — več povpraševanj za obrtnike",
+    description: DEFAULT_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
   formatDetection: {
     email: false,
     address: false,

@@ -36,7 +36,7 @@ Cena: 99 €/mesec ali 950 € za 12 mesecev.
 Vključuje:
 
 - profesionalna spletna stran do 5 podstrani
-- popolna skrb ekipe Nivo za vsebino in delovanje spletne strani
+- popolna skrb ekipe Obrtio za vsebino in delovanje spletne strani
 - gostovanje
 - vzdrževanje
 - kontaktni obrazci

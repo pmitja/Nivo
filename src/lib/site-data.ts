@@ -96,7 +96,7 @@ export const features = [
   {
     icon: "✎",
     title: "Popolna skrb za spletno stran",
-    desc: "Za vsebino, slike, posodobitve in tehnično vzdrževanje v celoti skrbi ekipa Nivo.",
+    desc: "Za vsebino, slike, posodobitve in tehnično vzdrževanje v celoti skrbi ekipa Obrtio.",
   },
   {
     icon: "◎",
@@ -234,7 +234,7 @@ export const faqsLanding = [
   },
   {
     q: "Kdo skrbi za spletno stran?",
-    a: "Za spletno stran v celoti skrbi ekipa Nivo — od vsebine in slik do gostovanja, posodobitev in tehničnega vzdrževanja. Vam se s tem ni treba ukvarjati.",
+    a: "Za spletno stran v celoti skrbi ekipa Obrtio — od vsebine in slik do gostovanja, posodobitev in tehničnega vzdrževanja. Vam se s tem ni treba ukvarjati.",
   },
   {
     q: "Ali potrebujem tehnično znanje?",
@@ -398,7 +398,7 @@ export const roofers = {
   ],
   siteBullets: ["Do 5 podstrani", "Galerija projektov", "Obrazec za hitro ponudbo", "Mobilno optimizirano"],
   reviews: [
-    { text: "Odkar imam Nivo, ne zamudim več nobenega klica. Povpraševanja dobim na telefon takoj.", name: "Marko P.", meta: "Krovstvo · Gorenjska" },
+    { text: "Odkar imam Obrtio, ne zamudim več nobenega klica. Povpraševanja dobim na telefon takoj.", name: "Marko P.", meta: "Krovstvo · Gorenjska" },
     { text: "Stara stran ni prinašala nič. Zdaj me najdejo na Googlu in dobivam ponudbe vsak teden.", name: "Tomaž R.", meta: "Krovec · Štajerska" },
     { text: "Najboljša investicija za 99 € na mesec. Več ocen, več strank, manj skrbi.", name: "Andrej K.", meta: "Krovstvo · Ljubljana" },
   ],

@@ -6,9 +6,9 @@ import { createMetadata } from "@/lib/seo";
 export const metadata = createMetadata({
   title: "Kontakt in brezplačen posvet",
   description:
-    "Rezervirajte brezplačen 20-minutni posvet. Pokažemo vam, kako lahko Nivo uredi spletno stran, povpraševanja in pridobivanje Google ocen.",
+    "Rezervirajte brezplačen 20-minutni posvet. Pokažemo vam, kako lahko Obrtio uredi spletno stran, povpraševanja in pridobivanje Google ocen.",
   path: "/kontakt",
-  keywords: ["brezplačen posvet", "Nivo kontakt", "spletna stran za obrtnike"],
+  keywords: ["brezplačen posvet", "Obrtio kontakt", "spletna stran za obrtnike"],
 });
 
 const nextSteps = [
@@ -52,7 +52,7 @@ export default function ContactPage() {
               <div className="text-xs font-bold uppercase tracking-[.06em] text-[#9A97A5]">Ali nas pokličite</div>
               <div className="mt-4 flex flex-col gap-3.5">
                 <ContactLine icon="✆" label="Telefon" value="030 000 000" />
-                <ContactLine icon="✉" label="E-pošta" value="pozdravljeni@nivo.si" />
+                <ContactLine icon="✉" label="E-pošta" value="pozdravljeni@obrtio.si" />
               </div>
             </div>
           </div>

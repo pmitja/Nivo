@@ -91,7 +91,7 @@ export default async function TradeCityPage({ params }: { params: Promise<Params
             {trade.plural} — <HeroHighlight>{cityName} in okolica</HeroHighlight>
           </>
         }
-        text={`${trade.intro} Izberite izvajalca in mu pošljite povpraševanje — odgovor dobite hitro, saj vsi uporabljajo SMS obvestila Nivo.`}
+        text={`${trade.intro} Izberite izvajalca in mu pošljite povpraševanje — odgovor dobite hitro, saj vsi uporabljajo SMS obvestila Obrtio.`}
       />
 
       <section className="bg-white px-5 pb-24 pt-4 md:px-8">
@@ -131,7 +131,7 @@ export default async function TradeCityPage({ params }: { params: Promise<Params
 
       <CtaBand
         title={`Ste ${trade.singular} v kraju ${cityName}?`}
-        text="Pridružite se sistemu Nivo — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
+        text="Pridružite se sistemu Obrtio — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
       />
     </PageShell>
   );

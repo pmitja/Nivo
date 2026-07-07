@@ -65,9 +65,9 @@ Za MVP naj stranka vidi aktivne kampanje, pripravljene kampanje, rezultate, mož
 
 ## Spletna stran
 
-Payload CMS zaenkrat ne uporabljamo. Stranka spletne strani ne ureja sama; za vsebino in tehnično delovanje v celoti skrbi ekipa Nivo.
+Payload CMS zaenkrat ne uporabljamo. Stranka spletne strani ne ureja sama; za vsebino in tehnično delovanje v celoti skrbi ekipa Obrtio.
 
-Modul omogoča, da stranka ekipi Nivo preprosto sporoči novo željo ali podatek, izvedbo pa v celoti prevzame ekipa.
+Modul omogoča, da stranka ekipi Obrtio preprosto sporoči novo željo ali podatek, izvedbo pa v celoti prevzame ekipa.
 
 Opis:
 

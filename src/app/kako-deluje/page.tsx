@@ -12,9 +12,9 @@ import { createMetadata } from "@/lib/seo";
 import { flow, processFaqs, processSteps, setup } from "@/lib/site-data";
 
 export const metadata = createMetadata({
-  title: "Kako deluje sistem Nivo",
+  title: "Kako deluje sistem Obrtio",
   description:
-    "Od brezplačnega posveta do nove spletne strani in sistema za povpraševanja v 10 dneh. Nivo poskrbi za postavitev, obvestila in podporo.",
+    "Od brezplačnega posveta do nove spletne strani in sistema za povpraševanja v 10 dneh. Obrtio poskrbi za postavitev, obvestila in podporo.",
   path: "/kako-deluje",
   keywords: ["sistem za obrtnike", "izdelava spletne strani", "SMS za povpraševanja"],
 });
@@ -108,7 +108,7 @@ export default function HowItWorksPage() {
               <span className="h-[11px] w-[11px] rounded-full bg-[#E8C16B]" />
               <span className="h-[11px] w-[11px] rounded-full bg-[#7FC08C]" />
               <div className="ml-2.5 flex-1 rounded-[7px] border border-[#E4E2EC] bg-white px-3 py-1.5 font-mono text-xs text-[#8C8898]">
-                nivo.si — sistem za povpraševanja
+                obrtio.si — sistem za povpraševanja
               </div>
             </div>
             <div className="relative aspect-video bg-[#EDE8F8]">

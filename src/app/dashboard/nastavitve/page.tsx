@@ -19,7 +19,7 @@ export default async function ClientSettingsPage() {
         <Panel title="Podatki podjetja">
           {company ? <CompanySettingsForm company={company} /> : null}
           <p className="mt-5 rounded-[14px] bg-[#FBFAFF] p-4 text-sm font-semibold leading-6 text-[#666271]">
-            Cene paketa, aktivne storitve, plačila in sistemske nastavitve ureja ekipa Nivo.
+            Cene paketa, aktivne storitve, plačila in sistemske nastavitve ureja ekipa Obrtio.
           </p>
         </Panel>
         <Panel title="Sistemski podatki">
