@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 
 export function Logo({
   className,
+  dark,
 }: {
   dark?: boolean;
   className?: string;
@@ -12,7 +13,14 @@ export function Logo({
 }) {
   return (
     <span className={cn("relative block h-8 w-[128px] shrink-0 no-underline", className)}>
-      <Image src="/obrtio-logo.webp" alt="Obrtio" fill sizes="128px" className="object-contain" priority />
+      <Image
+        src={dark ? "/obrtio-logo-white.webp" : "/obrtio-logo.webp"}
+        alt="Obrtio"
+        fill
+        sizes="128px"
+        className="object-contain"
+        priority
+      />
     </span>
   );
 }
