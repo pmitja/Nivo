@@ -24,7 +24,7 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1200px] gap-10 md:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
         <div>
           <Link href="/" aria-label="Obrtio domov">
-            <Logo dark />
+            <Logo className="h-8 w-[128px]" dark />
           </Link>
           <p className="mt-4 max-w-[280px] text-[14.5px] leading-[1.6] text-[#9D9AAB]">
             Vi opravljate delo. Mi poskrbimo za stranke. Sistem za rast gradbenih in obrtniških podjetij.

@@ -19,9 +19,7 @@ export function CompareSection() {
           <CompareCard
             title={
               <Logo
-                className="justify-center"
-                markClassName="h-7 w-7 rounded-[8px]"
-                textClassName="text-[25px] md:text-[28px]"
+                className="mx-auto h-9 w-36"
               />
             }
             items={compareNew}

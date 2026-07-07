@@ -38,7 +38,7 @@ export function DashboardShell({
     <div className="min-h-screen bg-[#F7F6FB] text-[#16151D]">
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-[264px] flex-col border-r border-[#E8E5EF] bg-white px-4 py-5 lg:flex">
         <Link href={mode === "admin" ? "/admin" : "/dashboard"} className="flex items-center gap-3 px-2">
-          <Logo markClassName="h-9 w-9 rounded-[10px]" textClassName="text-lg" />
+          <Logo className="h-8 w-[128px]" />
         </Link>
         <div className="flex-1 overflow-y-auto">
           <SidebarNav mode={mode} />
