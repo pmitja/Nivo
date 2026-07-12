@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq, gte } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/db";
@@ -9,6 +9,7 @@ import { sendSms } from "@/lib/sms";
 import { isUploadableLeadAttachment, prepareLeadAttachment, uploadPreparedFile } from "@/lib/uploadthing";
 
 const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+const DUPLICATE_WINDOW_MS = 2 * 60 * 1000;
 
 const leadSchema = z.object({
   companyId: z.string().uuid(),
@@ -17,14 +18,61 @@ const leadSchema = z.object({
   email: z.string().email(),
   location: z.string().optional(),
   service: z.string().min(2),
-  message: z.string().min(10),
+  message: z.string().trim().max(2000).default(""),
   privacyConsent: z.literal(true),
   marketingConsent: z.boolean().default(false),
 });
 
+/** Domene strank, ki smejo oddajati povpraševanja s svojega obrazca. */
+function allowedOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  if (!origin) return null;
+
+  const allowlist = (process.env.LEAD_FORM_ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean);
+
+  if (origin === new URL(request.url).origin || allowlist.includes(origin)) {
+    return origin;
+  }
+
+  return null;
+}
+
+function corsHeaders(origin: string) {
+  return {
+    "Access-Control-Allow-Origin": origin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Max-Age": "86400",
+    Vary: "Origin",
+  };
+}
+
+export async function OPTIONS(request: Request) {
+  const origin = allowedOrigin(request);
+  if (!origin) return new Response(null, { status: 403 });
+
+  return new Response(null, { status: 204, headers: corsHeaders(origin) });
+}
+
 export async function POST(request: Request) {
+  const origin = allowedOrigin(request);
+
+  // Zahtevek brez Origin glave (strežnik, curl) pustimo skozi; brskalnik ga vedno poslje.
+  if (request.headers.get("origin") && !origin) {
+    return NextResponse.json({ message: "Domena ni dovoljena." }, { status: 403 });
+  }
+
   const body = await request.json();
-  return submitLead(body);
+  const response = await submitLead(body);
+
+  if (origin) {
+    Object.entries(corsHeaders(origin)).forEach(([key, value]) => response.headers.set(key, value));
+  }
+
+  return response;
 }
 
 export async function submitLead(body: unknown, companyId?: string, attachment?: File | null) {
@@ -55,6 +103,23 @@ export async function submitLead(body: unknown, companyId?: string, attachment?:
   const [contactForm] = await db.select().from(contactForms).where(eq(contactForms.companyId, company.id)).limit(1);
   if (contactForm?.active === false) {
     return NextResponse.json({ message: "Obrazec trenutno ni aktiven." }, { status: 404 });
+  }
+
+  // Vsako povprasevanje poslje dva SMS-a, zato zavrnemo ponovne oddaje z iste stevilke.
+  const [recentLead] = await db
+    .select({ id: leads.id })
+    .from(leads)
+    .where(
+      and(
+        eq(leads.companyId, company.id),
+        eq(leads.phone, data.phone),
+        gte(leads.createdAt, new Date(Date.now() - DUPLICATE_WINDOW_MS)),
+      ),
+    )
+    .limit(1);
+
+  if (recentLead) {
+    return NextResponse.json({ message: "Povpraševanje smo že prejeli." }, { status: 429 });
   }
 
   const missingRequiredField = contactForm?.fields.some((field) => {
