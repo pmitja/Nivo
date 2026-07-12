@@ -217,6 +217,7 @@ export const smsMessages = pgTable(
     type: smsTypeEnum("type").notNull(),
     status: smsStatusEnum("status").default("pending").notNull(),
     provider: text("provider").default("mvp_stub").notNull(),
+    providerMessageId: text("provider_message_id"),
     cost: numeric("cost", { precision: 10, scale: 4 }),
     errorMessage: text("error_message"),
     sentAt: timestamp("sent_at", { withTimezone: true }),
@@ -226,6 +227,7 @@ export const smsMessages = pgTable(
     index("sms_messages_company_id_idx").on(table.companyId),
     index("sms_messages_lead_id_idx").on(table.leadId),
     index("sms_messages_created_at_idx").on(table.createdAt),
+    index("sms_messages_provider_message_id_idx").on(table.providerMessageId),
   ],
 );
 

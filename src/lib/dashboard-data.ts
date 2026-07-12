@@ -6,7 +6,6 @@ import {
   campaigns,
   companies,
   companyDocuments,
-  companySmsSettings,
   contactForms,
   customers,
   leadStatusEnum,
@@ -597,16 +596,6 @@ export async function getClientSmsPage(companyId: string, page = 1, pageSize = 1
     pageSize,
     pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
   };
-}
-
-export async function getClientSmsSettings(companyId: string) {
-  const [settings] = await db
-    .select()
-    .from(companySmsSettings)
-    .where(eq(companySmsSettings.companyId, companyId))
-    .limit(1);
-
-  return settings;
 }
 
 export async function getClientReviewRequestsPage(companyId: string, page = 1, pageSize = 5) {

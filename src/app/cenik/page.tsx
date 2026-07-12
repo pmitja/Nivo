@@ -1,78 +1,18 @@
+import { Check, HelpCircle, ShieldCheck, Sparkles } from "lucide-react";
+
 import { AddonPricingCards } from "@/components/addon-pricing-cards";
 import { FaqAccordion } from "@/components/faq-accordion";
+import { MarketingHeading, MarketingHero } from "@/components/premium-marketing";
 import { PricingSwitcher } from "@/components/pricing-switcher";
-import { CtaBand, PageShell, SectionHeading } from "@/components/site-shell";
-import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
+import { CtaBand, PageShell } from "@/components/site-shell";
 import { createMetadata } from "@/lib/seo";
 import { priceFaqs } from "@/lib/site-data";
 
-export const metadata = createMetadata({
-  title: "Cenik — spletna stran in sistem od 99 €",
-  description:
-    "Spletna stran, SMS obvestila, Google ocene, kampanje, gostovanje in podpora za 99 € na mesec ali 950 € na leto. Brez vezave.",
-  path: "/cenik",
-  keywords: ["cena spletne strani", "spletna stran 99 €", "cenik za obrtnike"],
-});
+export const metadata = createMetadata({ title:"Cenik — spletna stran in sistem od 99 €", description:"Spletna stran, SMS obvestila, Google ocene, kampanje, gostovanje in podpora za 99 € mesečno ali 950 € letno.", path:"/cenik", keywords:["cena spletne strani","spletna stran 99 €","cenik za obrtnike"] });
+const addons=[{title:"AI pomočnik",price:"Pride kmalu",unit:"",features:["Povzetki sporočil","Osnutki ponudb","Vedno z vašo potrditvijo"]},{title:"Google Business Profil",price:"500 €",unit:"enkratno",features:["Nastavitev profila","Optimizacija kategorij","Boljši lokalni vtis"]},{title:"SEO",price:"500 €",unit:"enkratno",features:["Lokalni SEO","Tehnična ureditev","Ključne vsebine"]},{title:"Oglaševanje",price:"Po ponudbi",unit:"kampanje",features:["Google Ads","Meta in TikTok","Slikovni oglasi"]}];
 
-const addons = [
-  {
-    title: "AI Pomočnik",
-    price: "Pride kmalu",
-    unit: "",
-    features: ["Povzetki sporočil", "Osnutki ponudb", "V pripravi"],
-  },
-  {
-    title: "Google Business Profil",
-    price: "500 €",
-    unit: "enkratno",
-    features: ["Nastavitev profila", "Optimizacija kategorij", "Boljši lokalni vtis"],
-  },
-  {
-    title: "SEO Optimizacija",
-    price: "500 €",
-    unit: "enkratno",
-    features: ["Lokalni SEO", "Tehnična ureditev", "Ključne vsebine"],
-  },
-  {
-    title: "Oglasi",
-    price: "Po ponudbi",
-    unit: "kampanje",
-    features: ["Google oglasi", "Meta in TikTok", "Vodenje kampanj"],
-  },
-];
-
-export default function PricingPage() {
-  return (
-    <PageShell active="cenik">
-      <SubpageHero
-        badge="Cenik"
-        title={
-          <>
-            Preprost cenik, <HeroHighlight>brez skritih stroškov</HeroHighlight>
-          </>
-        }
-        text="Spletna stran, SMS sistem, Google ocene, kampanje, gostovanje in podpora v enem paketu."
-      />
-
-      <PricingSwitcher />
-
-      <section className="bg-[#F6F4FC] px-5 py-[76px] md:px-8">
-        <div className="mx-auto max-w-[1080px]">
-          <SectionHeading eyebrow="Dodatne storitve" title="Dodajte, ko ste pripravljeni" />
-          <div className="mt-10">
-            <AddonPricingCards items={addons} />
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-5 py-[88px] md:px-8">
-        <div className="mx-auto max-w-[760px]">
-          <SectionHeading eyebrow="Pogosta vprašanja" title="Vse o ceni in pogojih" />
-          <FaqAccordion items={priceFaqs} />
-        </div>
-      </section>
-
-      <CtaBand title="Pripravljeni na več povpraševanj?" text="99 € na mesec ali 950 € za 12 mesecev. Brez vezave. Začnete prejemati povpraševanja v 10 dneh." />
-    </PageShell>
-  );
-}
+export default function PricingPage(){return <PageShell active="cenik"><main><MarketingHero eyebrow="Preprost cenik" title="En paket. Vse potrebno." highlight="Brez presenečenj." text="Spletna stran, sistem za povpraševanja, SMS obvestila, Google ocene, kampanje in podpora v eni jasni naročnini." secondary={{label:"Kaj je vključeno",href:"#vkljuceno"}} />
+  <section id="vkljuceno" className="px-5 pb-24 md:px-8 md:pb-28"><PricingSwitcher /></section>
+  <section className="bg-[#17141F] px-5 py-20 text-white md:px-8"><div className="mx-auto grid max-w-[1050px] gap-10 md:grid-cols-[.8fr_1.2fr]"><div><div className="text-xs font-extrabold uppercase tracking-[.13em] text-[#B9B0FF]">Jasni pogoji</div><h2 className="mt-4 text-[34px] font-extrabold leading-tight tracking-[-.035em]">Plačujete samo, dokler sistem uporabljate.</h2></div><div className="grid gap-4 sm:grid-cols-3">{[[ShieldCheck,"Brez vezave","Prekinitev kadarkoli."],[Check,"Brez začetnega stroška","Postavitev je vključena."],[Sparkles,"Popolna skrb","Gostovanje in spremembe ureja ekipa."]].map(([Icon,t,d])=>{const I=Icon as typeof Check;return <article key={t as string} className="rounded-2xl border border-white/10 bg-white/5 p-5"><I size={20} className="text-[#B9B0FF]"/><h3 className="mt-4 text-sm font-extrabold">{t as string}</h3><p className="mt-1 text-xs leading-5 text-[#AAA5B4]">{d as string}</p></article>})}</div></div></section>
+  <section className="bg-[#F7F5FC] px-5 py-24 md:px-8 md:py-28"><div className="mx-auto max-w-[1080px]"><MarketingHeading eyebrow="Dodatne storitve" title="Nadgradite takrat, ko to res potrebujete." text="Osnovni paket že pokrije vaš spletni nastop in delo s strankami. Dodatke vključite glede na cilje podjetja."/><div className="mt-12"><AddonPricingCards items={addons}/></div></div></section>
+  <section className="px-5 py-24 md:px-8 md:py-28"><div className="mx-auto max-w-[760px]"><div className="flex justify-center"><HelpCircle className="text-[#6654DB]"/></div><MarketingHeading eyebrow="Pogosta vprašanja" title="Vse o ceni in pogojih."/><div className="mt-10"><FaqAccordion items={priceFaqs}/></div></div></section><CtaBand title="Začnite brez velikega začetnega vložka" text="99 € na mesec ali 950 € za 12 mesecev. Brez vezave in brez skritih stroškov."/></main></PageShell>}

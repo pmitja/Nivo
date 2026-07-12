@@ -36,6 +36,8 @@ body {
   overflow-x: clip;
 }
 
+button, a { -webkit-tap-highlight-color: transparent; }
+
 input::placeholder,
 textarea::placeholder {
   color: #a9a6b3;
@@ -77,12 +79,22 @@ textarea::placeholder {
 @keyframes nv-section-reveal {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(28px) scale(0.99);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes nv-soft-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(0, -12px, 0) scale(1.025); }
+}
+
+@keyframes nv-video-arrive {
+  from { opacity: 0; transform: translateY(30px) scale(0.965); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes accordion-down {
@@ -119,15 +131,38 @@ textarea::placeholder {
   animation: nv-enter 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.marketing-page > section:first-of-type {
+.marketing-page > section:first-of-type,
+.marketing-page main > section:first-of-type {
   animation: nv-enter 560ms 80ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.nv-hero-video {
+  animation: nv-video-arrive 820ms 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.nv-drift {
+  animation: nv-soft-drift 9s ease-in-out infinite;
+}
+
+.marketing-page article,
+.marketing-page [data-motion-card] {
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 240ms ease, border-color 240ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .marketing-page article:hover,
+  .marketing-page [data-motion-card]:hover {
+    transform: translateY(-5px);
+  }
+}
+
 @supports (animation-timeline: view()) {
-  .marketing-page > section:not(:first-of-type) {
+  .marketing-page > section:not(:first-of-type),
+  .marketing-page main > section:not(:first-of-type) {
     animation: nv-section-reveal linear both;
     animation-timeline: view();
-    animation-range: entry 5% cover 22%;
+    animation-range: entry 4% cover 24%;
   }
 }
 
@@ -161,7 +196,10 @@ textarea::placeholder {
     transition-duration: 0.001ms !important;
   }
 
-  .marketing-page > section {
+  .marketing-page > section,
+  .marketing-page main > section,
+  .nv-hero-video,
+  .nv-drift {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

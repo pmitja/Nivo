@@ -1,91 +1,26 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BadgeCheck, MapPin, Search, ShieldCheck, Zap } from "lucide-react";
 
+import { MarketingHeading } from "@/components/premium-marketing";
 import { PageShell } from "@/components/site-shell";
-import { CtaBand } from "@/components/site-primitives";
-import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
+import { Button } from "@/components/ui/button";
 import { getDirectoryCompanies, groupByCity, trades } from "@/lib/directory";
 import { createMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
-
-export const metadata: Metadata = createMetadata({
-  title: "Preverjeni izvajalci po Sloveniji",
-  description:
-    "Poiščite preverjenega električarja, vodovodarja, krovca ali drugega izvajalca v svojem kraju. Vsi izvajalci odgovarjajo hitro in imajo urejeno spletno stran.",
-  path: "/izvajalci",
-  keywords: ["izvajalci Slovenija", "lokalni izvajalci", "preverjeni obrtniki"],
-});
+export const metadata: Metadata = createMetadata({ title: "Preverjeni izvajalci po Sloveniji", description: "Poiščite električarja, vodovodarja, krovca ali drugega lokalnega izvajalca in mu pošljite povpraševanje.", path: "/izvajalci", keywords: ["izvajalci Slovenija", "lokalni izvajalci", "preverjeni obrtniki"] });
 
 export default async function DirectoryIndexPage() {
   const all = await getDirectoryCompanies();
-
-  const byTrade = trades
-    .map((trade) => {
-      const companies = all.filter((company) => company.trade.slug === trade.slug);
-      return { trade, count: companies.length, cities: groupByCity(companies).slice(0, 4) };
-    })
-    .sort((a, b) => b.count - a.count);
-
-  return (
-    <PageShell active="izvajalci">
-      <SubpageHero
-        badge="Imenik izvajalcev"
-        title={
-          <>
-            Najdite <HeroHighlight>preverjenega izvajalca</HeroHighlight> v svojem kraju
-          </>
-        }
-        text="Vsi izvajalci v imeniku uporabljajo sistem Obrtio — to pomeni hitre odgovore, urejeno spletno stran in resen odnos do strank."
-      />
-
-      <section className="bg-white px-5 pb-24 pt-4 md:px-8">
-        <div className="mx-auto grid max-w-[1100px] gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {byTrade.map(({ trade, count, cities }) => (
-            <Link
-              key={trade.slug}
-              href={`/izvajalci/${trade.slug}`}
-              className="group flex flex-col rounded-[20px] border border-[#ECEAF3] bg-white p-6 no-underline shadow-[0_2px_10px_rgba(20,19,29,.04)] transition-all duration-200 hover:-translate-y-1 hover:border-[#D8D2F0] hover:shadow-[0_18px_44px_rgba(20,19,29,.10)]"
-            >
-              <div className="flex items-center justify-between">
-                <Image
-                  src={trade.icon}
-                  alt=""
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                />
-                {count > 0 ? (
-                  <span className="rounded-full bg-[#EFEBFF] px-2.5 py-1 text-[12.5px] font-bold text-[#6A5AE0]">
-                    {count} {count === 1 ? "izvajalec" : count === 2 ? "izvajalca" : count < 5 ? "izvajalci" : "izvajalcev"}
-                  </span>
-                ) : null}
-              </div>
-              <h2 className="mt-4 text-[18px] font-extrabold tracking-[-.01em] text-[#16151D]">{trade.plural}</h2>
-              <p className="mt-1.5 text-[14px] leading-[1.5] text-[#54515E]">{trade.intro}</p>
-              {cities.length > 0 ? (
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {cities.map((group) => (
-                    <span key={group.citySlug} className="rounded-full border border-[#ECEAF3] px-2.5 py-0.5 text-[12.5px] font-semibold text-[#56535F]">
-                      {group.city}
-                    </span>
-                  ))}
-                </div>
-              ) : null}
-              <span className="mt-auto flex items-center gap-1.5 pt-4 text-[14px] font-bold text-[#6A5AE0]">
-                Poglej izvajalce <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <CtaBand
-        title="Ste izvajalec in vas še ni na seznamu?"
-        text="Pridružite se sistemu Obrtio — dobite spletno stran, SMS obvestila in mesto v imeniku, kjer vas stranke same najdejo."
-      />
-    </PageShell>
-  );
+  const byTrade = trades.map(trade => { const companies=all.filter(c=>c.trade.slug===trade.slug); return {trade,count:companies.length,cities:groupByCity(companies).slice(0,3)} }).sort((a,b)=>b.count-a.count);
+  return <PageShell active="izvajalci"><main>
+    <section className="relative overflow-hidden bg-[#F7F5FC] px-5 py-20 md:px-8 md:py-28"><div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(105,89,223,.17),transparent_45%)]"/><div className="relative mx-auto max-w-[980px] text-center"><div className="inline-flex items-center gap-2 rounded-full border border-[#DFDAF6] bg-white px-3.5 py-2 text-[12px] font-extrabold uppercase tracking-[.1em] text-[#6654DB]"><BadgeCheck size={15}/> Imenik izvajalcev</div><h1 className="mt-7 text-balance text-[43px] font-extrabold leading-[1.04] tracking-[-.047em] sm:text-[56px] md:text-[68px]">Pravi izvajalec za vaš projekt. <span className="text-[#6654DB]">Brez ugibanja.</span></h1><p className="mx-auto mt-6 max-w-[670px] text-[17px] leading-[1.7] text-[#5D5967] md:text-[19px]">Izberite storitev in kraj. Preglejte lokalne izvajalce ter pošljite jasno povpraševanje neposredno podjetju.</p>
+      <div className="mx-auto mt-9 flex max-w-[680px] items-center gap-3 rounded-2xl border border-[#DDD8EA] bg-white p-3 shadow-[0_20px_55px_rgba(48,37,90,.12)]"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EEEAFE] text-[#6654DB]"><Search size={20}/></span><div className="min-w-0 flex-1 text-left"><div className="text-xs font-bold text-[#9994A1]">Kaj potrebujete?</div><div className="truncate text-sm font-extrabold sm:text-base">Izberite kategorijo spodaj</div></div><ArrowRight className="mr-2 text-[#6654DB]"/></div>
+    </div></section>
+    <section className="border-y border-[#ECEAF2] bg-white px-5 py-7 md:px-8"><div className="mx-auto flex max-w-[900px] flex-wrap justify-center gap-x-8 gap-y-3 text-[13px] font-bold text-[#55515E]">{[[ShieldCheck,"Jasni kontaktni podatki"],[MapPin,"Lokalni izvajalci"],[Zap,"Hitro povpraševanje"]].map(([Icon,text])=>{const I=Icon as typeof Zap;return <span key={text as string} className="flex items-center gap-2"><I size={16} className="text-[#6654DB]"/>{text as string}</span>})}</div></section>
+    <section className="px-5 py-24 md:px-8 md:py-28"><div className="mx-auto max-w-[1120px]"><MarketingHeading eyebrow="Izberite storitev" title="Poiščite strokovnjaka za delo, ki ga potrebujete." text={`${byTrade.length} kategorij izvajalcev po Sloveniji.`}/><div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{byTrade.map(({trade,count,cities})=><Link key={trade.slug} href={`/izvajalci/${trade.slug}`} className="group flex min-h-[290px] flex-col overflow-hidden rounded-[24px] border border-[#E8E5EE] bg-[#FCFBFD] p-7 no-underline shadow-[0_10px_30px_rgba(28,23,46,.04)]"><div className="flex items-start justify-between"><Image src={trade.icon} alt="" width={72} height={72} className="h-[72px] w-[72px] object-contain"/><span className="rounded-full bg-[#EEEAFE] px-3 py-1.5 text-[11px] font-extrabold text-[#6654DB]">{count} {count===1?"izvajalec":"izvajalcev"}</span></div><h2 className="mt-5 text-xl font-extrabold tracking-[-.02em]">{trade.plural}</h2><p className="mt-2 line-clamp-2 text-sm leading-6 text-[#67626E]">{trade.intro}</p>{cities.length?<div className="mt-4 flex flex-wrap gap-1.5">{cities.map(c=><span key={c.citySlug} className="rounded-full border border-[#E4E1EA] bg-white px-2.5 py-1 text-[11px] font-semibold text-[#68636F]">{c.city}</span>)}</div>:null}<span className="mt-auto flex items-center gap-2 pt-5 text-sm font-extrabold text-[#6654DB]">Poglej izvajalce <ArrowRight size={15} className="transition-transform group-hover:translate-x-1"/></span></Link>)}</div></div></section>
+    <section className="bg-[#17141F] px-5 py-20 text-white md:px-8"><div className="mx-auto flex max-w-[1000px] flex-col items-center justify-between gap-8 text-center md:flex-row md:text-left"><div><div className="text-xs font-extrabold uppercase tracking-[.12em] text-[#B9B0FF]">Za izvajalce</div><h2 className="mt-3 text-[32px] font-extrabold tracking-[-.035em] md:text-[40px]">Želite, da vas stranke najdejo tukaj?</h2><p className="mt-3 max-w-[620px] text-[15px] leading-7 text-[#AAA5B4]">Z Obrtio dobite profesionalno stran, sistem za povpraševanja in mesto v imeniku.</p></div><Button asChild variant="inverse" size="lg"><Link href="/kontakt">Pridružite se <ArrowRight size={17}/></Link></Button></div></section>
+  </main></PageShell>;
 }

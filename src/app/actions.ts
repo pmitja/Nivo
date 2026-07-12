@@ -12,7 +12,6 @@ import {
   companies,
   companyDocuments,
   contactForms,
-  companySmsSettings,
   leads,
   reviewFeedbacks,
   reviewRequests,
@@ -702,46 +701,6 @@ export async function confirmPreparedCampaignAction(formData: FormData) {
 
   revalidatePath("/dashboard/kampanje");
   revalidatePath("/admin/kampanje");
-}
-
-export async function updateAutoReplyMessageAction(_: unknown, formData: FormData) {
-  const user = await requireClientUser();
-  const autoReplyMessage = String(formData.get("autoReplyMessage") ?? "").trim();
-
-  if (autoReplyMessage.length < 20) {
-    return { ok: false, message: "Sporočilo naj ima vsaj 20 znakov." };
-  }
-
-  if (autoReplyMessage.length > 480) {
-    return { ok: false, message: "Sporočilo naj bo krajše od 480 znakov." };
-  }
-
-  await db
-    .insert(companySmsSettings)
-    .values({
-      companyId: user.companyId!,
-      autoReplyMessage,
-      updatedAt: new Date(),
-    })
-    .onConflictDoUpdate({
-      target: companySmsSettings.companyId,
-      set: {
-        autoReplyMessage,
-        updatedAt: new Date(),
-      },
-    });
-
-  await db.insert(auditLogs).values({
-    companyId: user.companyId!,
-    userId: user.id,
-    action: "auto_reply_message_updated",
-    entityType: "company_sms_settings",
-    entityId: user.companyId!,
-    metadata: { source: "sms_dashboard" },
-  });
-
-  revalidatePath("/dashboard/sms");
-  return { ok: true, message: "Avtomatski SMS odgovor je shranjen." };
 }
 
 export async function sendReviewRequestAction(formData: FormData) {

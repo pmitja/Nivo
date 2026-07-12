@@ -36,6 +36,20 @@
       "when": 1751022240000,
       "tag": "0005_lead_attachment",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1751022300000,
+      "tag": "0006_review_feedback_optional",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1751022360000,
+      "tag": "0007_sms_provider_message_id",
+      "breakpoints": true
     }
   ]
 }

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import { analyticsEvents, companies, contactForms, customers, leads, smsMessages } from "@/db/schema";
 import { sendLeadConfirmationEmail } from "@/lib/email";
-import { contractorLeadSms } from "@/lib/sms-copy";
+import { contractorLeadSms, customerLeadConfirmationSms } from "@/lib/sms-copy";
 import { sendSms } from "@/lib/sms";
 import { isUploadableLeadAttachment, prepareLeadAttachment, uploadPreparedFile } from "@/lib/uploadthing";
 
@@ -115,21 +115,33 @@ export async function submitLead(body: unknown, companyId?: string, attachment?:
     .returning();
 
   const contractorMessage = contractorLeadSms(data.name, data.location, data.service);
+  const customerMessage = customerLeadConfirmationSms(company.name);
 
-  const [contractorSms] = await db
+  const [contractorSms, customerSms] = await db
     .insert(smsMessages)
-    .values({
-      companyId: company.id,
-      customerId: customer.id,
-      leadId: lead.id,
-      phone: company.phone,
-      message: contractorMessage,
-      type: "contractor_new_lead",
-    })
+    .values([
+      {
+        companyId: company.id,
+        customerId: customer.id,
+        leadId: lead.id,
+        phone: company.phone,
+        message: contractorMessage,
+        type: "contractor_new_lead",
+      },
+      {
+        companyId: company.id,
+        customerId: customer.id,
+        leadId: lead.id,
+        phone: data.phone,
+        message: customerMessage,
+        type: "customer_auto_reply",
+      },
+    ])
     .returning();
 
   const notifications: Promise<unknown>[] = [
     sendSms(contractorSms.id, company.phone, contractorMessage),
+    sendSms(customerSms.id, data.phone, customerMessage),
   ];
 
   if (data.email) {

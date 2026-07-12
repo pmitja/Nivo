@@ -13,20 +13,33 @@ Uporaba:
 1. Stranka izpolni kontaktni obrazec.
 2. Sistem shrani lead v bazo.
 3. Sistem pošlje SMS obrtniku.
-4. Sistem pošlje potrditveno e-pošto stranki.
-5. Lead se prikaže v dashboardu.
+4. Sistem pošlje potrditveni SMS stranki.
+5. Sistem pošlje potrditveno e-pošto stranki.
+6. Lead se prikaže v dashboardu.
 
 ## SMS obrtniku
 
-> Novo povpraševanje: Marko, Ljubljana, menjava strehe. Odprite dashboard za več informacij.
+> Novo povprasevanje: Marko, Ljubljana, menjava strehe. Odprite Obrtio za vec informacij.
+
+## SMS stranki
+
+> Hvala za povprasevanje. Streharstvo Novak se vam javi v najkrajsem moznem casu.
+
+Besedilo je fiksno in ni nastavljivo po podjetju.
 
 ## E-pošta stranki
 
-Stranka po oddaji prejme e-poštno potrdilo. SMS se stranki ob oddaji povpraševanja ne pošilja.
+Stranka po oddaji poleg SMS-a prejme še e-poštno potrdilo.
 
 ## SMS za Google oceno
 
-> Hvala za zaupanje. Veseli bomo vaše Google ocene: [povezava]
+> Hvala za zaupanje. Prosimo ocenite naso storitev: [povezava]
+
+## Kodiranje in dolžina
+
+SMS s šumniki se kodira v UCS-2, kjer je en segment dolg samo 70 znakov. Zato vsa SMS besedila pred pošiljanjem pretvorimo v GSM-7 (č → c, š → s, ž → z) in jih omejimo na **160 znakov**, kar je en segment.
+
+Pretvorbo in omejitev opravi `src/lib/sms-copy.ts`. Nova SMS besedila vedno dodaj tam.
 
 ## SMS kampanje
 
@@ -82,6 +95,17 @@ Vsak SMS mora biti shranjen v `sms_messages`.
 
 ## Provider
 
-Za MVP uporabljamo Twilio. SMS ob novem povpraševanju prejme samo obrtnik.
+Uporabljamo sent.dm. SMS ob novem povpraševanju prejmeta obrtnik in stranka.
 
-Pričakovan strošek za Slovenijo: približno 0,03 € do 0,08 € na SMS.
+Okoljske spremenljivke:
+
+```txt
+SENT_API_KEY
+SENT_WEBHOOK_SECRET
+```
+
+Pošiljanje: `POST https://api.sent.dm/v3/messages` z glavo `x-api-key`, telo `{ to, text, channel: ["sms"] }`. Uporabljamo prosto besedilo (`text`), ne predlog.
+
+Status dostave: sent.dm pošlje webhook na `/api/webhooks/sent`. Webhook nastaviš v sent.dm nadzorni plošči. Ker webhook vrne sent.dm ID sporočila, ga ob pošiljanju shranimo v `sms_messages.provider_message_id`.
+
+Pošiljatelj je trenutno telefonska številka. Alfanumerični pošiljatelj (`Obrtio`) prek API-ja ni nastavljiv — zanj je treba pisati na support@sent.dm.
