@@ -41,7 +41,7 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
       </aside>
 
       <div className="lg:pl-[252px]">
-        <header className="sticky top-0 z-10 border-b border-[#E4E6EA] bg-white/90 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 border-b border-[#E4E6EA] bg-white/90 backdrop-blur-xl">
           <div className="flex h-16 items-center justify-between gap-3 px-4 md:px-7 lg:px-10">
             <Link
               href={mode === "admin" ? "/admin" : "/dashboard"}
@@ -50,20 +50,22 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
             >
               <Logo className="h-7 w-[108px]" />
             </Link>
-            <DashboardUtilities mode={mode} today={today} />
-            <form action={signOut} className="lg:hidden">
-              <button
-                type="submit"
-                aria-label="Odjava"
-                title="Odjava"
-                className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[#E2E4E8] bg-white text-[#555861] transition active:bg-[#F3F1FC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15"
-              >
-                <LogOut className="h-[18px] w-[18px]" />
-              </button>
-            </form>
+            <div className="ml-auto flex items-center gap-2">
+              <DashboardUtilities mode={mode} today={today} />
+              <form action={signOut} className="lg:hidden">
+                <button
+                  type="submit"
+                  aria-label="Odjava"
+                  title="Odjava"
+                  className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[#E2E4E8] bg-white text-[#555861] transition active:bg-[#F3F1FC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15"
+                >
+                  <LogOut className="h-[18px] w-[18px]" />
+                </button>
+              </form>
+            </div>
           </div>
-          <div className="px-4 md:px-7 lg:hidden"><MobileTabs mode={mode} /></div>
         </header>
+        <div className="px-4 md:px-7 lg:hidden"><MobileTabs mode={mode} /></div>
         <main className="mx-auto max-w-[1500px] px-4 pb-24 pt-7 md:px-7 md:pb-28 md:pt-9 lg:px-10 lg:pb-9">
           <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
             <div><p className="mb-1.5 text-[12px] font-bold uppercase tracking-[.12em] text-[#777A83]">{mode === "admin" ? "Upravljanje platforme" : "Vaše poslovanje"}</p><h1 className="text-[28px] font-bold leading-tight tracking-[-.035em] md:text-[34px]">{title}</h1>{subtitle ? <p className="mt-1.5 text-[15px] text-[#6D7078]">{subtitle}</p> : null}</div>
