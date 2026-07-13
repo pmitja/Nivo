@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -23,13 +22,6 @@ import { PromoVideoPlayer } from "@/components/promo-video-player";
 import { PageShell } from "@/components/site-shell";
 import { Button } from "@/components/ui/button";
 import { faqsLanding } from "@/lib/site-data";
-
-export const metadata: Metadata = {
-  title: "Obrtio — sistem za več strank",
-  description:
-    "Profesionalna spletna stran, povpraševanja, SMS obvestila, Google ocene in kampanje za obrtnike — vse na enem mestu.",
-  robots: { index: false, follow: false },
-};
 
 const trades = ["Krovci", "Električarji", "Vodovodarji", "Gradbinci", "Fasaderji", "HVAC", "Solarni monterji"];
 
@@ -82,7 +74,7 @@ function DashboardPreview() {
   );
 }
 
-export default function NovaDomaca() {
+export function HomePage() {
   return (
     <PageShell>
       <main className="bg-white">

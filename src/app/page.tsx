@@ -1,7 +1,7 @@
 import { JsonLd } from "@/components/json-ld";
+import { HomePage } from "@/components/home-page";
 import { createMetadata, faqJsonLd, serviceJsonLd } from "@/lib/seo";
 import { faqsLanding } from "@/lib/site-data";
-import HomePage from "./nova-domaca/page";
 
 const description =
   "Profesionalna spletna stran, povpraševanja, SMS obvestila, Google ocene in kampanje za slovenske obrtnike — vse na enem mestu.";

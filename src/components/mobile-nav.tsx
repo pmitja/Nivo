@@ -1,13 +1,28 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { navLinks } from '@/lib/site-data';
 
+const ContactForm = dynamic(
+  () => import('@/components/contact-form').then((module) => module.ContactForm),
+  {
+    loading: () => <div className="min-h-[520px] animate-pulse rounded-[22px] bg-white" aria-hidden="true" />,
+  },
+);
+
 export function MobileNav({ active, dashboardHref }: { active?: string; dashboardHref?: string | null }) {
   const [open, setOpen] = useState(false);
+  const [consultationOpen, setConsultationOpen] = useState(false);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -75,8 +90,36 @@ export function MobileNav({ active, dashboardHref }: { active?: string; dashboar
           >
             {dashboardHref ? 'Sistem' : 'Prijava'}
           </Link>
+          {!dashboardHref ? (
+            <button
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                setConsultationOpen(true);
+              }}
+              className={cn(
+                'mt-5 flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#6654DB] px-5 py-3 text-[15px] font-extrabold text-white shadow-[0_14px_30px_rgba(102,84,219,.24)] transition-all duration-300 hover:bg-[#5443C4] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/20',
+                open ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0',
+              )}
+              style={{ transitionDelay: open ? `${90 + navLinks.length * 40}ms` : '0ms' }}
+            >
+              Brezplačen posvet <ArrowRight size={16} />
+            </button>
+          ) : null}
         </div>
       </div>
+
+      {!dashboardHref ? (
+        <Dialog open={consultationOpen} onOpenChange={setConsultationOpen}>
+          <DialogContent className="max-h-[calc(100dvh-24px)] w-[calc(100vw-24px)] max-w-[600px] overflow-y-auto overscroll-contain rounded-[24px] border-0 bg-[#F7F5FC] p-2 sm:max-h-[88vh] sm:p-3">
+            <DialogTitle className="sr-only">Rezervirajte brezplačen posvet</DialogTitle>
+            <DialogDescription className="sr-only">
+              Izpolnite obrazec in odgovorili vam bomo v 24 urah.
+            </DialogDescription>
+            <ContactForm />
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </>
   );
 }

@@ -35,7 +35,7 @@ export function SiteNav({ active }: { active?: string }) {
           <Link href="/prijava" className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline sm:inline md:inline">
             Prijava
           </Link>
-          <Button asChild size="sm" className="hidden sm:inline-flex">
+          <Button asChild size="sm" className="hidden md:inline-flex">
             <Link href="/kontakt">Brezplačen posvet</Link>
           </Button>
           <MobileNav active={active} dashboardHref={null} />
