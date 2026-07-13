@@ -4,10 +4,11 @@ import Link from "next/link";
 import { ArrowRight, BadgeCheck, MapPin, Search, ShieldCheck, Zap } from "lucide-react";
 
 import { MarketingHeading } from "@/components/premium-marketing";
+import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/site-shell";
 import { Button } from "@/components/ui/button";
 import { getDirectoryCompanies, groupByCity, trades } from "@/lib/directory";
-import { createMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, createMetadata, SITE_URL } from "@/lib/seo";
 
 export const revalidate = 3600;
 export const metadata: Metadata = createMetadata({ title: "Preverjeni izvajalci po Sloveniji", description: "Poiščite električarja, vodovodarja, krovca ali drugega lokalnega izvajalca in mu pošljite povpraševanje.", path: "/izvajalci", keywords: ["izvajalci Slovenija", "lokalni izvajalci", "preverjeni obrtniki"] });
@@ -15,7 +16,7 @@ export const metadata: Metadata = createMetadata({ title: "Preverjeni izvajalci 
 export default async function DirectoryIndexPage() {
   const all = await getDirectoryCompanies();
   const byTrade = trades.map(trade => { const companies=all.filter(c=>c.trade.slug===trade.slug); return {trade,count:companies.length,cities:groupByCity(companies).slice(0,3)} }).sort((a,b)=>b.count-a.count);
-  return <PageShell active="izvajalci"><main>
+  return <PageShell active="izvajalci"><JsonLd data={[breadcrumbJsonLd([{name:"Domov",path:"/"},{name:"Izvajalci",path:"/izvajalci"}]),{"@type":"ItemList",name:"Vrste izvajalcev po Sloveniji",numberOfItems:byTrade.length,itemListElement:byTrade.map(({trade},index)=>({"@type":"ListItem",position:index+1,name:trade.plural,url:`${SITE_URL}/izvajalci/${trade.slug}`}))}]}/><main>
     <section className="relative overflow-hidden bg-[#F7F5FC] px-5 py-20 md:px-8 md:py-28"><div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(105,89,223,.17),transparent_45%)]"/><div className="relative mx-auto max-w-[980px] text-center"><div className="inline-flex items-center gap-2 rounded-full border border-[#DFDAF6] bg-white px-3.5 py-2 text-[12px] font-extrabold uppercase tracking-[.1em] text-[#6654DB]"><BadgeCheck size={15}/> Imenik izvajalcev</div><h1 className="mt-7 text-balance text-[43px] font-extrabold leading-[1.04] tracking-[-.047em] sm:text-[56px] md:text-[68px]">Pravi izvajalec za vaš projekt. <span className="text-[#6654DB]">Brez ugibanja.</span></h1><p className="mx-auto mt-6 max-w-[670px] text-[17px] leading-[1.7] text-[#5D5967] md:text-[19px]">Izberite storitev in kraj. Preglejte lokalne izvajalce ter pošljite jasno povpraševanje neposredno podjetju.</p>
       <div className="mx-auto mt-9 flex max-w-[680px] items-center gap-3 rounded-2xl border border-[#DDD8EA] bg-white p-3 shadow-[0_20px_55px_rgba(48,37,90,.12)]"><span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EEEAFE] text-[#6654DB]"><Search size={20}/></span><div className="min-w-0 flex-1 text-left"><div className="text-xs font-bold text-[#9994A1]">Kaj potrebujete?</div><div className="truncate text-sm font-extrabold sm:text-base">Izberite kategorijo spodaj</div></div><ArrowRight className="mr-2 text-[#6654DB]"/></div>
     </div></section>

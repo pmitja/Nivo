@@ -1,4 +1,5 @@
 import { inArray } from "drizzle-orm";
+import { cache } from "react";
 
 import { db } from "@/db";
 import { companies, type Company } from "@/db/schema";
@@ -156,7 +157,7 @@ export type DirectoryCompany = {
 
 const VISIBLE_STATUSES: Company["status"][] = ["active"];
 
-export async function getDirectoryCompanies(): Promise<DirectoryCompany[]> {
+export const getDirectoryCompanies = cache(async (): Promise<DirectoryCompany[]> => {
   const rows = await db
     .select({
       id: companies.id,
@@ -190,7 +191,7 @@ export async function getDirectoryCompanies(): Promise<DirectoryCompany[]> {
       },
     ];
   });
-}
+});
 
 export async function getCompaniesForTrade(tradeSlug: string): Promise<DirectoryCompany[]> {
   const all = await getDirectoryCompanies();

@@ -62,7 +62,7 @@ export async function sendContactInquiryEmails(inquiry: ContactInquiry) {
 
   const resend = new Resend(apiKey);
   const from = process.env.EMAIL_FROM || "Obrtio <onboarding@resend.dev>";
-  const inbox = process.env.CONTACT_INBOX_EMAIL || "pozdravljeni@obrtio.si";
+  const inbox = process.env.CONTACT_INBOX_EMAIL || "info@obrtio.si";
 
   const notification = contactInquiryNotificationEmail(inquiry);
   const { error: notificationError } = await resend.emails.send({

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
+import { LEGAL_NAME } from "@/lib/seo";
 
 function FooterColumn({ title, links }: { title: string; links: [string, string][] }) {
   return (
@@ -33,10 +34,10 @@ export function SiteFooter() {
         <FooterColumn
           title="Storitve"
           links={[
-            ["Spletna stran", "/storitve"],
+            ["Spletna stran za obrtnike", "/spletna-stran-za-obrtnike"],
             ["SMS sistem", "/storitve"],
             ["Google ocene", "/storitve"],
-            ["AI pomočnik", "/storitve"],
+            ["Vse storitve", "/storitve"],
           ]}
         />
         <FooterColumn
@@ -57,7 +58,7 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="mx-auto mt-12 flex max-w-[1200px] flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-6">
-        <div className="text-[13px] text-[#76737F]">© 2026 Obrtio. Vse pravice pridržane.</div>
+        <div className="text-[13px] text-[#76737F]">© 2026 {LEGAL_NAME}. Obrtio. Vse pravice pridržane.</div>
         <div className="text-[13px] text-[#76737F]">Brez vezave · Prekinitev kadarkoli</div>
       </div>
     </footer>

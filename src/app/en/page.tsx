@@ -15,6 +15,7 @@ export const metadata = createMetadata({
     "Obrtio builds your website and helps you manage leads, SMS alerts, customer reviews and campaigns in one simple system.",
   path: "/en",
   locale: "en_US",
+  languages: { en: "/en", "sl-SI": "/", "x-default": "/" },
   keywords: ["contractor website", "lead management for contractors", "home service marketing"],
 });
 

@@ -4,17 +4,13 @@ import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { Logo } from "@/components/logo";
 import { SiteFooter } from "@/components/site-footer";
-import { getCurrentUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { navLinks } from "@/lib/site-data";
 
 export { Logo } from "@/components/logo";
 export { Eyebrow, SectionHeading, CtaBand } from "@/components/site-primitives";
 
-export async function SiteNav({ active }: { active?: string }) {
-  const user = await getCurrentUser();
-  const dashboardHref = user?.role === "super_admin" ? "/admin" : "/dashboard";
-
+export function SiteNav({ active }: { active?: string }) {
   return (
     <header className="relative sticky top-0 z-50 border-b border-[#ECEAF3] bg-white/80 backdrop-blur-[10px] backdrop-saturate-150">
       <nav className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-5 py-4 md:px-8">
@@ -36,13 +32,13 @@ export async function SiteNav({ active }: { active?: string }) {
           ))}
         </div>
         <div className="flex items-center gap-3.5">
-          <Link href={user ? dashboardHref : "/prijava"} className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline sm:inline md:inline">
-            {user ? "Sistem" : "Prijava"}
+          <Link href="/prijava" className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline sm:inline md:inline">
+            Prijava
           </Link>
           <Button asChild size="sm" className="hidden sm:inline-flex">
             <Link href="/kontakt">Brezplačen posvet</Link>
           </Button>
-          <MobileNav active={active} dashboardHref={user ? dashboardHref : null} />
+          <MobileNav active={active} dashboardHref={null} />
         </div>
       </nav>
     </header>

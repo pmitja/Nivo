@@ -3,11 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CompanyCard } from "@/components/directory/company-card";
+import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/site-shell";
 import { CtaBand } from "@/components/site-primitives";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 import { getCompaniesForTrade, getDirectoryCompanies, getTrade, groupByCity, siteUrl } from "@/lib/directory";
-import { createMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, createMetadata, noIndexMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -39,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const title = `${singular} ${cityName} in okolica`;
   const description = `Iščete ${trade.searchPhrase} v kraju ${cityName} in okolici? Preverjeni lokalni izvajalci, ki hitro odgovorijo na povpraševanje. ${trade.intro}`;
 
-  return createMetadata({
+  const pageMetadata = createMetadata({
     title,
     description,
     path: `/izvajalci/${trade.slug}/${citySlug}`,
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       `${trade.singular} v bližini`,
     ],
   });
+  return companies.length > 0 ? pageMetadata : { ...pageMetadata, ...noIndexMetadata };
 }
 
 export default async function TradeCityPage({ params }: { params: Promise<Params> }) {
@@ -64,7 +66,6 @@ export default async function TradeCityPage({ params }: { params: Promise<Params
   const otherCities = groupByCity(allForTrade).filter((group) => group.citySlug !== citySlug);
 
   const jsonLd = {
-    "@context": "https://schema.org",
     "@type": "ItemList",
     name: `${trade.plural} — ${cityName} in okolica`,
     numberOfItems: companies.length,
@@ -83,7 +84,7 @@ export default async function TradeCityPage({ params }: { params: Promise<Params
 
   return (
     <PageShell active="izvajalci">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={[breadcrumbJsonLd([{name:"Domov",path:"/"},{name:"Izvajalci",path:"/izvajalci"},{name:trade.plural,path:`/izvajalci/${trade.slug}`},{name:`${cityName} in okolica`,path:`/izvajalci/${trade.slug}/${citySlug}`}]), jsonLd]} />
       <SubpageHero
         badge={`Imenik izvajalcev · ${trade.plural}`}
         title={
