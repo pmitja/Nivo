@@ -19,18 +19,22 @@ export async function POST(request: Request, { params }: { params: Promise<{ com
     return Response.json({ message: "Neveljaven zahtevek." }, { status: 400 });
   }
   const attachment = formData.get("attachment");
+  const formStartedAt = formData.get("formStartedAt");
 
   const body = {
     name: formData.get("name"),
     phone: formData.get("phone"),
     email: formData.get("email"),
-    location: formData.get("location"),
+    location: formData.get("location") ?? undefined,
     service: formData.get("service") || "Splošno povpraševanje",
-    message: formData.get("message"),
+    message: formData.get("message") ?? "",
     privacyConsent: formData.get("privacyConsent") === "on",
     marketingConsent: formData.get("marketingConsent") === "on",
-    website: formData.get("website"),
-    formStartedAt: formData.get("formStartedAt"),
+    website: formData.get("website") ?? "",
+    formStartedAt:
+      typeof formStartedAt === "string" && formStartedAt.trim().length > 0
+        ? formStartedAt
+        : undefined,
   };
 
   const response = await submitLead(body, companyId, attachment instanceof File ? attachment : null, request.headers);
