@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
 import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -42,6 +42,7 @@ export function ContactForm() {
     website: "",
   });
   const [errors, setErrors] = useState<Errors>({});
+  const formStartedAt = useRef<number | null>(null);
 
   function validate() {
     const next: Errors = {};
@@ -62,7 +63,7 @@ export function ContactForm() {
     }
     setErrors({});
     startTransition(async () => {
-      const result = await submitContactInquiry(values);
+      const result = await submitContactInquiry({ ...values, formStartedAt: formStartedAt.current ?? Date.now() });
       if (result.ok) {
         setSubmitted(true);
       } else {
@@ -72,6 +73,7 @@ export function ContactForm() {
   }
 
   function update(field: keyof typeof values, value: string) {
+    formStartedAt.current ??= Date.now();
     setValues((current) => ({ ...current, [field]: value }));
   }
 
@@ -94,6 +96,7 @@ export function ContactForm() {
             size="sm"
             onClick={() => {
               setValues({ name: "", email: "", phone: "", panoga: "", message: "", website: "" });
+              formStartedAt.current = null;
               setErrors({});
               setSubmitted(false);
             }}

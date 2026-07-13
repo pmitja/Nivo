@@ -4,27 +4,31 @@ import { z } from "zod";
 import { db } from "@/db";
 import { analyticsEvents, companies, contactForms, customers, leads, smsMessages } from "@/db/schema";
 import { sendLeadConfirmationEmail } from "@/lib/email";
+import { enforceRateLimits, getClientIdentifier, isSuspiciouslyFast } from "@/lib/form-spam-protection";
 import { contractorLeadSms, customerLeadConfirmationSms } from "@/lib/sms-copy";
 import { sendSms } from "@/lib/sms";
 import { isUploadableLeadAttachment, prepareLeadAttachment, uploadPreparedFile } from "@/lib/uploadthing";
 
 const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+const MAX_JSON_BODY_SIZE = 32 * 1024;
 const DUPLICATE_WINDOW_MS = 2 * 60 * 1000;
 
 const leadSchema = z.object({
   companyId: z.string().uuid(),
-  name: z.string().min(2),
-  phone: z.string().min(5),
-  email: z.string().email(),
-  location: z.string().optional(),
-  service: z.string().min(2),
+  name: z.string().trim().min(2).max(120),
+  phone: z.string().trim().min(5).max(32).refine((value) => (value.match(/\d/g) ?? []).length >= 6),
+  email: z.string().trim().email().max(254),
+  location: z.string().trim().max(200).optional(),
+  service: z.string().trim().min(2).max(200),
   message: z.string().trim().max(2000).default(""),
   privacyConsent: z.literal(true),
   marketingConsent: z.boolean().default(false),
+  website: z.string().max(200).default(""),
+  formStartedAt: z.coerce.number().int().positive().optional(),
 });
 
 /** Domene strank, ki smejo oddajati povpraševanja s svojega obrazca. */
-function allowedOrigin(request: Request) {
+export function allowedOrigin(request: Request) {
   const origin = request.headers.get("origin");
   if (!origin) return null;
 
@@ -40,7 +44,7 @@ function allowedOrigin(request: Request) {
   return null;
 }
 
-function corsHeaders(origin: string) {
+export function corsHeaders(origin: string) {
   return {
     "Access-Control-Allow-Origin": origin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
@@ -65,8 +69,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Domena ni dovoljena." }, { status: 403 });
   }
 
-  const body = await request.json();
-  const response = await submitLead(body);
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > MAX_JSON_BODY_SIZE) {
+    return NextResponse.json({ message: "Zahtevek je prevelik." }, { status: 413 });
+  }
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ message: "Neveljaven zahtevek." }, { status: 400 });
+  }
+
+  const response = await submitLead(body, undefined, null, request.headers);
 
   if (origin) {
     Object.entries(corsHeaders(origin)).forEach(([key, value]) => response.headers.set(key, value));
@@ -75,13 +90,22 @@ export async function POST(request: Request) {
   return response;
 }
 
-export async function submitLead(body: unknown, companyId?: string, attachment?: File | null) {
+export async function submitLead(
+  body: unknown,
+  companyId?: string,
+  attachment?: File | null,
+  requestHeaders?: Headers,
+) {
   const parsed = leadSchema.safeParse(
     typeof body === "object" && body !== null ? { ...body, companyId: companyId ?? (body as { companyId?: string }).companyId } : body,
   );
 
   if (!parsed.success) {
     return NextResponse.json({ message: "Preverite obvezna polja obrazca." }, { status: 400 });
+  }
+
+  if (parsed.data.website || (parsed.data.formStartedAt && isSuspiciouslyFast(parsed.data.formStartedAt))) {
+    return NextResponse.json({ ok: true });
   }
 
   if (attachment && attachment.size > 0) {
@@ -103,6 +127,20 @@ export async function submitLead(body: unknown, companyId?: string, attachment?:
   const [contactForm] = await db.select().from(contactForms).where(eq(contactForms.companyId, company.id)).limit(1);
   if (contactForm?.active === false) {
     return NextResponse.json({ message: "Obrazec trenutno ni aktiven." }, { status: 404 });
+  }
+  const clientIdentifier = getClientIdentifier(requestHeaders ?? new Headers());
+  const normalizedPhone = data.phone.replace(/\D/g, "");
+  const rateLimit = await enforceRateLimits([
+    { scope: "lead:ip:10m", identifier: clientIdentifier, limit: 8, windowMs: 10 * 60 * 1000 },
+    { scope: `lead:company:${company.id}:ip:10m`, identifier: clientIdentifier, limit: 4, windowMs: 10 * 60 * 1000 },
+    { scope: `lead:company:${company.id}:phone:1h`, identifier: normalizedPhone, limit: 2, windowMs: 60 * 60 * 1000 },
+  ]);
+
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { message: "Preveč poskusov. Poskusite znova pozneje." },
+      { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } },
+    );
   }
 
   // Vsako povprasevanje poslje dva SMS-a, zato zavrnemo ponovne oddaje z iste stevilke.

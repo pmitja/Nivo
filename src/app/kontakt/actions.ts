@@ -1,8 +1,10 @@
 "use server";
 
 import { z } from "zod";
+import { headers } from "next/headers";
 
 import { sendContactInquiryEmails } from "@/lib/email";
+import { enforceRateLimits, getClientIdentifier, isSuspiciouslyFast } from "@/lib/form-spam-protection";
 
 const inquirySchema = z.object({
   name: z.string().trim().min(1, "Vnesite ime in priimek.").max(200),
@@ -15,7 +17,8 @@ const inquirySchema = z.object({
     .refine((value) => (value.match(/\d/g) || []).length >= 6, "Neveljavna številka."),
   panoga: z.string().trim().max(100).default(""),
   message: z.string().trim().max(5000).default(""),
-  website: z.string().default(""),
+  website: z.string().max(200).default(""),
+  formStartedAt: z.coerce.number().int().positive(),
 });
 
 export type ContactInquiryResult = { ok: true } | { ok: false; error: string };
@@ -26,9 +29,20 @@ export async function submitContactInquiry(input: unknown): Promise<ContactInqui
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Preverite vnesene podatke." };
   }
 
-  const { website, ...inquiry } = parsed.data;
-  if (website) {
+  const { website, formStartedAt, ...inquiry } = parsed.data;
+  if (website || isSuspiciouslyFast(formStartedAt)) {
     return { ok: true };
+  }
+
+  const headerStore = await headers();
+  const clientIdentifier = getClientIdentifier(headerStore);
+  const rateLimit = await enforceRateLimits([
+    { scope: "contact:ip:15m", identifier: clientIdentifier, limit: 3, windowMs: 15 * 60 * 1000 },
+    { scope: "contact:ip:24h", identifier: clientIdentifier, limit: 10, windowMs: 24 * 60 * 60 * 1000 },
+  ]);
+
+  if (!rateLimit.allowed) {
+    return { ok: false, error: "Preveč poskusov. Poskusite znova pozneje." };
   }
 
   try {

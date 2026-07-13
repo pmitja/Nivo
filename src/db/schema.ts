@@ -155,6 +155,19 @@ export const sessions = pgTable(
   (table) => [index("sessions_user_id_idx").on(table.userId), index("sessions_expires_at_idx").on(table.expiresAt)],
 );
 
+export const formRateLimits = pgTable(
+  "form_rate_limits",
+  {
+    key: text("key").primaryKey(),
+    scope: text("scope").notNull(),
+    requestCount: integer("request_count").default(1).notNull(),
+    windowStartedAt: timestamp("window_started_at", { withTimezone: true }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [index("form_rate_limits_expires_at_idx").on(table.expiresAt)],
+);
+
 export const customers = pgTable(
   "customers",
   {
@@ -242,7 +255,8 @@ export const companySmsSettings = pgTable("company_sms_settings", {
 export type ContactFormField = {
   name: "name" | "phone" | "email" | "location" | "service" | "message";
   label: string;
-  type: "text" | "email" | "tel" | "textarea";
+  type: "text" | "email" | "tel" | "textarea" | "select";
+  options?: string[];
   required: boolean;
   enabled: boolean;
 };

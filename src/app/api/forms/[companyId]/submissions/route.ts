@@ -1,8 +1,23 @@
-import { submitLead } from "@/app/api/leads/route";
+import { allowedOrigin, corsHeaders, submitLead } from "@/app/api/leads/route";
 
 export async function POST(request: Request, { params }: { params: Promise<{ companyId: string }> }) {
+  const origin = allowedOrigin(request);
+  if (request.headers.get("origin") && !origin) {
+    return Response.json({ message: "Domena ni dovoljena." }, { status: 403 });
+  }
+
   const { companyId } = await params;
-  const formData = await request.formData();
+  const contentLength = Number(request.headers.get("content-length") ?? 0);
+  if (contentLength > 10 * 1024 * 1024 + 256 * 1024) {
+    return Response.json({ message: "Zahtevek je prevelik." }, { status: 413 });
+  }
+
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return Response.json({ message: "Neveljaven zahtevek." }, { status: 400 });
+  }
   const attachment = formData.get("attachment");
 
   const body = {
@@ -14,21 +29,23 @@ export async function POST(request: Request, { params }: { params: Promise<{ com
     message: formData.get("message"),
     privacyConsent: formData.get("privacyConsent") === "on",
     marketingConsent: formData.get("marketingConsent") === "on",
+    website: formData.get("website"),
+    formStartedAt: formData.get("formStartedAt"),
   };
 
-  const response = await submitLead(body, companyId, attachment instanceof File ? attachment : null);
-  response.headers.set("access-control-allow-origin", "*");
+  const response = await submitLead(body, companyId, attachment instanceof File ? attachment : null, request.headers);
+  if (origin) {
+    Object.entries(corsHeaders(origin)).forEach(([key, value]) => response.headers.set(key, value));
+  }
   return response;
 }
 
-export async function OPTIONS() {
+export async function OPTIONS(request: Request) {
+  const origin = allowedOrigin(request);
+  if (!origin) return new Response(null, { status: 403 });
+
   return new Response(null, {
     status: 204,
-    headers: {
-      "access-control-allow-origin": "*",
-      "access-control-allow-methods": "POST, OPTIONS",
-      "access-control-allow-headers": "content-type",
-      "access-control-max-age": "86400",
-    },
+    headers: corsHeaders(origin),
   });
 }
