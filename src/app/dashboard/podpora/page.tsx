@@ -1,7 +1,7 @@
 import { createSupportTicketAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -44,7 +44,7 @@ export default async function ClientSupportPage({ searchParams }: { searchParams
               <Label htmlFor="support-message">Sporočilo</Label>
               <Textarea id="support-message" name="message" required className="min-h-32" placeholder="Kako vam lahko pomagamo?" />
             </div>
-            <Button>Pošlji vprašanje</Button>
+            <SubmitButton pendingText="Pošiljam...">Pošlji vprašanje</SubmitButton>
           </form>
         </Panel>
         <Panel title="Moja vprašanja">

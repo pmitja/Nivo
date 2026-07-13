@@ -2,6 +2,7 @@ import { DashboardShell, Panel, StatusPill } from "@/components/dashboard/dashbo
 import { createCompanyAction } from "@/app/actions";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -80,7 +81,7 @@ export default async function AdminCompaniesPage({ searchParams }: { searchParam
               <Label htmlFor="internal-notes">Interni zapiski</Label>
               <Textarea id="internal-notes" name="internalNotes" placeholder="Kaj mora ekipa vedeti?" />
             </div>
-            <Button>Dodaj stranko</Button>
+            <SubmitButton pendingText="Dodajam stranko...">Dodaj stranko</SubmitButton>
           </form>
         </Panel>
 

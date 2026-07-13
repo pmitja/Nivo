@@ -1,7 +1,7 @@
 import { addWebsiteRequestCommentAction, createWebsiteRequestAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -46,7 +46,7 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
                 </SelectContent>
               </Select>
             </div>
-            <Button>Oddaj zahtevek</Button>
+            <SubmitButton pendingText="Oddajam...">Oddaj zahtevek</SubmitButton>
           </form>
         </Panel>
 
@@ -81,9 +81,9 @@ export default async function ClientWebsitePage({ searchParams }: { searchParams
                   <form action={addWebsiteRequestCommentAction} className="grid gap-2">
                     <input type="hidden" name="requestId" value={request.id} />
                     <Textarea name="message" required placeholder="Dodajte dodatne informacije ali odgovor ekipi Obrtio." />
-                    <Button size="sm" variant="secondary">
+                    <SubmitButton size="sm" variant="secondary" pendingText="Dodajam...">
                       Dodaj odgovor
-                    </Button>
+                    </SubmitButton>
                   </form>
                 </div>
               </div>

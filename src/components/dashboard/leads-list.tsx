@@ -1,7 +1,7 @@
 import { updateLeadStatusAction } from "@/app/actions";
 import { EmptyState, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { SendReviewRequestButton } from "@/components/dashboard/send-review-request-button";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { getClientLeadsPage } from "@/lib/dashboard-data";
 import { formatDate, leadStatusLabels } from "@/lib/labels";
@@ -51,7 +51,7 @@ export function LeadsList({
                   {Object.entries(leadStatusLabels).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <Button size="sm">Shrani</Button>
+              <SubmitButton size="sm">Shrani</SubmitButton>
             </form>
             {lead.status === "completed" ? (
               <SendReviewRequestButton

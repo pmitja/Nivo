@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
+import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { sendReviewRequestForLeadAction, type SendReviewRequestState } from "@/app/actions";
 import { Button, type ButtonProps } from "@/components/ui/button";
@@ -37,7 +38,12 @@ export function SendReviewRequestButton({
     <form action={formAction}>
       <input type="hidden" name="leadId" value={leadId} />
       <Button {...buttonProps} disabled={isPending || buttonProps.disabled}>
-        {isPending ? "Pošiljam..." : "Pošlji zahtevo za oceno"}
+        {isPending ? (
+          <>
+            <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+            Pošiljam...
+          </>
+        ) : "Pošlji zahtevo za oceno"}
       </Button>
     </form>
   );

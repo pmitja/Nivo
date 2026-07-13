@@ -10,6 +10,7 @@ import {
 } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatCard, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -123,7 +124,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button>Shrani obrazec</Button>
+              <SubmitButton>Shrani obrazec</SubmitButton>
               <Button asChild variant="secondary"><Link href={`/obrazec/${company.id}`} target="_blank">Predogled</Link></Button>
             </div>
           </form>
@@ -197,7 +198,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
               <Label htmlFor="internal-notes">Interni zapiski</Label>
               <Textarea id="internal-notes" name="internalNotes" className="min-h-32" defaultValue={company.internalNotes ?? ""} />
             </div>
-            <Button>Shrani spremembe</Button>
+            <SubmitButton>Shrani spremembe</SubmitButton>
           </form>
         </Panel>
 
@@ -246,7 +247,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
               <p className="text-sm font-semibold leading-6 text-[#777382]">
                 SVG ostane SVG. PNG, JPG in WebP se pred uploadom pretvorijo v kompresiran WebP.
               </p>
-              <Button variant="secondary">Naloži logo</Button>
+              <SubmitButton variant="secondary" pendingText="Nalaganje...">Naloži logo</SubmitButton>
             </form>
           </Panel>
         </div>
@@ -310,7 +311,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
               </div>
             </div>
             <Textarea name="notes" placeholder="Interna opomba za storitev." />
-            <Button>Dodaj storitev</Button>
+            <SubmitButton pendingText="Dodajam...">Dodaj storitev</SubmitButton>
           </form>
         </Panel>
 
@@ -342,9 +343,9 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button size="sm" variant="secondary">
+                    <SubmitButton size="sm" variant="secondary">
                       Shrani
-                    </Button>
+                    </SubmitButton>
                   </form>
                 </div>
               ))
@@ -375,7 +376,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
             <p className="text-sm font-semibold leading-6 text-[#777382]">
               Dokumenti so shranjeni na UploadThing z ločenim ključem podjetja in zapisom v bazi.
             </p>
-            <Button>Naloži dokument</Button>
+            <SubmitButton pendingText="Nalaganje...">Naloži dokument</SubmitButton>
           </form>
         </Panel>
 

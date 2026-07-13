@@ -1,7 +1,7 @@
 import { updateLeadStatusAction } from "@/app/actions";
 import { DashboardShell, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { requireSuperAdmin } from "@/lib/auth";
 import { getAdminLeadsPage } from "@/lib/dashboard-data";
@@ -40,7 +40,7 @@ export default async function AdminLeadsPage({ searchParams }: { searchParams: P
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button size="sm" className="bg-[#16151D] hover:bg-[#2B2933]">Shrani status</Button>
+                  <SubmitButton size="sm" pendingText="Shranjujem..." className="bg-[#16151D] hover:bg-[#2B2933]">Shrani status</SubmitButton>
                 </form>
               </div>
               <p className="mt-3 text-sm leading-6 text-[#55515F]">{lead.message}</p>

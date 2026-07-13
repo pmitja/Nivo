@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { createManualLeadAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
@@ -78,7 +79,12 @@ export function AddLeadDialog() {
             </Select>
           </div>
           <Button type="submit" disabled={isPending} className="mt-1">
-            {isPending ? "Dodajam..." : "Dodaj povpraševanje"}
+            {isPending ? (
+              <>
+                <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+                Dodajam...
+              </>
+            ) : "Dodaj povpraševanje"}
           </Button>
         </form>
       </DialogContent>

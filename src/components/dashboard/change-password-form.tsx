@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useRef } from "react";
-import { LockKeyhole } from "lucide-react";
+import { LoaderCircle, LockKeyhole } from "lucide-react";
+import { toast } from "sonner";
 import { changePasswordAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,10 +13,14 @@ export function ChangePasswordForm() {
   const [state, action, pending] = useActionState(changePasswordAction, { message: "", ok: false });
 
   useEffect(() => {
+    if (state.message) {
+      if (state.ok) toast.success(state.message);
+      else toast.error(state.message);
+    }
     if (state.ok) {
       formRef.current?.reset();
     }
-  }, [state.ok]);
+  }, [state]);
 
   return (
     <form ref={formRef} action={action} className="grid gap-4">
@@ -39,7 +44,11 @@ export function ChangePasswordForm() {
       ) : null}
 
       <Button type="submit" disabled={pending} className="justify-self-start">
-        <LockKeyhole className="h-4 w-4" />
+        {pending ? (
+          <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+        ) : (
+          <LockKeyhole className="h-4 w-4" />
+        )}
         {pending ? "Shranjujem..." : "Spremeni geslo"}
       </Button>
     </form>

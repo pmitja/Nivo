@@ -1,7 +1,7 @@
 import { addWebsiteRequestCommentAction, updateSupportTicketStatusAction, updateWebsiteRequestStatusAction } from "@/app/actions";
 import { DashboardShell, EmptyState, Panel, StatusPill } from "@/components/dashboard/dashboard-shell";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
-import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/ui/submit-button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,9 +70,9 @@ export default async function AdminRequestsPage({
                         ))}
                       </SelectContent>
                     </Select>
-                    <Button size="sm" variant="secondary" className="h-11 shrink-0 px-4 py-0">
+                    <SubmitButton size="sm" variant="secondary" className="h-11 shrink-0 px-4 py-0">
                       Shrani
-                    </Button>
+                    </SubmitButton>
                   </div>
                   {request.resolvedAt ? (
                     <div className="text-xs font-medium text-[#777A83]">Zaključeno {formatDate(request.resolvedAt)}</div>
@@ -103,7 +103,7 @@ export default async function AdminRequestsPage({
                   <form action={addWebsiteRequestCommentAction} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
                     <input type="hidden" name="requestId" value={request.id} />
                     <Textarea className="min-h-20 resize-y font-medium" name="message" required placeholder="Napišite komentar ali pojasnilo ..." />
-                    <Button size="sm" className="h-11 px-5 py-0">Dodaj komentar</Button>
+                    <SubmitButton size="sm" pendingText="Dodajam..." className="h-11 px-5 py-0">Dodaj komentar</SubmitButton>
                   </form>
                 </div>
               </div>
@@ -160,9 +160,9 @@ export default async function AdminRequestsPage({
                         </SelectContent>
                       </Select>
                     </div>
-                    <Button size="sm" variant="secondary">
+                    <SubmitButton size="sm" variant="secondary">
                       Shrani status
-                    </Button>
+                    </SubmitButton>
                     {ticket.resolvedAt ? (
                       <div className="text-xs font-semibold text-[#777382]">Zaključeno {formatDate(ticket.resolvedAt)}</div>
                     ) : null}

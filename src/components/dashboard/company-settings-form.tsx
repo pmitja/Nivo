@@ -1,6 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { LoaderCircle } from "lucide-react";
+import { toast } from "sonner";
 import { updateClientCompanySettingsAction } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,6 +23,12 @@ const initialState = { message: "", ok: false };
 
 export function CompanySettingsForm({ company }: CompanySettingsFormProps) {
   const [state, formAction, pending] = useActionState(updateClientCompanySettingsAction, initialState);
+
+  useEffect(() => {
+    if (!state.message) return;
+    if (state.ok) toast.success(state.message);
+    else toast.error(state.message);
+  }, [state]);
 
   return (
     <form action={formAction} className="grid gap-4">
@@ -49,7 +57,14 @@ export function CompanySettingsForm({ company }: CompanySettingsFormProps) {
           {state.message}
         </div>
       ) : null}
-      <Button disabled={pending}>{pending ? "Shranjujem ..." : "Shrani podatke"}</Button>
+      <Button disabled={pending} aria-live="polite">
+        {pending ? (
+          <>
+            <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
+            Shranjujem...
+          </>
+        ) : "Shrani podatke"}
+      </Button>
     </form>
   );
 }
