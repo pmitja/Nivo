@@ -53,6 +53,8 @@ export async function enforceRateLimits(rules: RateLimitRule[]): Promise<RateLim
     const now = new Date();
     const cutoff = new Date(now.getTime() - rule.windowMs);
     const expiresAt = new Date(now.getTime() + rule.windowMs);
+    const nowIso = now.toISOString();
+    const cutoffIso = cutoff.toISOString();
     const key = rateLimitKey(rule.scope, rule.identifier);
 
     const [row] = await db
@@ -69,11 +71,11 @@ export async function enforceRateLimits(rules: RateLimitRule[]): Promise<RateLim
         target: formRateLimits.key,
         set: {
           requestCount: sql<number>`case
-            when ${formRateLimits.windowStartedAt} <= ${cutoff} then 1
+            when ${formRateLimits.windowStartedAt} <= ${cutoffIso}::timestamptz then 1
             else ${formRateLimits.requestCount} + 1
           end`,
           windowStartedAt: sql<Date>`case
-            when ${formRateLimits.windowStartedAt} <= ${cutoff} then ${now}
+            when ${formRateLimits.windowStartedAt} <= ${cutoffIso}::timestamptz then ${nowIso}::timestamptz
             else ${formRateLimits.windowStartedAt}
           end`,
           expiresAt,
