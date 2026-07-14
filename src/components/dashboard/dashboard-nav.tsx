@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { NavIcon, NavSpinner } from "@/components/dashboard/nav-progress";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -113,7 +114,8 @@ export function SidebarNav({ mode }: { mode: "admin" | "client" }) {
                   : "text-[#60636B] hover:bg-white hover:text-[#17181C]",
               )}
             >
-              <item.icon
+              <NavIcon
+                icon={item.icon}
                 className={cn(
                   "h-4 w-4 transition",
                   isItemActive(item) ? "text-[#6553D8]" : "text-[#858891] group-hover:text-[#6553D8]",
@@ -129,13 +131,14 @@ export function SidebarNav({ mode }: { mode: "admin" | "client" }) {
                     href={child.href}
                     aria-current={isChildActive(item, child) ? "page" : undefined}
                     className={cn(
-                      "rounded-lg px-3 py-2 text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15",
+                      "flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[12px] font-semibold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15",
                       isChildActive(item, child)
                         ? "bg-[#F1EFF8] font-bold text-[#6A5AE0]"
                         : "text-[#8A8694] hover:bg-[#F7F6FB] hover:text-[#16151D]",
                     )}
                   >
                     {child.label}
+                    <NavSpinner />
                   </Link>
                 ))}
               </div>
@@ -166,13 +169,14 @@ export function MobileTabs({ mode }: { mode: "admin" | "client" }) {
               key={child.href}
               href={child.href}
               className={cn(
-                "shrink-0 rounded-[999px] border px-3 py-1.5 text-[13px] font-bold transition",
+                "flex shrink-0 items-center gap-1.5 rounded-[999px] border px-3 py-1.5 text-[13px] font-bold transition",
                 isChildActive(activeParent, child)
                   ? "border-[#DCD6FF] bg-[#F1EFF8] text-[#6A5AE0]"
                   : "border-[#E2DFEA] bg-white text-[#5F5B68]",
               )}
             >
               {child.label}
+              <NavSpinner />
             </Link>
           ))}
         </nav>
@@ -191,7 +195,7 @@ export function MobileTabs({ mode }: { mode: "admin" | "client" }) {
               )}
             >
               <span className={cn("flex h-7 w-10 items-center justify-center rounded-xl transition", isItemActive(item) && "bg-[#EEEAFE]")}>
-                <item.icon className="h-[19px] w-[19px]" strokeWidth={isItemActive(item) ? 2.4 : 2} />
+                <NavIcon icon={item.icon} className="h-[19px] w-[19px]" strokeWidth={isItemActive(item) ? 2.4 : 2} />
               </span>
               <span className="w-full truncate text-center">{item.label}</span>
             </Link>

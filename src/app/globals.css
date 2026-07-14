@@ -166,6 +166,25 @@ textarea::placeholder {
   }
 }
 
+@keyframes nv-nav-progress {
+  0% { transform: scaleX(0.03); }
+  35% { transform: scaleX(0.48); }
+  70% { transform: scaleX(0.76); }
+  100% { transform: scaleX(0.93); }
+}
+
+.nv-nav-progress {
+  transform-origin: left;
+  animation: nv-nav-progress 2.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nv-nav-progress {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
 .animate-accordion-down {
   animation: accordion-down 220ms ease-out;
 }

@@ -5,6 +5,7 @@ import { logoutAction } from "@/app/prijava/actions";
 import { Logo } from "@/components/logo";
 import { Badge } from "@/components/ui/badge";
 import { MobileTabs, SidebarNav } from "@/components/dashboard/dashboard-nav";
+import { NavProgressBar } from "@/components/dashboard/nav-progress";
 import { DashboardUtilities } from "@/components/dashboard/dashboard-utilities";
 import { cn } from "@/lib/utils";
 import type { AuthUser } from "@/lib/auth";
@@ -21,6 +22,7 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
 
   return (
     <div className="min-h-screen bg-[#F6F7F9] text-[#17181C]">
+      <NavProgressBar />
       <aside className="fixed inset-y-0 left-0 z-20 hidden w-[252px] flex-col border-r border-[#E4E6EA] bg-[#FBFBFC] px-3 py-4 lg:flex">
         <Link href={mode === "admin" ? "/admin" : "/dashboard"} className="flex min-h-12 items-center rounded-xl px-3 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15">
           <Logo className="h-7 w-[112px]" />

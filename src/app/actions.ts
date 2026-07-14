@@ -438,6 +438,43 @@ export async function updateLeadStatusAction(formData: FormData) {
   revalidateLeadPaths();
 }
 
+export type DeleteLeadState = { ok: boolean; message: string } | null;
+
+export async function deleteLeadAction(_: DeleteLeadState, formData: FormData): Promise<DeleteLeadState> {
+  const user = await requireUserForLeadAction();
+  const leadId = String(formData.get("leadId") ?? "");
+
+  if (!leadId) {
+    return { ok: false, message: "Povpraševanje ni bilo najdeno." };
+  }
+
+  // Client user lahko briše samo povpraševanja svojega podjetja.
+  const where =
+    user.role === "super_admin" ? eq(leads.id, leadId) : and(eq(leads.id, leadId), eq(leads.companyId, user.companyId!));
+
+  const [deleted] = await db
+    .delete(leads)
+    .where(where)
+    .returning({ id: leads.id, companyId: leads.companyId, name: leads.name });
+
+  if (!deleted) {
+    return { ok: false, message: "Povpraševanja ni bilo mogoče izbrisati." };
+  }
+
+  await db.insert(auditLogs).values({
+    companyId: deleted.companyId,
+    userId: user.id,
+    action: "lead_deleted",
+    entityType: "lead",
+    entityId: deleted.id,
+    metadata: { name: deleted.name },
+  });
+
+  revalidateLeadPaths();
+
+  return { ok: true, message: "Povpraševanje je izbrisano." };
+}
+
 export async function updateContactInquiryStatusAction(formData: FormData) {
   await requireSuperAdmin();
   const inquiryId = String(formData.get("inquiryId") ?? "");

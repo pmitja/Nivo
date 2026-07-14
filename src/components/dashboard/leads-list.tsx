@@ -1,5 +1,6 @@
 import { updateLeadStatusAction } from "@/app/actions";
 import { EmptyState, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { DeleteLeadButton } from "@/components/dashboard/delete-lead-button";
 import { SendReviewRequestButton } from "@/components/dashboard/send-review-request-button";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -61,6 +62,9 @@ export function LeadsList({
                 alreadySent={sentReviewLeadIds.has(lead.id)}
               />
             ) : null}
+            <div className="ml-auto">
+              <DeleteLeadButton leadId={lead.id} leadName={lead.name} />
+            </div>
           </div>
           <div className="mt-4 rounded-[14px] border border-[#EEEAF5] bg-[#FBFAFF] p-4 text-sm font-semibold text-[#686473]">
             AI pomočnik za povzetke in osnutke ponudb: <span className="font-extrabold text-[#6A5AE0]">pride kmalu</span>
