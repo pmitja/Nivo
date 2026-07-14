@@ -118,6 +118,59 @@ ${ctaButton(`tel:${inquiry.phone.replace(/\s+/g, "")}`, `Pokliči ${inquiry.name
   return { subject: `Novo povpraševanje: ${inquiry.name} (${inquiry.panoga || "brez panoge"})`, html, text };
 }
 
+export type LeadConfirmation = {
+  customerName: string;
+  companyName: string;
+  companyEmail: string;
+  companyPhone: string;
+  service: string;
+};
+
+/** Potrdilo stranki, ki je oddala povpraševanje pri obrtniku. */
+export function leadConfirmationEmail(lead: LeadConfirmation) {
+  const firstName = lead.customerName.trim().split(/\s+/)[0];
+  const rows = [
+    detailRow("Storitev", lead.service),
+    detailRow("Izvajalec", lead.companyName),
+    detailRow("Telefon", lead.companyPhone),
+    detailRow("E-pošta", lead.companyEmail),
+  ].join("");
+
+  const html = layout({
+    preheader: `${lead.companyName} je prejel vaše povpraševanje za ${lead.service}.`,
+    body: `
+<div style="font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${BRAND};">Povpraševanje prejeto</div>
+<h1 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.5px;color:${INK};line-height:1.2;">Hvala, ${escapeHtml(firstName)}!</h1>
+<p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Podjetje <strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> je prejelo vaše povpraševanje za <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> in se vam javi v najkrajšem možnem času.</p>
+<div style="margin-top:26px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${FAINT};">Vaš izvajalec</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;border:1px solid ${BORDER};border-radius:14px;border-collapse:separate;overflow:hidden;">
+${rows}
+</table>
+${ctaButton(`tel:${lead.companyPhone.replace(/\s+/g, "")}`, `Pokličite ${escapeHtml(lead.companyName)}`)}
+<p style="margin:28px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Če želite kaj dodati ali popraviti, kar odgovorite na to sporočilo — odgovor gre neposredno podjetju ${escapeHtml(lead.companyName)}, ne Obrtiu.</p>
+<p style="margin:20px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Lep pozdrav,<br><strong style="color:${INK};">ekipa Obrtio</strong></p>
+`,
+  });
+
+  const text = [
+    `Pozdravljeni ${firstName},`,
+    "",
+    `podjetje ${lead.companyName} je prejelo vaše povpraševanje za ${lead.service} in se vam javi v najkrajšem možnem času.`,
+    "",
+    "Vaš izvajalec:",
+    `${lead.companyName}`,
+    `Telefon: ${lead.companyPhone}`,
+    `E-pošta: ${lead.companyEmail}`,
+    "",
+    `Če želite kaj dodati, odgovorite na to sporočilo — odgovor gre neposredno podjetju ${lead.companyName}.`,
+    "",
+    "Lep pozdrav,",
+    "ekipa Obrtio",
+  ].join("\n");
+
+  return { subject: `Prejeli smo vaše povpraševanje za ${lead.service}`, html, text };
+}
+
 export function contactInquiryConfirmationEmail(inquiry: ContactInquiry) {
   const firstName = inquiry.name.trim().split(/\s+/)[0];
   const steps = [

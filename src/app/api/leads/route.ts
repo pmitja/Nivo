@@ -253,6 +253,8 @@ export async function submitLead(
         customerEmail: data.email,
         customerName: data.name,
         companyName: company.name,
+        companyEmail: company.email,
+        companyPhone: company.phone,
         service: data.service,
       }),
     );
