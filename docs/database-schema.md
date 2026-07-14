@@ -62,6 +62,28 @@ leads
 
 Statusi: new, contacted, quote_sent, won, completed, lost.
 
+## contact_inquiries
+
+Prodajna povpraševanja za Obrtio, oddana prek obrazca za brezplačni posvet. Ker gre za podatke same platforme in ne podatke naročnika, nimajo `company_id`.
+
+```sql
+contact_inquiries
+- id
+- name
+- email
+- phone
+- industry
+- message
+- status
+- source
+- confirmation_email_sent_at
+- confirmation_email_error
+- created_at
+- updated_at
+```
+
+Statusi: new, contacted, quote_sent, won, completed, lost.
+
 ## customers
 
 ```sql

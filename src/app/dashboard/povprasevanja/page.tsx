@@ -1,4 +1,3 @@
-import { AddLeadDialog } from "@/components/dashboard/add-lead-dialog";
 import { DashboardShell, Panel } from "@/components/dashboard/dashboard-shell";
 import { LeadsList } from "@/components/dashboard/leads-list";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
@@ -16,7 +15,7 @@ export default async function ClientLeadsPage({ searchParams }: { searchParams: 
 
   return (
     <DashboardShell user={user} mode="client" title="Povpraševanja" subtitle="Nova povpraševanja, ki še čakajo na obravnavo.">
-      <Panel title="Nova povpraševanja" action={<AddLeadDialog />}>
+      <Panel title="Nova povpraševanja">
         <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Novih povpraševanj ni." />
         <PaginationFooter
           page={data.page}

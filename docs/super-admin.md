@@ -34,6 +34,8 @@ Zahtevek vsebuje podjetje, naslov, opis, priloge, prioriteto, status, komentarje
 
 Super Admin vidi vsa povpraševanja vseh strank.
 
+V istem pregledu vidi tudi brezplačne posvete, oddane na `obrtio.si/kontakt`. Posvet se neposredno shrani v bazo kot novo povpraševanje, obiskovalec pa samodejno prejme potrditveno e-pošto.
+
 Povpraševanje vsebuje ime, telefon, email, lokacijo, storitev, sporočilo, podjetje, status, datum, vir in SMS status. AI povzetki pridejo kasneje.
 
 Statusi: Novo, Kontaktirano, Ponudba poslana, Dogovorjeno, Zaključeno, Izgubljeno.

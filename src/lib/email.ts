@@ -2,7 +2,6 @@ import { Resend } from "resend";
 
 import {
   contactInquiryConfirmationEmail,
-  contactInquiryNotificationEmail,
   type ContactInquiry,
 } from "@/lib/email-templates";
 
@@ -54,7 +53,7 @@ export async function sendLeadConfirmationEmail({
   }
 }
 
-export async function sendContactInquiryEmails(inquiry: ContactInquiry) {
+export async function sendContactInquiryConfirmationEmail(inquiry: ContactInquiry) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error("RESEND_API_KEY ni nastavljen.");
@@ -62,21 +61,6 @@ export async function sendContactInquiryEmails(inquiry: ContactInquiry) {
 
   const resend = new Resend(apiKey);
   const from = process.env.EMAIL_FROM || "Obrtio <onboarding@resend.dev>";
-  const inbox = process.env.CONTACT_INBOX_EMAIL || "info@obrtio.si";
-
-  const notification = contactInquiryNotificationEmail(inquiry);
-  const { error: notificationError } = await resend.emails.send({
-    from,
-    to: process.env.RESEND_DEV_RECIPIENT || inbox,
-    replyTo: inquiry.email,
-    subject: notification.subject,
-    html: notification.html,
-    text: notification.text,
-  });
-
-  if (notificationError) {
-    throw new Error(notificationError.message);
-  }
 
   const confirmation = contactInquiryConfirmationEmail(inquiry);
   const { error: confirmationError } = await resend.emails.send({
@@ -88,6 +72,6 @@ export async function sendContactInquiryEmails(inquiry: ContactInquiry) {
   });
 
   if (confirmationError) {
-    console.error("Potrditvene e-pošte stranki ni bilo mogoče poslati:", confirmationError.message);
+    throw new Error(confirmationError.message);
   }
 }

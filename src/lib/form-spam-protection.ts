@@ -20,7 +20,7 @@ export type RateLimitResult =
 function signingSecret() {
   return (
     process.env.FORM_RATE_LIMIT_SECRET ??
-    process.env.SENT_WEBHOOK_SECRET ??
+    process.env.SEVEN_SIGNING_SECRET ??
     process.env.DATABASE_URL ??
     "obrtio-local-rate-limit"
   );

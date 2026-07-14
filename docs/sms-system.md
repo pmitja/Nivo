@@ -95,17 +95,25 @@ Vsak SMS mora biti shranjen v `sms_messages`.
 
 ## Provider
 
-Uporabljamo sent.dm. SMS ob novem povpraševanju prejmeta obrtnik in stranka.
+Uporabljamo seven.io. SMS ob novem povpraševanju prejmeta obrtnik in stranka.
 
 Okoljske spremenljivke:
 
 ```txt
-SENT_API_KEY
-SENT_WEBHOOK_SECRET
+SEVEN_API_KEY          # API ključ (app.seven.io → Developer)
+SEVEN_SIGNING_SECRET   # signing key za preverjanje webhookov (isto mesto)
+SEVEN_SMS_FROM         # pošiljatelj, npr. Obrtio (neobvezno)
+SEVEN_WEBHOOK_URL      # URL, kot je registriran pri seven.io (neobvezno)
 ```
 
-Pošiljanje: `POST https://api.sent.dm/v3/messages` z glavo `x-api-key`, telo `{ to, text, channel: ["sms"] }`. Uporabljamo prosto besedilo (`text`), ne predlog.
+Pošiljanje: `POST https://gateway.seven.io/api/sms` z glavo `X-Api-Key`, telo `{ to, text, from, foreign_id }`. `foreign_id` je naš `sms_messages.id`, da sporočilo najdemo tudi v dnevniku seven.io.
 
-Status dostave: sent.dm pošlje webhook na `/api/webhooks/sent`. Webhook nastaviš v sent.dm nadzorni plošči. Ker webhook vrne sent.dm ID sporočila, ga ob pošiljanju shranimo v `sms_messages.provider_message_id`.
+Odgovor vrne kodo `success` (`100` = sprejeto) ter `messages[0].id` in `messages[0].price`. ID shranimo v `sms_messages.provider_message_id`, ceno v `sms_messages.cost`.
 
-Pošiljatelj je trenutno telefonska številka. Alfanumerični pošiljatelj (`Obrtio`) prek API-ja ni nastavljiv — zanj je treba pisati na support@sent.dm.
+Status dostave: seven.io pošlje `dlr` webhook na `/api/webhooks/seven`. Webhook registriraš v seven.io (tip dogodka `dlr`, metoda `JSON`). Payload je `{ data: { msg_id, status }, webhook_event: "dlr" }`.
+
+Statuse mapiramo: `DELIVERED` → `delivered`, `NOTDELIVERED` / `EXPIRED` / `REJECTED` / `FAILED` → `failed`. Vmesne statuse (`TRANSMITTED`, `ACCEPTED`, `BUFFERED`) ignoriramo.
+
+Webhook je podpisan. Preverimo `X-Signature` = HMAC-SHA256 (hex) niza `timestamp \n nonce \n POST \n URL \n MD5(telo)` s signing key-em. Zavrnemo podpise, starejše od 5 minut.
+
+Pošiljatelj: alfanumerični `Obrtio` je pri seven.io nastavljiv prek `from`. Za Slovenijo je treba pošiljatelja pri seven.io predhodno registrirati, sicer se uporabi privzeta številka računa.

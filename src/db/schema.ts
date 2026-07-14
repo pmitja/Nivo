@@ -218,6 +218,27 @@ export const leads = pgTable(
   ],
 );
 
+export const contactInquiries = pgTable(
+  "contact_inquiries",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    name: text("name").notNull(),
+    email: text("email").notNull(),
+    phone: text("phone").notNull(),
+    industry: text("industry"),
+    message: text("message"),
+    status: leadStatusEnum("status").default("new").notNull(),
+    source: text("source").default("obrtio.si/kontakt").notNull(),
+    confirmationEmailSentAt: timestamp("confirmation_email_sent_at", { withTimezone: true }),
+    confirmationEmailError: text("confirmation_email_error"),
+    ...timestamps,
+  },
+  (table) => [
+    index("contact_inquiries_status_idx").on(table.status),
+    index("contact_inquiries_created_at_idx").on(table.createdAt),
+  ],
+);
+
 export const smsMessages = pgTable(
   "sms_messages",
   {

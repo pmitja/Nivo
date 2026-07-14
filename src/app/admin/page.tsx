@@ -12,11 +12,11 @@ export default async function AdminOverviewPage() {
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <StatCard label="Aktivne stranke" value={data.activeCompanies} helper={`${data.newCompanies} novih ta mesec`} tone="green" icon={Building2} />
       <StatCard label="Mesečni prihodek" value={formatCurrency(data.mrr)} helper="Aktivne mesečne naročnine" icon={WalletCards} />
-      <StatCard label="Nova povpraševanja" value={data.newLeads} helper="Čakajo na odziv strank" tone="amber" icon={FileText} />
+      <StatCard label="Nova povpraševanja" value={data.newLeads} helper="Čakajo na obravnavo" tone="amber" icon={FileText} />
       <StatCard label="Odprti zahtevki" value={data.openRequests} helper="Spremembe spletnih strani" tone={data.openRequests ? "red" : "default"} icon={ReceiptText} />
     </div>
     <div className="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,.75fr)]">
-      <Panel title="Zadnja povpraševanja" eyebrow="Vsa podjetja" action={<DashboardLink href="/admin/povprasevanja">Poglej vsa</DashboardLink>}>
+      <Panel title="Zadnja povpraševanja" eyebrow="Najnovejše oddaje" action={<DashboardLink href="/admin/povprasevanja">Poglej vsa</DashboardLink>}>
         <div className="divide-y divide-[#ECEDEF]">{data.recentLeads.length ? data.recentLeads.map((lead) => <Link href="/admin/povprasevanja" key={lead.id} className="group -mx-2 grid min-h-[76px] items-center gap-3 rounded-xl px-2 py-3 transition hover:bg-[#FAFAFB] sm:grid-cols-[minmax(0,1fr)_auto_auto]"><div className="min-w-0"><div className="truncate text-sm font-bold">{lead.name} · {lead.service}</div><div className="mt-1 truncate text-[13px] text-[#777A83]">{lead.companyName}</div></div><div className="text-xs text-[#8A8D95]">{formatDate(lead.createdAt)}</div><div className="flex items-center gap-2"><StatusPill>{leadStatusLabels[lead.status]}</StatusPill><ArrowRight className="h-4 w-4 text-[#A0A3AA] transition group-hover:translate-x-0.5" /></div></Link>) : <EmptyState text="Ni še povpraševanj." />}</div>
       </Panel>
       <Panel title="Nove stranke" eyebrow="Zadnje dodane" action={<DashboardLink href="/admin/stranke">Upravljaj</DashboardLink>}>

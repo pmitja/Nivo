@@ -6,6 +6,7 @@ import {
   campaigns,
   companies,
   companyDocuments,
+  contactInquiries,
   contactForms,
   customers,
   leadStatusEnum,
@@ -34,13 +35,17 @@ export async function getAdminOverview() {
   const [newCompanies] = await db.select({ value: count() }).from(companies).where(gte(companies.createdAt, monthStart()));
   const [allSms] = await db.select({ value: count() }).from(smsMessages);
   const [newLeads] = await db.select({ value: count() }).from(leads).where(eq(leads.status, "new"));
+  const [newContactInquiries] = await db
+    .select({ value: count() })
+    .from(contactInquiries)
+    .where(eq(contactInquiries.status, "new"));
   const [openRequests] = await db
     .select({ value: count() })
     .from(websiteChangeRequests)
     .where(sql`${websiteChangeRequests.status} not in ('completed', 'closed')`);
   const [activeCampaigns] = await db.select({ value: count() }).from(campaigns).where(eq(campaigns.status, "active"));
 
-  const recentLeads = await db
+  const recentClientLeads = await db
     .select({
       id: leads.id,
       name: leads.name,
@@ -54,6 +59,29 @@ export async function getAdminOverview() {
     .orderBy(desc(leads.createdAt))
     .limit(5);
 
+  const recentContactInquiries = await db
+    .select({
+      id: contactInquiries.id,
+      name: contactInquiries.name,
+      service: contactInquiries.industry,
+      createdAt: contactInquiries.createdAt,
+      status: contactInquiries.status,
+    })
+    .from(contactInquiries)
+    .orderBy(desc(contactInquiries.createdAt))
+    .limit(5);
+
+  const recentLeads = [
+    ...recentClientLeads,
+    ...recentContactInquiries.map((inquiry) => ({
+      ...inquiry,
+      service: inquiry.service || "Brezplačni posvet",
+      companyName: "Obrtio · brezplačni posvet",
+    })),
+  ]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 5);
+
   const recentCompanies = await db.select().from(companies).orderBy(desc(companies.createdAt)).limit(5);
 
   return {
@@ -61,11 +89,32 @@ export async function getAdminOverview() {
     newCompanies: newCompanies.value,
     mrr: activeCompanies.value * 99,
     allSms: allSms.value,
-    newLeads: newLeads.value,
+    newLeads: newLeads.value + newContactInquiries.value,
     openRequests: openRequests.value,
     activeCampaigns: activeCampaigns.value,
     recentLeads,
     recentCompanies,
+  };
+}
+
+export async function getAdminContactInquiriesPage(page = 1, pageSize = 5) {
+  const safePage = Math.max(1, page);
+  const offset = (safePage - 1) * pageSize;
+
+  const [total] = await db.select({ value: count() }).from(contactInquiries);
+  const rows = await db
+    .select()
+    .from(contactInquiries)
+    .orderBy(desc(contactInquiries.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+
+  return {
+    inquiries: rows,
+    total: total.value,
+    page: safePage,
+    pageSize,
+    pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
   };
 }
 

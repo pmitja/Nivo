@@ -1,9 +1,13 @@
 "use server";
 
 import { z } from "zod";
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
+import { revalidatePath } from "next/cache";
 
-import { sendContactInquiryEmails } from "@/lib/email";
+import { db } from "@/db";
+import { contactInquiries } from "@/db/schema";
+import { sendContactInquiryConfirmationEmail } from "@/lib/email";
 import { enforceRateLimits, getClientIdentifier, isSuspiciouslyFast } from "@/lib/form-spam-protection";
 
 const inquirySchema = z.object({
@@ -45,14 +49,40 @@ export async function submitContactInquiry(input: unknown): Promise<ContactInqui
     return { ok: false, error: "Preveč poskusov. Poskusite znova pozneje." };
   }
 
+  let inquiryId: string;
   try {
-    await sendContactInquiryEmails(inquiry);
-    return { ok: true };
+    const [savedInquiry] = await db
+      .insert(contactInquiries)
+      .values({
+        name: inquiry.name,
+        email: inquiry.email,
+        phone: inquiry.phone,
+        industry: inquiry.panoga || null,
+        message: inquiry.message || null,
+      })
+      .returning({ id: contactInquiries.id });
+    inquiryId = savedInquiry.id;
   } catch (error) {
-    console.error("Pošiljanje povpraševanja ni uspelo:", error);
-    return {
-      ok: false,
-      error: "Pošiljanje trenutno ne deluje. Poskusite znova ali nas pokličite.",
-    };
+    console.error("Shranjevanje brezplačnega posveta ni uspelo:", error);
+    return { ok: false, error: "Pošiljanje trenutno ne deluje. Poskusite znova ali nas pokličite." };
   }
+
+  try {
+    await sendContactInquiryConfirmationEmail(inquiry);
+    await db
+      .update(contactInquiries)
+      .set({ confirmationEmailSentAt: new Date(), confirmationEmailError: null })
+      .where(eq(contactInquiries.id, inquiryId));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Neznana napaka";
+    console.error("Potrditvene e-pošte ni bilo mogoče poslati:", error);
+    await db
+      .update(contactInquiries)
+      .set({ confirmationEmailError: message.slice(0, 1000) })
+      .where(eq(contactInquiries.id, inquiryId));
+  }
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/povprasevanja");
+  return { ok: true };
 }

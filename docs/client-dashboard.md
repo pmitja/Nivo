@@ -23,6 +23,8 @@ Prikaži nova povpraševanja, neodgovorjena povpraševanja, poslane SMS-e, zahte
 
 Povpraševanje vsebuje ime, telefon, email, lokacijo, storitev, sporočilo, datum, status in SMS status. AI povzetki so označeni kot »Pride kmalu«.
 
+Povpraševanja nastanejo izključno z oddajo obrazca na spletni strani stranke. V dashboardu ni ročnega vnosa; uporabnik prejeta povpraševanja samo pregleda in obdeluje.
+
 Statusi: Novo, Kontaktirano, Ponudba poslana, Dogovorjeno, Zaključeno, Izgubljeno.
 
 Akcije: Pokliči stranko, Pošlji SMS, Spremeni status, Dodaj opombo, Pošlji zahtevo za Google oceno. AI priprava ponudbe pride kmalu.

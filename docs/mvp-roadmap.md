@@ -35,6 +35,8 @@ Zgraditi prvo verzijo platforme, katere jedro so spletne strani, prilagodljivi k
 - spletna stran zahtevki
 - nastavitve
 
+Povpraševanja se ustvarijo samo prek obrazcev na spletnih straneh strank. Dashboard je namenjen pregledu in obdelavi, ne ročnemu vnosu povpraševanj.
+
 ## Faza 4 — Lead sistem
 
 - admin urejevalnik kontaktnega obrazca za posamezno stranko

@@ -11,7 +11,9 @@ import {
   campaigns,
   companies,
   companyDocuments,
+  contactInquiries,
   contactForms,
+  leadStatusEnum,
   leads,
   reviewFeedbacks,
   reviewRequests,
@@ -436,6 +438,24 @@ export async function updateLeadStatusAction(formData: FormData) {
   revalidateLeadPaths();
 }
 
+export async function updateContactInquiryStatusAction(formData: FormData) {
+  await requireSuperAdmin();
+  const inquiryId = String(formData.get("inquiryId") ?? "");
+  const status = String(formData.get("status") ?? "new") as typeof contactInquiries.$inferSelect.status;
+
+  if (!inquiryId || !leadStatusEnum.enumValues.includes(status)) {
+    return;
+  }
+
+  await db
+    .update(contactInquiries)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(contactInquiries.id, inquiryId));
+
+  revalidatePath("/admin");
+  revalidatePath("/admin/povprasevanja");
+}
+
 async function requireUserForLeadAction() {
   const { requireUser } = await import("@/lib/auth");
   return requireUser();
@@ -450,42 +470,6 @@ function revalidateLeadPaths() {
   revalidatePath("/dashboard/povprasevanja/zakljuceno");
   revalidatePath("/dashboard/povprasevanja/izgubljeno");
   revalidatePath("/admin/povprasevanja");
-}
-
-export type CreateManualLeadState = { ok: boolean; message: string } | null;
-
-export async function createManualLeadAction(
-  _prevState: CreateManualLeadState,
-  formData: FormData,
-): Promise<CreateManualLeadState> {
-  const user = await requireClientUser();
-
-  const name = String(formData.get("name") ?? "").trim();
-  const phone = String(formData.get("phone") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const location = String(formData.get("location") ?? "").trim();
-  const service = String(formData.get("service") ?? "").trim();
-  const message = String(formData.get("message") ?? "").trim();
-  const status = String(formData.get("status") ?? "new") as "new";
-
-  if (!name || !phone || !service || !message) {
-    return { ok: false, message: "Izpolnite ime, telefon, vrsto dela in opis dela." };
-  }
-
-  await db.insert(leads).values({
-    companyId: user.companyId!,
-    name,
-    phone,
-    email: email || null,
-    location: location || null,
-    service,
-    message,
-    status,
-    source: "ročni vnos",
-  });
-
-  revalidateLeadPaths();
-  return { ok: true, message: "Povpraševanje je dodano." };
 }
 
 export async function createWebsiteRequestAction(formData: FormData) {

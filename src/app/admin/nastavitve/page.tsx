@@ -12,7 +12,7 @@ export default async function AdminSettingsPage() {
             <Info label="Baza" value="Neon PostgreSQL" />
             <Info label="Hosting" value="Railway" />
             <Info label="Aplikacija" value="Next.js + Drizzle ORM + Tailwind" />
-            <Info label="SMS provider" value={process.env.SMS_PROVIDER || "mvp_stub"} />
+            <Info label="SMS provider" value={process.env.SMS_PROVIDER || "seven.io"} />
           </div>
         </Panel>
         <Panel title="MVP pravila">
