@@ -1,10 +1,18 @@
 # Super Admin Dashboard
 
-Super Admin je interna ekipa oziroma lastnik platforme. Ima popoln nadzor nad vsemi podjetji, uporabniki, povpraševanji, SMS-i, kampanjami, storitvami in zahtevki.
+Super Admin je interna ekipa oziroma lastnik platforme. Upravlja podjetja, uporabnike, storitve, kampanje, zahtevke in plačila.
+
+## Kaj Super Admin NE vidi
+
+Povpraševanja, SMS-i, Google ocene in CRM kontakti naročnikov so podatki strank naših strank. Pripadajo obrtniku in jih Super Admin ne vidi — ne v seznamih, ne v profilu podjetja.
+
+Na voljo so samo agregatni števci (koliko povpraševanj, koliko SMS-ov, koliko dostavljenih in neuspelih, koliko ocen), da lahko ekipa preveri, ali sistem pri stranki deluje. Nikoli imena, telefonske številke, e-pošte ali vsebine sporočil.
+
+Izjema: brezplačni posveti, oddani na obrtio.si, so Obrtiova lastna povpraševanja in jih Super Admin vidi v celoti.
 
 ## Pregled
 
-Prikazuj: aktivne stranke, nove stranke ta mesec, MRR, poslane SMS-e, nova povpraševanja, odprte zahtevke, aktivne kampanje, zapadla plačila in zadnje aktivnosti.
+Prikazuj: aktivne stranke, nove stranke ta mesec, MRR, število poslanih SMS-ov, število novih povpraševanj, odprte zahtevke, aktivne kampanje, zapadla plačila in zadnje posvete z obrtio.si.
 
 ## Stranke / Companies
 
@@ -18,7 +26,7 @@ Statusi stranke: Aktivna, V pripravi, Čaka na vsebino, Čaka na plačilo, Zača
 
 ## Profil stranke
 
-Prikaži osnovne podatke, kontaktne podatke, paket, dodatke, aktivne storitve, domeno, status spletne strani, Google review link, število leadov, SMS zgodovino, kampanje, CRM kontakte, zahtevke, interne zapiske in zgodovino aktivnosti.
+Prikaži osnovne podatke, kontaktne podatke, paket, dodatke, aktivne storitve, domeno, status spletne strani, Google review link, zahtevke, interne zapiske in zgodovino aktivnosti. Za povpraševanja, SMS-e, CRM kontakte in ocene prikaži samo števce, brez vsebine.
 
 Akcije: Uredi podjetje, Deaktiviraj podjetje, Dodaj opombo, Odpri dashboard kot stranka, Pošlji obvestilo, Dodaj storitev, Označi storitev kot zaključeno.
 

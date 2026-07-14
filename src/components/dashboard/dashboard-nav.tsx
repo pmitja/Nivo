@@ -35,7 +35,7 @@ const adminNav: NavItem[] = [
   { href: "/admin", label: "Pregled", icon: Home },
   { href: "/admin/stranke", label: "Stranke", icon: Building2 },
   { href: "/admin/povprasevanja", label: "Povpraševanja", icon: FileText },
-  { href: "/admin/sms-log", label: "SMS log", icon: MessageSquareText },
+  { href: "/admin/sms-log", label: "SMS statistika", icon: MessageSquareText },
   { href: "/admin/google-ocene", label: "Google ocene", icon: Star },
   { href: "/admin/kampanje", label: "Kampanje", icon: Megaphone, comingSoon: true },
   { href: "/admin/zahtevki", label: "Zahtevki", icon: LifeBuoy },

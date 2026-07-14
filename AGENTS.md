@@ -87,7 +87,11 @@ Payload CMS zaenkrat ne uporabljamo. Stranka spletne strani ne ureja sama; za vs
 
 ### Super Admin
 
-Interna ekipa / lastnik platforme. Ima popoln nadzor nad strankami, podjetji, lead-i, SMS-i, kampanjami, storitvami, zahtevki, analitiko in nastavitvami.
+Interna ekipa / lastnik platforme. Upravlja stranke, podjetja, storitve, zahtevke, plačila, kampanje in nastavitve.
+
+**Super Admin ne vidi povpraševanj, SMS-ov, ocen in CRM kontaktov naročnikov.** To so podatki strank naših strank in pripadajo obrtniku. Super Admin vidi samo agregatne števce (koliko povpraševanj, koliko SMS-ov, koliko ocen), da lahko preveri, ali sistem pri stranki deluje — nikoli imen, telefonskih številk ali vsebine sporočil.
+
+Izjema so povpraševanja, oddana na obrtio.si (brezplačni posveti) — ta pripadajo Obrtiu in jih Super Admin vidi v celoti.
 
 ### Client User
 
@@ -95,7 +99,9 @@ Obrtnik oziroma podjetje. Vidi samo svoje podatke.
 
 ## Multi-tenant pravilo
 
-Vsi glavni zapisi morajo imeti `company_id`. Client User nikoli ne sme videti podatkov drugih podjetij. Super Admin lahko vidi vse.
+Vsi glavni zapisi morajo imeti `company_id`. Client User nikoli ne sme videti podatkov drugih podjetij.
+
+Super Admin vidi vse, kar zadeva poslovanje s stranko (podjetje, storitve, plačila, zahtevki, podpora), ne pa podatkov, ki jih je stranka pridobila prek platforme (povpraševanja, SMS-i, ocene, CRM kontakti). Za te ima na voljo samo števce.
 
 ## Navigacija — Client Dashboard
 
@@ -114,9 +120,9 @@ Vsi glavni zapisi morajo imeti `company_id`. Client User nikoli ne sme videti po
 
 - Pregled
 - Stranke
-- Povpraševanja
-- SMS log
-- Google ocene
+- Povpraševanja (samo posveti z obrtio.si)
+- SMS statistika (samo števci)
+- Google ocene (samo števci)
 - Kampanje
 - Zahtevki
 - Storitve

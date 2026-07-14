@@ -45,21 +45,8 @@ export async function getAdminOverview() {
     .where(sql`${websiteChangeRequests.status} not in ('completed', 'closed')`);
   const [activeCampaigns] = await db.select({ value: count() }).from(campaigns).where(eq(campaigns.status, "active"));
 
-  const recentClientLeads = await db
-    .select({
-      id: leads.id,
-      name: leads.name,
-      service: leads.service,
-      createdAt: leads.createdAt,
-      companyName: companies.name,
-      status: leads.status,
-    })
-    .from(leads)
-    .innerJoin(companies, eq(companies.id, leads.companyId))
-    .orderBy(desc(leads.createdAt))
-    .limit(5);
-
-  const recentContactInquiries = await db
+  // Povpraševanja naročnikov so njihova last — admin vidi samo števce, ne vsebine.
+  const recentInquiries = await db
     .select({
       id: contactInquiries.id,
       name: contactInquiries.name,
@@ -71,17 +58,6 @@ export async function getAdminOverview() {
     .orderBy(desc(contactInquiries.createdAt))
     .limit(5);
 
-  const recentLeads = [
-    ...recentClientLeads,
-    ...recentContactInquiries.map((inquiry) => ({
-      ...inquiry,
-      service: inquiry.service || "Brezplačni posvet",
-      companyName: "Obrtio · brezplačni posvet",
-    })),
-  ]
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-    .slice(0, 5);
-
   const recentCompanies = await db.select().from(companies).orderBy(desc(companies.createdAt)).limit(5);
 
   return {
@@ -89,12 +65,51 @@ export async function getAdminOverview() {
     newCompanies: newCompanies.value,
     mrr: activeCompanies.value * 99,
     allSms: allSms.value,
-    newLeads: newLeads.value + newContactInquiries.value,
+    newClientLeads: newLeads.value,
+    newInquiries: newContactInquiries.value,
     openRequests: openRequests.value,
     activeCampaigns: activeCampaigns.value,
-    recentLeads,
+    recentInquiries,
     recentCompanies,
   };
+}
+
+export type AdminCompanyActivity = Awaited<ReturnType<typeof getAdminCompanyActivity>>[number];
+
+/**
+ * Agregirana aktivnost po podjetjih: samo števci, brez imen strank, telefonov
+ * in vsebine sporočil. Admin s tem vidi, ali sistem pri stranki deluje, ne pa
+ * česa, kar pripada stranki.
+ */
+export async function getAdminCompanyActivity() {
+  const [companyRows, leadRows, smsRows, requestRows, feedbackRows] = await Promise.all([
+    db.select({ id: companies.id, name: companies.name, status: companies.status }).from(companies).orderBy(companies.name),
+    db.select({ companyId: leads.companyId, status: leads.status, value: count() }).from(leads).groupBy(leads.companyId, leads.status),
+    db
+      .select({ companyId: smsMessages.companyId, status: smsMessages.status, value: count() })
+      .from(smsMessages)
+      .groupBy(smsMessages.companyId, smsMessages.status),
+    db.select({ companyId: reviewRequests.companyId, value: count() }).from(reviewRequests).groupBy(reviewRequests.companyId),
+    db.select({ companyId: reviewFeedbacks.companyId, value: count() }).from(reviewFeedbacks).groupBy(reviewFeedbacks.companyId),
+  ]);
+
+  const sumFor = <T extends { companyId: string; value: number }>(rows: T[], companyId: string, match?: (row: T) => boolean) =>
+    rows
+      .filter((row) => row.companyId === companyId && (!match || match(row)))
+      .reduce((total, row) => total + row.value, 0);
+
+  return companyRows.map((company) => ({
+    id: company.id,
+    name: company.name,
+    status: company.status,
+    leads: sumFor(leadRows, company.id),
+    newLeads: sumFor(leadRows, company.id, (row) => row.status === "new"),
+    sms: sumFor(smsRows, company.id),
+    smsDelivered: sumFor(smsRows, company.id, (row) => row.status === "delivered"),
+    smsFailed: sumFor(smsRows, company.id, (row) => row.status === "failed"),
+    reviewRequests: sumFor(requestRows, company.id),
+    reviewFeedbacks: sumFor(feedbackRows, company.id),
+  }));
 }
 
 export async function getAdminContactInquiriesPage(page = 1, pageSize = 5) {
@@ -193,25 +208,24 @@ export async function getAdminCompanyProfile(companyId: string) {
     return null;
   }
 
+  // Povpraševanja, stranke, SMS-i in ocene pripadajo naročniku. Admin dobi
+  // samo števce; vsebine in osebnih podatkov njegovih strank ne vidi.
   const [
     companyUsers,
-    companyLeads,
-    companyCustomers,
-    companySms,
     companyCampaigns,
     companyServices,
     companyDocumentsRows,
     companyWebsiteRequests,
     companySupportTickets,
-    companyReviewRequests,
-    companyReviewFeedbacks,
     companyAuditLogs,
     companyContactForms,
+    [leadCount],
+    [customerCount],
+    [smsCount],
+    [reviewRequestCount],
+    [reviewFeedbackCount],
   ] = await Promise.all([
     db.select().from(users).where(eq(users.companyId, companyId)).orderBy(desc(users.createdAt)).limit(5),
-    db.select().from(leads).where(eq(leads.companyId, companyId)).orderBy(desc(leads.createdAt)).limit(5),
-    db.select().from(customers).where(eq(customers.companyId, companyId)).orderBy(desc(customers.createdAt)).limit(5),
-    db.select().from(smsMessages).where(eq(smsMessages.companyId, companyId)).orderBy(desc(smsMessages.createdAt)).limit(5),
     db.select().from(campaigns).where(eq(campaigns.companyId, companyId)).orderBy(desc(campaigns.createdAt)).limit(5),
     db.select().from(services).where(eq(services.companyId, companyId)).orderBy(desc(services.startedAt)).limit(5),
     db.select().from(companyDocuments).where(eq(companyDocuments.companyId, companyId)).orderBy(desc(companyDocuments.createdAt)).limit(5),
@@ -222,120 +236,34 @@ export async function getAdminCompanyProfile(companyId: string) {
       .orderBy(desc(websiteChangeRequests.createdAt))
       .limit(5),
     db.select().from(supportTickets).where(eq(supportTickets.companyId, companyId)).orderBy(desc(supportTickets.createdAt)).limit(5),
-    db.select().from(reviewRequests).where(eq(reviewRequests.companyId, companyId)).orderBy(desc(reviewRequests.createdAt)).limit(5),
-    db.select().from(reviewFeedbacks).where(eq(reviewFeedbacks.companyId, companyId)).orderBy(desc(reviewFeedbacks.createdAt)).limit(5),
     db.select().from(auditLogs).where(eq(auditLogs.companyId, companyId)).orderBy(desc(auditLogs.createdAt)).limit(5),
     db.select().from(contactForms).where(eq(contactForms.companyId, companyId)).limit(1),
+    db.select({ value: count() }).from(leads).where(eq(leads.companyId, companyId)),
+    db.select({ value: count() }).from(customers).where(eq(customers.companyId, companyId)),
+    db.select({ value: count() }).from(smsMessages).where(eq(smsMessages.companyId, companyId)),
+    db.select({ value: count() }).from(reviewRequests).where(eq(reviewRequests.companyId, companyId)),
+    db.select({ value: count() }).from(reviewFeedbacks).where(eq(reviewFeedbacks.companyId, companyId)),
   ]);
 
   return {
     company,
     users: companyUsers,
-    leads: companyLeads,
-    customers: companyCustomers,
-    sms: companySms,
     campaigns: companyCampaigns,
     services: companyServices,
     documents: companyDocumentsRows,
     websiteRequests: companyWebsiteRequests,
     supportTickets: companySupportTickets,
-    reviewRequests: companyReviewRequests,
-    reviewFeedbacks: companyReviewFeedbacks,
     auditLogs: companyAuditLogs,
     contactForm: companyContactForms[0] ?? null,
     stats: {
-      leads: companyLeads.length,
-      customers: companyCustomers.length,
-      sms: companySms.length,
+      leads: leadCount.value,
+      customers: customerCount.value,
+      sms: smsCount.value,
+      reviewRequests: reviewRequestCount.value,
+      reviewFeedbacks: reviewFeedbackCount.value,
       campaigns: companyCampaigns.length,
       openRequests: companyWebsiteRequests.filter((request) => !["completed", "closed"].includes(request.status)).length,
     },
-  };
-}
-
-export async function getAdminLeadsPage(page = 1, pageSize = 5) {
-  const safePage = Math.max(1, page);
-  const offset = (safePage - 1) * pageSize;
-
-  const [total] = await db.select({ value: count() }).from(leads);
-  const rows = await db
-    .select({
-      id: leads.id,
-      name: leads.name,
-      phone: leads.phone,
-      email: leads.email,
-      location: leads.location,
-      service: leads.service,
-      message: leads.message,
-      status: leads.status,
-      aiSummary: leads.aiSummary,
-      attachmentUrl: leads.attachmentUrl,
-      attachmentName: leads.attachmentName,
-      createdAt: leads.createdAt,
-      companyName: companies.name,
-      companyHasAiAddon: companies.hasAiAddon,
-    })
-    .from(leads)
-    .innerJoin(companies, eq(companies.id, leads.companyId))
-    .orderBy(desc(leads.createdAt))
-    .limit(pageSize)
-    .offset(offset);
-
-  return {
-    leads: rows,
-    total: total.value,
-    page: safePage,
-    pageSize,
-    pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
-  };
-}
-
-export async function getAdminSms() {
-  return db
-    .select({
-      id: smsMessages.id,
-      phone: smsMessages.phone,
-      message: smsMessages.message,
-      type: smsMessages.type,
-      status: smsMessages.status,
-      provider: smsMessages.provider,
-      cost: smsMessages.cost,
-      createdAt: smsMessages.createdAt,
-      companyName: companies.name,
-    })
-    .from(smsMessages)
-    .innerJoin(companies, eq(companies.id, smsMessages.companyId))
-    .orderBy(desc(smsMessages.createdAt));
-}
-
-export async function getAdminSmsPage(page = 1, pageSize = 10) {
-  const safePage = Math.max(1, page);
-  const offset = (safePage - 1) * pageSize;
-  const [total] = await db.select({ value: count() }).from(smsMessages);
-  const messages = await db
-    .select({
-      id: smsMessages.id,
-      phone: smsMessages.phone,
-      message: smsMessages.message,
-      type: smsMessages.type,
-      status: smsMessages.status,
-      provider: smsMessages.provider,
-      cost: smsMessages.cost,
-      createdAt: smsMessages.createdAt,
-      companyName: companies.name,
-    })
-    .from(smsMessages)
-    .innerJoin(companies, eq(companies.id, smsMessages.companyId))
-    .orderBy(desc(smsMessages.createdAt))
-    .limit(pageSize)
-    .offset(offset);
-
-  return {
-    messages,
-    total: total.value,
-    page: safePage,
-    pageSize,
-    pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
   };
 }
 
@@ -437,57 +365,6 @@ export async function getAdminServicesPage(page = 1, pageSize = 5) {
     page: safePage,
     pageSize,
     pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
-  };
-}
-
-export async function getAdminReviewOverview(requestsPage = 1, feedbacksPage = 1, pageSize = 5) {
-  const safeRequestsPage = Math.max(1, requestsPage);
-  const safeFeedbacksPage = Math.max(1, feedbacksPage);
-
-  const [requestCount] = await db.select({ value: count() }).from(reviewRequests);
-  const [feedbackCount] = await db.select({ value: count() }).from(reviewFeedbacks);
-  const requests = await db
-    .select({
-      id: reviewRequests.id,
-      phone: reviewRequests.phone,
-      status: reviewRequests.status,
-      createdAt: reviewRequests.createdAt,
-      companyName: companies.name,
-      leadService: leads.service,
-    })
-    .from(reviewRequests)
-    .innerJoin(companies, eq(companies.id, reviewRequests.companyId))
-    .leftJoin(leads, eq(leads.id, reviewRequests.leadId))
-    .orderBy(desc(reviewRequests.createdAt))
-    .limit(pageSize)
-    .offset((safeRequestsPage - 1) * pageSize);
-  const feedbacks = await db
-    .select({
-      id: reviewFeedbacks.id,
-      rating: reviewFeedbacks.rating,
-      name: reviewFeedbacks.name,
-      feedback: reviewFeedbacks.feedback,
-      createdAt: reviewFeedbacks.createdAt,
-      companyName: companies.name,
-      leadService: leads.service,
-    })
-    .from(reviewFeedbacks)
-    .innerJoin(companies, eq(companies.id, reviewFeedbacks.companyId))
-    .leftJoin(leads, eq(leads.id, reviewFeedbacks.leadId))
-    .orderBy(desc(reviewFeedbacks.createdAt))
-    .limit(pageSize)
-    .offset((safeFeedbacksPage - 1) * pageSize);
-
-  return {
-    requestCount: requestCount.value,
-    feedbackCount: feedbackCount.value,
-    requests,
-    feedbacks,
-    requestsPage: safeRequestsPage,
-    requestsPageCount: Math.max(1, Math.ceil(requestCount.value / pageSize)),
-    feedbacksPage: safeFeedbacksPage,
-    feedbacksPageCount: Math.max(1, Math.ceil(feedbackCount.value / pageSize)),
-    pageSize,
   };
 }
 

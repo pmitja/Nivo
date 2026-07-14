@@ -24,11 +24,8 @@ import {
   companyStatusLabels,
   formatCurrency,
   formatDate,
-  leadStatusLabels,
   serviceStatusLabels,
   serviceTypeLabels,
-  smsStatusLabels,
-  smsTypeLabels,
   websiteRequestStatusLabels,
 } from "@/lib/labels";
 
@@ -407,54 +404,17 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
       </div>
 
       <div className="mt-6 grid gap-6 xl:grid-cols-2">
-        <Panel title="Zadnja povpraševanja">
+        <Panel title="Aktivnost stranke" eyebrow="Samo števci">
+          <p className="mb-4 text-sm leading-6 text-[#777382]">
+            Povpraševanja, kontakti, SMS-i in ocene pripadajo stranki. Vidimo samo, koliko jih je — ne vsebine
+            in ne podatkov njihovih strank.
+          </p>
           <div className="grid gap-2">
-            {data.leads.length ? (
-              data.leads.map((lead) => (
-                <CompactRow
-                  key={lead.id}
-                  title={`${lead.name} · ${lead.service}`}
-                  meta={`${lead.phone} · ${formatDate(lead.createdAt)}`}
-                  status={leadStatusLabels[lead.status]}
-                />
-              ))
-            ) : (
-              <EmptyState text="Povpraševanj še ni." />
-            )}
-          </div>
-        </Panel>
-
-        <Panel title="CRM kontakti">
-          <div className="grid gap-2">
-            {data.customers.length ? (
-              data.customers.map((customer) => (
-                <CompactRow
-                  key={customer.id}
-                  title={customer.name}
-                  meta={`${customer.phone} · ${customer.email || "Brez emaila"} · ${customer.city || "Brez kraja"}`}
-                  status={customer.marketingConsent ? "Soglasje za akcije" : "Brez soglasja"}
-                />
-              ))
-            ) : (
-              <EmptyState text="CRM kontaktov še ni." />
-            )}
-          </div>
-        </Panel>
-
-        <Panel title="SMS zgodovina">
-          <div className="grid gap-2">
-            {data.sms.length ? (
-              data.sms.map((sms) => (
-                <CompactRow
-                  key={sms.id}
-                  title={`${smsTypeLabels[sms.type]} · ${sms.phone}`}
-                  meta={sms.message}
-                  status={smsStatusLabels[sms.status]}
-                />
-              ))
-            ) : (
-              <EmptyState text="SMS zapisov še ni." />
-            )}
+            <Info label="Povpraševanja" value={String(data.stats.leads)} />
+            <Info label="CRM kontakti" value={String(data.stats.customers)} />
+            <Info label="Poslani SMS-i" value={String(data.stats.sms)} />
+            <Info label="Zahteve za oceno" value={String(data.stats.reviewRequests)} />
+            <Info label="Prejete ocene" value={String(data.stats.reviewFeedbacks)} />
           </div>
         </Panel>
 
@@ -489,20 +449,6 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
           <EmptyState text="Kampanje so del druge faze in pridejo kmalu." />
         </Panel>
 
-        <Panel title="Ocene in feedback">
-          <div className="grid gap-2">
-            <Info label="Poslane zahteve" value={String(data.reviewRequests.length)} />
-            <Info label="Interne povratne informacije" value={String(data.reviewFeedbacks.length)} />
-            {data.reviewFeedbacks.slice(0, 3).map((feedback) => (
-              <CompactRow
-                key={feedback.id}
-                title={`${feedback.rating}/5 · ${feedback.name || "Brez imena"}`}
-                meta={feedback.feedback || "Preusmerjeno na Google"}
-                status={formatDate(feedback.createdAt)}
-              />
-            ))}
-          </div>
-        </Panel>
       </div>
     </DashboardShell>
   );
