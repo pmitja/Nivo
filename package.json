@@ -7,6 +7,7 @@
     "build": "next build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "seven:check": "tsx --env-file=.env.local scripts/seven-check.mts",
     "start": "next start",
     "lint": "eslint"
   },
