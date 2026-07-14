@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const SITE_NAME = "Obrtio";
 export const LEGAL_NAME = "MIPA, Mitja Pak s.p.";
 export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://obrtio.si";
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://www.obrtio.si";
 export const CONTACT_EMAIL =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "info@obrtio.si";
 export const CONTACT_PHONE =

@@ -222,4 +222,4 @@ export function companyContactUrl(company: DirectoryCompany): string {
   return `/obrazec/${company.id}`;
 }
 
-export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://obrtio.si";
+export const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://www.obrtio.si";

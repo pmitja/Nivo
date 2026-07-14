@@ -8,7 +8,7 @@ import { PageShell } from "@/components/site-shell";
 import { CtaBand, SectionHeading } from "@/components/site-primitives";
 import { HeroHighlight, SubpageHero } from "@/components/subpage-hero";
 import { getCompaniesForTrade, getTrade, groupByCity, siteUrl, trades } from "@/lib/directory";
-import { breadcrumbJsonLd, createMetadata, noIndexMetadata } from "@/lib/seo";
+import { breadcrumbJsonLd, createMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
@@ -26,15 +26,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const singular = trade.singular.charAt(0).toUpperCase() + trade.singular.slice(1);
   const title = `${singular} — preverjeni izvajalci po Sloveniji`;
   const description = `Iščete ${trade.searchPhrase}? Preverjeni izvajalci po Sloveniji, ki hitro odgovorijo na povpraševanje. ${trade.intro}`;
-  const companies = await getCompaniesForTrade(trade.slug);
-
-  const pageMetadata = createMetadata({
+  return createMetadata({
     title,
     description,
     path: `/izvajalci/${trade.slug}`,
     keywords: [trade.plural.toLowerCase(), `${trade.singular} Slovenija`, `preverjeni ${trade.plural.toLowerCase()}`],
   });
-  return companies.length > 0 ? pageMetadata : { ...pageMetadata, ...noIndexMetadata };
 }
 
 export default async function TradePage({ params }: { params: Promise<Params> }) {

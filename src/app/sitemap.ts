@@ -18,14 +18,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const all = await getDirectoryCompanies().catch(() => []);
-  const populatedTrades = new Set(all.map((company) => company.trade.slug));
-  const tradePages: MetadataRoute.Sitemap = trades
-    .filter((trade) => populatedTrades.has(trade.slug))
-    .map((trade) => ({
-      url: `${siteUrl}/izvajalci/${trade.slug}`,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    }));
+  const tradePages: MetadataRoute.Sitemap = trades.map((trade) => ({
+    url: `${siteUrl}/izvajalci/${trade.slug}`,
+    changeFrequency: "weekly",
+    priority: 0.9,
+  }));
   const seen = new Set<string>();
   const cityPages: MetadataRoute.Sitemap = [];
   for (const company of all) {
