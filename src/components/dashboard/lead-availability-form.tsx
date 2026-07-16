@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CalendarOff, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -21,12 +22,20 @@ export function LeadAvailabilityForm({
   acceptingLeads: boolean;
   pauseReason: "vacation" | "capacity" | null;
 }) {
+  const router = useRouter();
   const [paused, setPaused] = useState(!acceptingLeads);
   const [state, formAction, pending] = useActionState(updateLeadAvailabilityAction, initialState);
 
   useEffect(() => {
-    if (state.message) toast.success(state.message);
-  }, [state]);
+    if (!state.message) return;
+
+    if (state.ok) {
+      toast.success(state.message);
+      router.refresh();
+    } else {
+      toast.error(state.message);
+    }
+  }, [router, state]);
 
   return (
     <form action={formAction} className="grid gap-4">
