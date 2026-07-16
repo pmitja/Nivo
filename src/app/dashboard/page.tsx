@@ -36,6 +36,7 @@ export default async function ClientDashboardPage() {
             eyebrow={company.acceptingLeads ? "Aktivno" : "Začasno ustavljeno"}
           >
             <LeadAvailabilityForm
+              key={`${company.acceptingLeads}-${company.leadPauseReason ?? "none"}`}
               acceptingLeads={company.acceptingLeads}
               pauseReason={company.leadPauseReason}
             />
