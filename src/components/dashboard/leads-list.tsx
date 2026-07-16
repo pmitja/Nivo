@@ -5,7 +5,7 @@ import { SendReviewRequestButton } from "@/components/dashboard/send-review-requ
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { getClientLeadsPage } from "@/lib/dashboard-data";
-import { formatDate, leadStatusLabels } from "@/lib/labels";
+import { formatDate, leadPauseReasonLabels, leadStatusLabels } from "@/lib/labels";
 
 export function LeadsList({
   leads,
@@ -38,7 +38,12 @@ export function LeadsList({
                 </a>
               ) : null}
             </div>
-            <StatusPill>{leadStatusLabels[lead.status]}</StatusPill>
+            <div className="flex flex-wrap justify-end gap-2">
+              {lead.receivedWhilePaused && lead.pauseReason ? (
+                <StatusPill>{leadPauseReasonLabels[lead.pauseReason]}</StatusPill>
+              ) : null}
+              <StatusPill>{leadStatusLabels[lead.status]}</StatusPill>
+            </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <a href={`tel:${lead.phone}`} className="rounded-[11px] bg-[#16151D] px-4 py-2 text-sm font-extrabold text-white">Pokliči stranko</a>

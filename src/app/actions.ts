@@ -426,6 +426,44 @@ export async function updateClientCompanySettingsAction(_: unknown, formData: Fo
   return { message: "Podatki podjetja so shranjeni.", ok: true };
 }
 
+export type LeadAvailabilityState = { message: string; ok: boolean };
+
+export async function updateLeadAvailabilityAction(
+  _: LeadAvailabilityState,
+  formData: FormData,
+): Promise<LeadAvailabilityState> {
+  const user = await requireClientUser();
+  const paused = formData.get("pauseLeads") === "on";
+  const requestedReason = String(formData.get("pauseReason") ?? "vacation");
+  const pauseReason = requestedReason === "capacity" ? "capacity" : "vacation";
+
+  await db
+    .update(companies)
+    .set({
+      acceptingLeads: !paused,
+      leadPauseReason: paused ? pauseReason : null,
+      updatedAt: new Date(),
+    })
+    .where(eq(companies.id, user.companyId!));
+
+  await db.insert(auditLogs).values({
+    companyId: user.companyId!,
+    userId: user.id,
+    action: paused ? "lead_acceptance_paused" : "lead_acceptance_resumed",
+    entityType: "company",
+    entityId: user.companyId!,
+    metadata: { source: "client_dashboard", reason: paused ? pauseReason : null },
+  });
+
+  revalidatePath("/dashboard");
+  return {
+    message: paused
+      ? "Sprejemanje povpraševanj je začasno ustavljeno."
+      : "Sprejemanje povpraševanj je ponovno vključeno.",
+    ok: true,
+  };
+}
+
 export async function updateLeadStatusAction(formData: FormData) {
   const user = await requireUserForLeadAction();
   const leadId = String(formData.get("leadId") ?? "");

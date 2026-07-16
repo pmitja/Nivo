@@ -22,6 +22,7 @@ export const companyStatusEnum = pgEnum("company_status", [
 
 export const planEnum = pgEnum("plan", ["basic"]);
 export const userRoleEnum = pgEnum("user_role", ["super_admin", "client_admin", "client_user"]);
+export const leadPauseReasonEnum = pgEnum("lead_pause_reason", ["vacation", "capacity"]);
 export const leadStatusEnum = pgEnum("lead_status", [
   "new",
   "contacted",
@@ -117,6 +118,8 @@ export const companies = pgTable("companies", {
   status: companyStatusEnum("status").default("setup").notNull(),
   plan: planEnum("plan").default("basic").notNull(),
   hasAiAddon: boolean("has_ai_addon").default(false).notNull(),
+  acceptingLeads: boolean("accepting_leads").default(true).notNull(),
+  leadPauseReason: leadPauseReasonEnum("lead_pause_reason"),
   googleReviewUrl: text("google_review_url"),
   websiteStatus: text("website_status").default("V pripravi").notNull(),
   googleBusinessProfileStatus: text("google_business_profile_status").default("Ni naročeno").notNull(),
@@ -203,6 +206,8 @@ export const leads = pgTable(
     service: text("service").notNull(),
     message: text("message").notNull(),
     status: leadStatusEnum("status").default("new").notNull(),
+    receivedWhilePaused: boolean("received_while_paused").default(false).notNull(),
+    pauseReason: leadPauseReasonEnum("pause_reason"),
     source: text("source").default("spletni obrazec").notNull(),
     aiSummary: text("ai_summary"),
     attachmentUrl: text("attachment_url"),

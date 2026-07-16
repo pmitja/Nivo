@@ -143,7 +143,7 @@ export async function submitLead(
     );
   }
 
-  // Vsako povprasevanje poslje dva SMS-a, zato zavrnemo ponovne oddaje z iste stevilke.
+  // Preprecimo podvojena povprasevanja in morebitna podvojena obvestila.
   const [recentLead] = await db
     .select({ id: leads.id })
     .from(leads)
@@ -212,40 +212,47 @@ export async function submitLead(
       location: data.location || null,
       service: data.service,
       message: data.message,
+      receivedWhilePaused: !company.acceptingLeads,
+      pauseReason: company.acceptingLeads ? null : company.leadPauseReason ?? "vacation",
       source: "spletni obrazec",
       ...attachmentFields,
     })
     .returning();
 
-  const contractorMessage = contractorLeadSms(data.name, data.location, data.service);
-  const customerMessage = customerLeadConfirmationSms(company.name);
+  const notifications: Promise<unknown>[] = [];
 
-  const [contractorSms, customerSms] = await db
-    .insert(smsMessages)
-    .values([
-      {
-        companyId: company.id,
-        customerId: customer.id,
-        leadId: lead.id,
-        phone: company.phone,
-        message: contractorMessage,
-        type: "contractor_new_lead",
-      },
-      {
-        companyId: company.id,
-        customerId: customer.id,
-        leadId: lead.id,
-        phone: data.phone,
-        message: customerMessage,
-        type: "customer_auto_reply",
-      },
-    ])
-    .returning();
+  // Med dopustom oziroma zapolnjeno kapaciteto povpraševanje shranimo,
+  // ne ustvarimo pa nobenega SMS sporočila.
+  if (company.acceptingLeads) {
+    const contractorMessage = contractorLeadSms(data.name, data.location, data.service);
+    const customerMessage = customerLeadConfirmationSms(company.name);
+    const [contractorSms, customerSms] = await db
+      .insert(smsMessages)
+      .values([
+        {
+          companyId: company.id,
+          customerId: customer.id,
+          leadId: lead.id,
+          phone: company.phone,
+          message: contractorMessage,
+          type: "contractor_new_lead",
+        },
+        {
+          companyId: company.id,
+          customerId: customer.id,
+          leadId: lead.id,
+          phone: data.phone,
+          message: customerMessage,
+          type: "customer_auto_reply",
+        },
+      ])
+      .returning();
 
-  const notifications: Promise<unknown>[] = [
-    sendSms(contractorSms.id, company.phone, contractorMessage),
-    sendSms(customerSms.id, data.phone, customerMessage),
-  ];
+    notifications.push(
+      sendSms(contractorSms.id, company.phone, contractorMessage),
+      sendSms(customerSms.id, data.phone, customerMessage),
+    );
+  }
 
   if (data.email) {
     notifications.push(
@@ -256,6 +263,7 @@ export async function submitLead(
         companyEmail: company.email,
         companyPhone: company.phone,
         service: data.service,
+        pauseReason: company.acceptingLeads ? null : company.leadPauseReason ?? "vacation",
       }),
     );
   }
@@ -271,7 +279,12 @@ export async function submitLead(
     companyId: company.id,
     type: "lead_submitted",
     source: "spletni obrazec",
-    metadata: { leadId: lead.id, service: data.service },
+    metadata: {
+      leadId: lead.id,
+      service: data.service,
+      receivedWhilePaused: !company.acceptingLeads,
+      pauseReason: company.acceptingLeads ? null : company.leadPauseReason,
+    },
   });
 
   return NextResponse.json({ ok: true, leadId: lead.id });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, BarChart3, FileText, MessageSquareText, Plus, Star, Users } from "lucide-react";
 import { DashboardLink, DashboardShell, EmptyState, Panel, StatCard, StatusPill } from "@/components/dashboard/dashboard-shell";
+import { LeadAvailabilityForm } from "@/components/dashboard/lead-availability-form";
 import { requireClientUser } from "@/lib/auth";
 import { getClientOverview, getCompany } from "@/lib/dashboard-data";
 import { formatDate, leadStatusLabels, websiteRequestStatusLabels } from "@/lib/labels";
@@ -29,6 +30,17 @@ export default async function ClientDashboardPage() {
         </div>
       </Panel>
       <div className="grid content-start gap-6">
+        {company ? (
+          <Panel
+            title="Sprejemanje povpraševanj"
+            eyebrow={company.acceptingLeads ? "Aktivno" : "Začasno ustavljeno"}
+          >
+            <LeadAvailabilityForm
+              acceptingLeads={company.acceptingLeads}
+              pauseReason={company.leadPauseReason}
+            />
+          </Panel>
+        ) : null}
         <Panel title="Naslednji koraki" eyebrow="Priporočeno">
           <div className="grid gap-2">
             {!company?.googleReviewUrl ? <Link href="/dashboard/nastavitve" className="group flex items-start gap-3 rounded-xl bg-[#FFF8E9] p-3.5 transition hover:bg-[#FFF4DA]"><div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#A96100]"><Star className="h-4 w-4" /></div><div className="min-w-0"><div className="text-[13px] font-bold">Dodajte Google povezavo</div><p className="mt-0.5 text-xs leading-5 text-[#777A83]">Omogočite pošiljanje zahtev za ocene.</p></div><ArrowRight className="ml-auto mt-2 h-4 w-4 text-[#A0A3AA] transition group-hover:translate-x-0.5" /></Link> : null}

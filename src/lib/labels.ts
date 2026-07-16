@@ -16,6 +16,11 @@ export const leadStatusLabels = {
   lost: "Izgubljeno",
 } as const;
 
+export const leadPauseReasonLabels = {
+  vacation: "Prejeto med dopustom",
+  capacity: "Prejeto ob zapolnjenih kapacitetah",
+} as const;
+
 export const customerStatusLabels = {
   new_contact: "Nov kontakt",
   prospect: "Potencialna stranka",
