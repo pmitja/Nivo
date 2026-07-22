@@ -11,6 +11,7 @@ import {
   customers,
   leadStatusEnum,
   leads,
+  outreachMessages,
   reviewFeedbacks,
   reviewRequests,
   services,
@@ -127,6 +128,38 @@ export async function getAdminContactInquiriesPage(page = 1, pageSize = 5) {
   return {
     inquiries: rows,
     total: total.value,
+    page: safePage,
+    pageSize,
+    pageCount: Math.max(1, Math.ceil(total.value / pageSize)),
+  };
+}
+
+export async function getAdminOutreachPage(page = 1, pageSize = 20) {
+  const safePage = Math.max(1, page);
+  const offset = (safePage - 1) * pageSize;
+
+  const [total] = await db.select({ value: count() }).from(outreachMessages);
+  const rows = await db
+    .select()
+    .from(outreachMessages)
+    .orderBy(desc(outreachMessages.createdAt))
+    .limit(pageSize)
+    .offset(offset);
+
+  const statusCounts = await db
+    .select({ status: outreachMessages.status, value: count() })
+    .from(outreachMessages)
+    .groupBy(outreachMessages.status);
+
+  const counts = Object.fromEntries(statusCounts.map((row) => [row.status, row.value]));
+
+  return {
+    messages: rows,
+    total: total.value,
+    delivered: counts.delivered ?? 0,
+    sent: counts.sent ?? 0,
+    failed: (counts.failed ?? 0) + (counts.bounced ?? 0),
+    replied: counts.replied ?? 0,
     page: safePage,
     pageSize,
     pageCount: Math.max(1, Math.ceil(total.value / pageSize)),

@@ -474,5 +474,40 @@ export const analyticsEvents = pgTable(
   (table) => [index("analytics_events_company_id_idx").on(table.companyId)],
 );
 
+export const outreachStatusEnum = pgEnum("outreach_status", [
+  "queued",
+  "sent",
+  "delivered",
+  "bounced",
+  "failed",
+  "replied",
+]);
+
+// Hladni prodajni nagovori, ki jih Obrtio pošlje potencialnim strankam.
+// Podatek pripada Obrtiu (kot obrtio.si posveti), zato ga Super Admin vidi v celoti.
+export const outreachMessages = pgTable(
+  "outreach_messages",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    companyName: text("company_name").notNull(),
+    recipientName: text("recipient_name"),
+    email: text("email").notNull(),
+    activity: text("activity"),
+    town: text("town"),
+    subject: text("subject").notNull(),
+    campaign: text("campaign").default("maribor-okolica").notNull(),
+    resendId: text("resend_id"),
+    status: outreachStatusEnum("status").default("queued").notNull(),
+    error: text("error"),
+    sentAt: timestamp("sent_at", { withTimezone: true }),
+    ...timestamps,
+  },
+  (table) => [
+    index("outreach_messages_status_idx").on(table.status),
+    index("outreach_messages_created_at_idx").on(table.createdAt),
+  ],
+);
+
 export type Company = typeof companies.$inferSelect;
 export type User = typeof users.$inferSelect;
+export type OutreachMessage = typeof outreachMessages.$inferSelect;

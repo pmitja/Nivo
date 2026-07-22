@@ -16,6 +16,15 @@ export const leadStatusLabels = {
   lost: "Izgubljeno",
 } as const;
 
+export const outreachStatusLabels = {
+  queued: "V čakalni vrsti",
+  sent: "Poslano",
+  delivered: "Dostavljeno",
+  bounced: "Zavrnjeno",
+  failed: "Napaka",
+  replied: "Odgovoril",
+} as const;
+
 export const leadPauseReasonLabels = {
   vacation: "Prejeto med dopustom",
   capacity: "Prejeto ob zapolnjenih kapacitetah",

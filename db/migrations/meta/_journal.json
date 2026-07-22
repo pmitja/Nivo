@@ -1,76 +1,83 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1751022000000,
-      "tag": "0001_nivo_mvp",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1751022060000,
-      "tag": "0002_company_files",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1751022120000,
-      "tag": "0003_contact_form_builder",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1751022180000,
-      "tag": "0004_required_contact_email",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1751022240000,
-      "tag": "0005_lead_attachment",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1751022300000,
-      "tag": "0006_review_feedback_optional",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1751022360000,
-      "tag": "0007_sms_provider_message_id",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1783972414946,
-      "tag": "0008_form_rate_limits",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1784011404550,
-      "tag": "0009_contact_inquiries",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1784203200000,
-      "tag": "0010_lead_availability",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "postgresql",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "7",
+			"when": 1751022000000,
+			"tag": "0001_nivo_mvp",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "7",
+			"when": 1751022060000,
+			"tag": "0002_company_files",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "7",
+			"when": 1751022120000,
+			"tag": "0003_contact_form_builder",
+			"breakpoints": true
+		},
+		{
+			"idx": 3,
+			"version": "7",
+			"when": 1751022180000,
+			"tag": "0004_required_contact_email",
+			"breakpoints": true
+		},
+		{
+			"idx": 4,
+			"version": "7",
+			"when": 1751022240000,
+			"tag": "0005_lead_attachment",
+			"breakpoints": true
+		},
+		{
+			"idx": 5,
+			"version": "7",
+			"when": 1751022300000,
+			"tag": "0006_review_feedback_optional",
+			"breakpoints": true
+		},
+		{
+			"idx": 6,
+			"version": "7",
+			"when": 1751022360000,
+			"tag": "0007_sms_provider_message_id",
+			"breakpoints": true
+		},
+		{
+			"idx": 7,
+			"version": "7",
+			"when": 1783972414946,
+			"tag": "0008_form_rate_limits",
+			"breakpoints": true
+		},
+		{
+			"idx": 8,
+			"version": "7",
+			"when": 1784011404550,
+			"tag": "0009_contact_inquiries",
+			"breakpoints": true
+		},
+		{
+			"idx": 9,
+			"version": "7",
+			"when": 1784203200000,
+			"tag": "0010_lead_availability",
+			"breakpoints": true
+		},
+		{
+			"idx": 10,
+			"version": "7",
+			"when": 1784716758472,
+			"tag": "0011_outreach_messages",
+			"breakpoints": true
+		}
+	]
 }
