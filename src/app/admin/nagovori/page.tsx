@@ -29,13 +29,18 @@ export default async function AdminOutreachPage({
         <StatCard label="Napake / zavrnjeno" value={data.failed} tone="red" icon={XCircle} />
       </div>
 
-      <Panel title="Poslani nagovori" eyebrow="kampanja: Maribor z okolico">
+      <Panel title="Poslani nagovori" eyebrow="vsi hladni nagovori">
         <div className="grid gap-3">
           {data.messages.length ? data.messages.map((message) => (
             <article key={message.id} className="rounded-[14px] border border-[#DED9F5] bg-[#FCFBFF] p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <div className="font-extrabold text-[#28262F]">{message.companyName}</div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-extrabold text-[#28262F]">{message.companyName}</span>
+                    <span className="rounded-full border border-[#E1DCF3] bg-white px-2 py-0.5 text-[11px] font-bold uppercase tracking-wide text-[#6F6A7A]">
+                      {message.campaign}
+                    </span>
+                  </div>
                   <div className="mt-1 text-sm font-semibold text-[#6F6A7A]">
                     {[message.activity, message.town].filter(Boolean).join(" · ") || "Panoga ni navedena"}
                     {" · "}

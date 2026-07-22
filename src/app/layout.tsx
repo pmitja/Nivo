@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
@@ -125,6 +126,7 @@ export default function RootLayout({
         {children}
         <Toaster richColors position="top-center" />
       </body>
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID ?? "G-X7NXTJ0JKV"} />
     </html>
   );
 }
