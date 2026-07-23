@@ -76,6 +76,9 @@ dependencies:
     version: 4.4.3
 
 devDependencies:
+  '@next/env':
+    specifier: 16.2.9
+    version: 16.2.9
   '@tailwindcss/postcss':
     specifier: ^4
     version: 4.3.3
@@ -1677,7 +1680,6 @@ packages:
 
   /@next/env@16.2.9:
     resolution: {integrity: sha512-ki5VxxXfzD/9TDe13wyeTKIjQTAwBVpnr8KhRDUr8ltMUq1/NBpWNT5tiPoxiGl+PHM4X2ahSOiPk6iAimIzPg==}
-    dev: false
 
   /@next/eslint-plugin-next@16.2.9:
     resolution: {integrity: sha512-UZi8+YT/MLgTC9nrrn2Xd4lBYv1B7lVmtWHfPcthAI5Tt/C1LuDe6DfmtCtJ+WQod3ksY4VrKSvk3oMVAnL7qw==}
