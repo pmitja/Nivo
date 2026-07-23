@@ -7,6 +7,12 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: siteUrl, changeFrequency: "weekly", priority: 1 },
+    { url: `${siteUrl}/services`, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${siteUrl}/how-it-works`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/pricing`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/contact`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/contractors`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${siteUrl}/sl`, changeFrequency: "weekly", priority: 0.6 },
     { url: `${siteUrl}/storitve`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/kako-deluje`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${siteUrl}/cenik`, changeFrequency: "monthly", priority: 0.8 },
@@ -14,7 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/spletna-stran-za-obrtnike`, changeFrequency: "monthly", priority: 0.9 },
     { url: `${siteUrl}/spletna-stran-za-krovce`, changeFrequency: "monthly", priority: 0.7 },
     { url: `${siteUrl}/izvajalci`, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${siteUrl}/en`, changeFrequency: "monthly", priority: 0.5 },
   ];
 
   const all = await getDirectoryCompanies().catch(() => []);

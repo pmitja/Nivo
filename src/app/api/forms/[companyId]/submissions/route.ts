@@ -3,20 +3,20 @@ import { allowedOrigin, corsHeaders, submitLead } from "@/app/api/leads/route";
 export async function POST(request: Request, { params }: { params: Promise<{ companyId: string }> }) {
   const origin = allowedOrigin(request);
   if (request.headers.get("origin") && !origin) {
-    return Response.json({ message: "Domena ni dovoljena." }, { status: 403 });
+    return Response.json({ message: "This domain is not allowed." }, { status: 403 });
   }
 
   const { companyId } = await params;
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (contentLength > 10 * 1024 * 1024 + 256 * 1024) {
-    return Response.json({ message: "Zahtevek je prevelik." }, { status: 413 });
+    return Response.json({ message: "The request is too large." }, { status: 413 });
   }
 
   let formData: FormData;
   try {
     formData = await request.formData();
   } catch {
-    return Response.json({ message: "Neveljaven zahtevek." }, { status: 400 });
+    return Response.json({ message: "Invalid request." }, { status: 400 });
   }
   const attachment = formData.get("attachment");
   const formStartedAt = formData.get("formStartedAt");
@@ -26,7 +26,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ com
     phone: formData.get("phone"),
     email: formData.get("email"),
     location: formData.get("location") ?? undefined,
-    service: formData.get("service") || "Splošno povpraševanje",
+    service: formData.get("service") || "General inquiry",
     message: formData.get("message") ?? "",
     privacyConsent: formData.get("privacyConsent") === "on",
     marketingConsent: formData.get("marketingConsent") === "on",

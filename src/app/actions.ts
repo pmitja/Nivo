@@ -36,13 +36,21 @@ import {
 } from "@/lib/uploadthing";
 
 const defaultContactFormFields: ContactFormField[] = [
-  { name: "name", label: "Ime in priimek", type: "text", required: true, enabled: true },
-  { name: "phone", label: "Telefon", type: "tel", required: true, enabled: true },
-  { name: "email", label: "E-pošta", type: "email", required: true, enabled: true },
-  { name: "location", label: "Lokacija", type: "text", required: false, enabled: true },
-  { name: "service", label: "Kaj potrebujete?", type: "text", required: true, enabled: true },
-  { name: "message", label: "Sporočilo", type: "textarea", required: true, enabled: true },
+  { name: "name", label: "Full name", type: "text", required: true, enabled: true },
+  { name: "phone", label: "Phone", type: "tel", required: true, enabled: true },
+  { name: "email", label: "Email", type: "email", required: true, enabled: true },
+  { name: "location", label: "Location", type: "text", required: false, enabled: true },
+  { name: "service", label: "What do you need?", type: "text", required: true, enabled: true },
+  { name: "message", label: "Message", type: "textarea", required: true, enabled: true },
 ];
+
+function normalizeCountry(value: FormDataEntryValue | null) {
+  return String(value ?? "SI").trim().toUpperCase().slice(0, 2) || "SI";
+}
+
+function parseServiceAreas(value: FormDataEntryValue | null) {
+  return String(value ?? "").split(",").map((area) => area.trim()).filter(Boolean);
+}
 
 export async function createCompanyAction(formData: FormData) {
   const admin = await requireSuperAdmin();
@@ -58,6 +66,8 @@ export async function createCompanyAction(formData: FormData) {
       phone: String(formData.get("phone") ?? ""),
       industry: String(formData.get("industry") ?? ""),
       city: String(formData.get("city") ?? ""),
+      country: normalizeCountry(formData.get("country")),
+      serviceAreas: parseServiceAreas(formData.get("serviceAreas")),
       domain: String(formData.get("domain") ?? ""),
       status: String(formData.get("status") ?? "setup") as "setup",
       hasAiAddon: false,
@@ -76,9 +86,9 @@ export async function createCompanyAction(formData: FormData) {
 
   await db.insert(services).values({
     companyId: company.id,
-    name: "Osnovni paket",
+    name: "Core plan",
     type: "basic_plan",
-    price: "99",
+    price: "199",
     billingType: "monthly",
     status: "active",
     startedAt: new Date(),
@@ -169,6 +179,8 @@ export async function updateCompanyAction(formData: FormData) {
       industry: String(formData.get("industry") ?? "").trim() || null,
       address: String(formData.get("address") ?? "").trim() || null,
       city: String(formData.get("city") ?? "").trim() || null,
+      country: normalizeCountry(formData.get("country")),
+      serviceAreas: parseServiceAreas(formData.get("serviceAreas")),
       domain: String(formData.get("domain") ?? "").trim() || null,
       status: String(formData.get("status") ?? "setup") as "setup",
       hasAiAddon: false,
@@ -360,21 +372,21 @@ export async function changePasswordAction(_: unknown, formData: FormData) {
   const confirmPassword = String(formData.get("confirmPassword") ?? "");
 
   if (newPassword.length < 10) {
-    return { message: "Novo geslo naj ima vsaj 10 znakov.", ok: false };
+    return { message: "Your new password must be at least 10 characters.", ok: false };
   }
 
   if (newPassword !== confirmPassword) {
-    return { message: "Novo geslo in potrditev se ne ujemata.", ok: false };
+    return { message: "The new password and confirmation do not match.", ok: false };
   }
 
   const [dbUser] = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
   if (!dbUser) {
-    return { message: "Uporabnik ni najden.", ok: false };
+    return { message: "User not found.", ok: false };
   }
 
   const validCurrentPassword = await compare(currentPassword, dbUser.passwordHash);
   if (!validCurrentPassword) {
-    return { message: "Trenutno geslo ni pravilno.", ok: false };
+    return { message: "Your current password is incorrect.", ok: false };
   }
 
   await db
@@ -394,7 +406,7 @@ export async function changePasswordAction(_: unknown, formData: FormData) {
     metadata: { source: "dashboard_settings" },
   });
 
-  return { message: "Geslo je uspešno posodobljeno.", ok: true };
+  return { message: "Password updated successfully.", ok: true };
 }
 
 export async function updateClientCompanySettingsAction(_: unknown, formData: FormData) {
@@ -408,6 +420,8 @@ export async function updateClientCompanySettingsAction(_: unknown, formData: Fo
       phone: String(formData.get("phone") ?? "").trim(),
       address: String(formData.get("address") ?? "").trim() || null,
       city: String(formData.get("city") ?? "").trim() || null,
+      country: normalizeCountry(formData.get("country")),
+      serviceAreas: parseServiceAreas(formData.get("serviceAreas")),
       googleReviewUrl: String(formData.get("googleReviewUrl") ?? "").trim() || null,
       updatedAt: new Date(),
     })
@@ -423,7 +437,7 @@ export async function updateClientCompanySettingsAction(_: unknown, formData: Fo
   });
 
   revalidatePath("/dashboard/nastavitve");
-  return { message: "Podatki podjetja so shranjeni.", ok: true };
+  return { message: "Company details saved.", ok: true };
 }
 
 export type LeadAvailabilityState = { message: string; ok: boolean };
@@ -458,8 +472,8 @@ export async function updateLeadAvailabilityAction(
   revalidatePath("/dashboard");
   return {
     message: paused
-      ? "Sprejemanje povpraševanj je začasno ustavljeno."
-      : "Sprejemanje povpraševanj je ponovno vključeno.",
+      ? "Inquiry intake has been paused."
+      : "Inquiry intake is active again.",
     ok: true,
   };
 }
@@ -483,7 +497,7 @@ export async function deleteLeadAction(_: DeleteLeadState, formData: FormData): 
   const leadId = String(formData.get("leadId") ?? "");
 
   if (!leadId) {
-    return { ok: false, message: "Povpraševanje ni bilo najdeno." };
+    return { ok: false, message: "Inquiry not found." };
   }
 
   // Client user lahko briše samo povpraševanja svojega podjetja.
@@ -496,7 +510,7 @@ export async function deleteLeadAction(_: DeleteLeadState, formData: FormData): 
     .returning({ id: leads.id, companyId: leads.companyId, name: leads.name });
 
   if (!deleted) {
-    return { ok: false, message: "Povpraševanja ni bilo mogoče izbrisati." };
+    return { ok: false, message: "The inquiry could not be deleted." };
   }
 
   await db.insert(auditLogs).values({
@@ -510,7 +524,7 @@ export async function deleteLeadAction(_: DeleteLeadState, formData: FormData): 
 
   revalidateLeadPaths();
 
-  return { ok: true, message: "Povpraševanje je izbrisano." };
+  return { ok: true, message: "Inquiry deleted." };
 }
 
 export async function updateContactInquiryStatusAction(formData: FormData) {
@@ -815,7 +829,7 @@ export async function sendReviewRequestForLeadAction(
   const [company] = await db.select().from(companies).where(eq(companies.id, user.companyId!)).limit(1);
 
   if (!lead || !company?.googleReviewUrl || lead.status !== "completed") {
-    return { ok: false, message: "Zahteve za oceno trenutno ni mogoče poslati." };
+    return { ok: false, message: "The review request cannot be sent right now." };
   }
 
   const [request] = await db
@@ -850,12 +864,12 @@ export async function sendReviewRequestForLeadAction(
     await db.update(reviewRequests).set({ status: "sent", sentAt: new Date() }).where(eq(reviewRequests.id, request.id));
     revalidatePath("/dashboard/google-ocene");
     revalidatePath("/dashboard/povprasevanja");
-    return { ok: true, message: "Zahteva za oceno je bila poslana." };
+    return { ok: true, message: "Review request sent." };
   } catch {
     await db.update(reviewRequests).set({ status: "failed" }).where(eq(reviewRequests.id, request.id));
     revalidatePath("/dashboard/google-ocene");
     revalidatePath("/dashboard/povprasevanja");
-    return { ok: false, message: "Pošiljanje ni uspelo. Poskusite znova kasneje." };
+    return { ok: false, message: "Sending failed. Please try again later." };
   }
 }
 
@@ -869,7 +883,7 @@ export async function submitPublicReviewAction(_: unknown, formData: FormData) {
   const [request] = await db.select().from(reviewRequests).where(eq(reviewRequests.id, requestId)).limit(1);
 
   if (!request || rating < 1 || rating > 5) {
-    return { ok: false, message: "Ocene trenutno ni mogoče oddati." };
+    return { ok: false, message: "The review cannot be submitted right now." };
   }
 
   if (rating >= 4) {
@@ -888,7 +902,7 @@ export async function submitPublicReviewAction(_: unknown, formData: FormData) {
   }
 
   if (feedback.length < 5) {
-    return { ok: false, message: "Prosimo napišite kratek komentar, da lahko izboljšamo storitev." };
+    return { ok: false, message: "Please add a short comment so the company can improve its service." };
   }
 
   await db.insert(reviewFeedbacks).values({
@@ -902,7 +916,7 @@ export async function submitPublicReviewAction(_: unknown, formData: FormData) {
     feedback,
   });
 
-  return { ok: true, message: "Hvala za povratno informacijo. Vaše sporočilo smo prejeli." };
+  return { ok: true, message: "Thank you for your feedback. We received your message." };
 }
 
 async function getAppBaseUrl() {

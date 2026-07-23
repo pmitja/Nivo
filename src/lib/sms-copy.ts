@@ -68,14 +68,14 @@ function build(prefix: string, value: string, suffix: string) {
 export function contractorLeadSms(name: string, location: string | null | undefined, service: string) {
   const details = [name, location, service].filter(Boolean).join(", ");
 
-  return build("Novo povprasevanje: ", details, ". Odprite Obrtio za vec informacij.");
+  return build("New inquiry: ", details, ". Open Obrtio for details.");
 }
 
 export function customerLeadConfirmationSms(companyName: string) {
-  return build("Hvala za povprasevanje. ", companyName, " se vam javi v najkrajsem moznem casu.");
+  return build("Thanks for your inquiry. ", companyName, " will get back to you as soon as possible.");
 }
 
 export function googleReviewSms(reviewUrl: string) {
   // Povezave ne krajsamo in ne ciscimo, ker bi postala neuporabna.
-  return `Hvala za zaupanje. Prosimo ocenite naso storitev: ${reviewUrl}`;
+  return `Thank you for choosing us. Please review our service: ${reviewUrl}`;
 }

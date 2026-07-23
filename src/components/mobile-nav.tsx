@@ -20,7 +20,16 @@ const ContactForm = dynamic(
   },
 );
 
-export function MobileNav({ active, dashboardHref }: { active?: string; dashboardHref?: string | null }) {
+const englishNavLinks = [
+  { label: "Services", href: "/services", key: "storitve" },
+  { label: "How it works", href: "/how-it-works", key: "kako" },
+  { label: "Pricing", href: "/pricing", key: "cenik" },
+  { label: "Contractors", href: "/contractors", key: "izvajalci" },
+  { label: "Contact", href: "/contact", key: "kontakt" },
+];
+
+export function MobileNav({ active, dashboardHref, locale = "sl" }: { active?: string; dashboardHref?: string | null; locale?: "sl" | "en" }) {
+  const links = locale === "en" ? englishNavLinks : navLinks;
   const [open, setOpen] = useState(false);
   const [consultationOpen, setConsultationOpen] = useState(false);
 
@@ -36,7 +45,7 @@ export function MobileNav({ active, dashboardHref }: { active?: string; dashboar
     <>
       <button
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? 'Zapri meni' : 'Odpri meni'}
+        aria-label={open ? (locale === "en" ? "Close menu" : "Zapri meni") : (locale === "en" ? "Open menu" : "Odpri meni")}
         aria-expanded={open}
         className="relative flex h-9 w-9 items-center justify-center rounded-lg text-[#56535F] transition-colors hover:bg-[#F4F3FA] hover:text-[#16151D] md:hidden"
       >
@@ -64,7 +73,7 @@ export function MobileNav({ active, dashboardHref }: { active?: string; dashboar
         )}
       >
         <div className="mx-auto flex max-w-[1200px] flex-col px-5 pb-5 pt-1">
-          {navLinks.map((link, i) => (
+          {links.map((link, i) => (
             <Link
               key={link.key}
               href={link.href}
@@ -86,9 +95,9 @@ export function MobileNav({ active, dashboardHref }: { active?: string; dashboar
               'pt-4 text-[16px] font-semibold text-[#16151D] no-underline transition-all duration-300 hover:text-[#6A5AE0]',
               open ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0',
             )}
-            style={{ transitionDelay: open ? `${50 + navLinks.length * 40}ms` : '0ms' }}
+            style={{ transitionDelay: open ? `${50 + links.length * 40}ms` : '0ms' }}
           >
-            {dashboardHref ? 'Sistem' : 'Prijava'}
+            {dashboardHref ? (locale === "en" ? "Dashboard" : "Sistem") : (locale === "en" ? "Log in" : "Prijava")}
           </Link>
           {!dashboardHref ? (
             <button
@@ -101,9 +110,9 @@ export function MobileNav({ active, dashboardHref }: { active?: string; dashboar
                 'mt-5 flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-full bg-[#6654DB] px-5 py-3 text-[15px] font-extrabold text-white shadow-[0_14px_30px_rgba(102,84,219,.24)] transition-all duration-300 hover:bg-[#5443C4] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/20',
                 open ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0',
               )}
-              style={{ transitionDelay: open ? `${90 + navLinks.length * 40}ms` : '0ms' }}
+              style={{ transitionDelay: open ? `${90 + links.length * 40}ms` : '0ms' }}
             >
-              Brezplačen posvet <ArrowRight size={16} />
+              {locale === "en" ? "Book a free call" : "Brezplačen posvet"} <ArrowRight size={16} />
             </button>
           ) : null}
         </div>
@@ -112,11 +121,11 @@ export function MobileNav({ active, dashboardHref }: { active?: string; dashboar
       {!dashboardHref ? (
         <Dialog open={consultationOpen} onOpenChange={setConsultationOpen}>
           <DialogContent className="max-h-[calc(100dvh-24px)] w-[calc(100vw-24px)] max-w-[600px] overflow-y-auto overscroll-contain rounded-[24px] border-0 bg-[#F7F5FC] p-2 sm:max-h-[88vh] sm:p-3">
-            <DialogTitle className="sr-only">Rezervirajte brezplačen posvet</DialogTitle>
+            <DialogTitle className="sr-only">{locale === "en" ? "Book a free call" : "Rezervirajte brezplačen posvet"}</DialogTitle>
             <DialogDescription className="sr-only">
-              Izpolnite obrazec in odgovorili vam bomo v 24 urah.
+              {locale === "en" ? "Complete the form and we will reply within 24 hours." : "Izpolnite obrazec in odgovorili vam bomo v 24 urah."}
             </DialogDescription>
-            <ContactForm />
+            <ContactForm locale={locale} />
           </DialogContent>
         </Dialog>
       ) : null}

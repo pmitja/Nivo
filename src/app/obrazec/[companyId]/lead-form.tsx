@@ -47,7 +47,7 @@ export function PublicLeadForm({
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setStatus("error");
-      setMessage(data?.message ?? "Povpraševanja trenutno ni bilo mogoče poslati.");
+      setMessage(data?.message ?? "We could not send your inquiry right now.");
       return;
     }
 
@@ -80,27 +80,27 @@ export function PublicLeadForm({
             name={field.name}
             required={field.required}
             minLength={10}
-            placeholder={electrician ? "Na kratko opišite, kaj potrebujete …" : undefined}
+            placeholder={electrician ? "Briefly describe what you need…" : undefined}
             className={electrician ? "min-h-28 rounded-xl border-[#d7deea] bg-white text-base focus-visible:border-[#ffbf00] focus-visible:ring-[#ffbf00]/25" : "min-h-36 text-[15px]"}
           />
         </div>
       ))}
       {showAttachment ? (
         <div className="grid gap-2">
-          <Label htmlFor="attachment">Popis del (Excel) — neobvezno</Label>
+          <Label htmlFor="attachment">Project details (Excel) — optional</Label>
           <Input id="attachment" name="attachment" type="file" accept=".xls,.xlsx,.csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv" className="h-12 text-[15px] file:mr-3 file:h-full file:border-0 file:bg-transparent file:text-sm file:font-semibold" />
         </div>
       ) : null}
       <div className="flex items-start gap-3">
         <Checkbox id="privacyConsent" name="privacyConsent" required className={electrician ? "mt-1 border-[#9ba8ba] data-[state=checked]:border-[#0f6cf2] data-[state=checked]:bg-[#0f6cf2]" : "mt-1"} />
         <Label htmlFor="privacyConsent" className={`cursor-pointer text-sm font-semibold leading-6 ${electrician ? "text-[#59677e]" : "text-[#55515F]"}`}>
-          Strinjam se z obdelavo podatkov za namen obravnave povpraševanja. *
+          I agree to the processing of my data for the purpose of handling this inquiry. *
         </Label>
       </div>
       <div className="flex items-start gap-3">
         <Checkbox id="marketingConsent" name="marketingConsent" className={electrician ? "mt-1 border-[#9ba8ba] data-[state=checked]:border-[#0f6cf2] data-[state=checked]:bg-[#0f6cf2]" : "mt-1"} />
         <Label htmlFor="marketingConsent" className={`cursor-pointer text-sm font-semibold leading-6 ${electrician ? "text-[#59677e]" : "text-[#55515F]"}`}>
-          Želim prejemati obvestila o akcijah, novostih in posebnih ponudbah.
+          I would like to receive updates, news and special offers.
         </Label>
       </div>
       {message ? (
@@ -109,10 +109,10 @@ export function PublicLeadForm({
         </p>
       ) : null}
       <Button disabled={status === "sending"} className={electrician ? "h-14 cursor-pointer rounded-xl bg-[#ffc400] text-base font-extrabold text-[#0b1729] shadow-none transition-colors hover:bg-[#ffd138] focus-visible:ring-[#ffc400]" : "h-12"}>
-        {status === "sending" ? "Pošiljam..." : submitLabel}
+        {status === "sending" ? "Sending..." : submitLabel}
         {electrician ? null : <Send className="h-4 w-4" />}
       </Button>
-      {electrician ? <p className="text-center text-xs font-medium leading-5 text-[#8a96a9]">Vaše podatke uporabimo izključno za pripravo odgovora na povpraševanje.</p> : null}
+      {electrician ? <p className="text-center text-xs font-medium leading-5 text-[#8a96a9]">We only use your details to respond to this inquiry.</p> : null}
     </form>
   );
 }
@@ -130,7 +130,7 @@ function Field({ field, appearance }: { field: ContactFormField; appearance: App
       </Label>
       {field.type === "select" ? (
         <select id={field.name} name={field.name} required={field.required} defaultValue="" className={`w-full cursor-pointer appearance-none border px-4 outline-none transition-shadow focus-visible:ring-2 ${controlClasses}`}>
-          <option value="" disabled>Izberite storitev</option>
+          <option value="" disabled>Select a service</option>
           {field.options?.map((option) => <option key={option} value={option}>{option}</option>)}
         </select>
       ) : (

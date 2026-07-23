@@ -210,13 +210,13 @@ export const addonsLanding = [
   {
     title: "Google Business profil",
     desc: "Optimizacija opisa, kategorij in fotografij.",
-    price: "500 €",
+    price: "$500",
     unit: "enkratno",
   },
   {
     title: "SEO optimizacija",
     desc: "Struktura, ključne besede in lokalne vsebine.",
-    price: "500 €",
+    price: "$500",
     unit: "enkratno",
   },
   {
@@ -282,13 +282,13 @@ export const aiFeatures = [
 export const serviceAddons = [
   {
     title: "Google Business Profil",
-    price: "500 €",
+    price: "$500",
     unit: "enkratno",
     features: ["Nastavitev profila", "Optimizacija", "Kategorije", "Storitve", "Lokalna vidnost"],
   },
   {
     title: "SEO Optimizacija",
-    price: "500 €",
+    price: "$500",
     unit: "enkratno",
     features: [
       "Analiza konkurence",

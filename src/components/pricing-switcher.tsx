@@ -44,6 +44,11 @@ const plans = {
   }
 >;
 
+const englishPlans = {
+  monthly: { label: "Monthly", price: "$199", unit: "/ month", summary: "$199 per month", note: "Maximum flexibility. Cancel anytime.", badge: "No contract", cta: "Start monthly", inactiveItems: ["Setup included", "No setup fee", "Support and maintenance"] },
+  yearly: { label: "Annual", price: "$1,900", unit: "/ year", summary: "$1,900 per year", note: "$158.33 / month when billed annually.", badge: "Save $488", cta: "Start annual", inactiveItems: ["$158.33 / month", "Save $488", "Every feature included"] },
+} satisfies typeof plans;
+
 const planFeatures = [
   "Spletna stran (do 5 podstrani)",
   "Gostovanje",
@@ -59,13 +64,15 @@ const planFeatures = [
   "Vzdrževanje",
 ];
 
-export function PricingSwitcher() {
+export function PricingSwitcher({ locale = "sl" }: { locale?: "sl" | "en" }) {
   const [selected, setSelected] = useState<BillingPeriod>("yearly");
+  const english = locale === "en";
+  const localizedPlans = english ? englishPlans : plans;
 
   return (
     <section className="bg-white px-5 pb-14 pt-0 text-center md:px-8">
-      <div className="mx-auto inline-grid grid-cols-2 rounded-full border border-[#E4E2EC] bg-white p-1 shadow-[0_8px_26px_rgba(20,19,29,.06)]" role="radiogroup" aria-label="Izbira obračuna">
-        {(Object.keys(plans) as BillingPeriod[]).map((period) => {
+      <div className="mx-auto inline-grid grid-cols-2 rounded-full border border-[#E4E2EC] bg-white p-1 shadow-[0_8px_26px_rgba(20,19,29,.06)]" role="radiogroup" aria-label={english ? "Billing period" : "Izbira obračuna"}>
+        {(Object.keys(localizedPlans) as BillingPeriod[]).map((period) => {
           const isSelected = selected === period;
 
           return (
@@ -80,30 +87,30 @@ export function PricingSwitcher() {
                 isSelected ? "bg-[#16151D] text-white shadow-[0_8px_18px_rgba(20,19,29,.20)]" : "text-[#6A6775] hover:text-[#16151D]",
               )}
             >
-              {plans[period].label}
+              {localizedPlans[period].label}
             </button>
           );
         })}
       </div>
-      <div className="mt-2 text-[12px] font-bold uppercase tracking-[.08em] text-[#8C8898]">{plans[selected].summary}</div>
+      <div className="mt-2 text-[12px] font-bold uppercase tracking-[.08em] text-[#8C8898]">{localizedPlans[selected].summary}</div>
 
       <div className="mx-auto mt-10 grid max-w-[1080px] items-stretch gap-5 text-left lg:grid-cols-2">
-        {(Object.keys(plans) as BillingPeriod[]).map((period) => (
-          <PlanCard key={period} period={period} active={selected === period} />
+        {(Object.keys(localizedPlans) as BillingPeriod[]).map((period) => (
+          <PlanCard key={period} period={period} active={selected === period} planSet={localizedPlans} locale={locale} />
         ))}
       </div>
       <div className="mx-auto mt-5 max-w-[1080px] rounded-[18px] border border-dashed border-[#D8D3EA] bg-[#FBFAFF] p-5 text-center">
-        <div className="text-xs font-bold uppercase tracking-[.08em] text-[#8C8898]">Ob preklicu naročnine</div>
+        <div className="text-xs font-bold uppercase tracking-[.08em] text-[#8C8898]">{english ? "When you cancel" : "Ob preklicu naročnine"}</div>
         <div className="mx-auto mt-2 max-w-[640px] text-[14px] leading-[1.55] text-[#54515E]">
-          Sistem se deaktivira in spletna stran se odstrani. Brez skritih stroškov, brez kazni.
+          {english ? "The system is deactivated and the website is taken down. No hidden fees or penalties." : "Sistem se deaktivira in spletna stran se odstrani. Brez skritih stroškov, brez kazni."}
         </div>
       </div>
     </section>
   );
 }
 
-function PlanCard({ period, active }: { period: BillingPeriod; active: boolean }) {
-  const plan = plans[period];
+function PlanCard({ period, active, planSet, locale }: { period: BillingPeriod; active: boolean; planSet: typeof plans; locale: "sl" | "en" }) {
+  const plan = planSet[period];
 
   return (
     <div
@@ -134,17 +141,19 @@ function PlanCard({ period, active }: { period: BillingPeriod; active: boolean }
         </div>
         <p className={cn("mt-3 text-[15px] leading-[1.55]", active ? "text-[#D6D3E1]" : "text-[#6A6775]")}>{plan.note}</p>
 
-        {active ? <ActivePlanContent cta={plan.cta} /> : <InactivePlanContent items={plan.inactiveItems} />}
+        {active ? <ActivePlanContent cta={plan.cta} locale={locale} /> : <InactivePlanContent items={plan.inactiveItems} locale={locale} />}
       </div>
     </div>
   );
 }
 
-function ActivePlanContent({ cta }: { cta: string }) {
+function ActivePlanContent({ cta, locale }: { cta: string; locale: "sl" | "en" }) {
+  const english = locale === "en";
+  const features = english ? ["Website (up to 5 pages)", "Hosting", "Fully managed website", "Contact forms", "SMS system", "Customer email confirmations", "Review system", "Marketing campaigns", "Referral campaigns", "Analytics", "Support", "Maintenance"] : planFeatures;
   return (
     <>
       <div className="mt-7 grid gap-3 sm:grid-cols-2">
-        {planFeatures.map((feature) => (
+        {features.map((feature) => (
           <div key={feature} className="flex items-center gap-2.5 text-[14px] font-semibold text-[#F4F2FA]">
             <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#8C7BF0] text-white">
               <Check size={12} strokeWidth={3} />
@@ -154,7 +163,7 @@ function ActivePlanContent({ cta }: { cta: string }) {
         ))}
       </div>
       <Button asChild className="mt-8 w-full bg-[#8C7BF0] text-white shadow-[0_18px_36px_rgba(106,90,224,.28)] hover:bg-[#6A5AE0]">
-        <Link href="/kontakt">
+        <Link href={english ? "/contact" : "/kontakt"}>
           {cta} <ArrowRight size={17} />
         </Link>
       </Button>
@@ -162,7 +171,8 @@ function ActivePlanContent({ cta }: { cta: string }) {
   );
 }
 
-function InactivePlanContent({ items }: { items: string[] }) {
+function InactivePlanContent({ items, locale }: { items: string[]; locale: "sl" | "en" }) {
+  const english = locale === "en";
   return (
     <>
       <div className="mt-7 space-y-3">
@@ -173,13 +183,13 @@ function InactivePlanContent({ items }: { items: string[] }) {
             </span>
             <div>
               <div className="text-[14.5px] font-bold text-[#16151D]">{item}</div>
-              <div className="mt-1 text-[13px] leading-[1.45] text-[#6A6775]">Na voljo tudi pri tej izbiri obračuna.</div>
+              <div className="mt-1 text-[13px] leading-[1.45] text-[#6A6775]">{english ? "Also available with this billing choice." : "Na voljo tudi pri tej izbiri obračuna."}</div>
             </div>
           </div>
         ))}
       </div>
       <div className="mt-8 rounded-[12px] border border-[#E4E2EC] bg-white px-5 py-[15px] text-center text-[15px] font-bold text-[#6A6775]">
-        Izberite zgoraj za podrobnosti
+        {english ? "Select above for details" : "Izberite zgoraj za podrobnosti"}
       </div>
     </>
   );

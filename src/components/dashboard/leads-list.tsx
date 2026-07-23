@@ -5,7 +5,7 @@ import { SendReviewRequestButton } from "@/components/dashboard/send-review-requ
 import { SubmitButton } from "@/components/ui/submit-button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { getClientLeadsPage } from "@/lib/dashboard-data";
-import { formatDate, leadPauseReasonLabels, leadStatusLabels } from "@/lib/labels";
+import { formatDate, leadPauseReasonLabels, leadStatusLabels } from "@/lib/labels-en";
 
 export function LeadsList({
   leads,
@@ -25,7 +25,7 @@ export function LeadsList({
           <div className="flex flex-wrap justify-between gap-3">
             <div>
               <div className="font-extrabold">{lead.name} · {lead.service}</div>
-              <div className="mt-1 text-sm font-semibold text-[#777382]">{lead.phone} · {lead.email || "Brez emaila"} · {lead.location || "Brez lokacije"}</div>
+              <div className="mt-1 text-sm font-semibold text-[#777382]">{lead.phone} · {lead.email || "No email"} · {lead.location || "No location"}</div>
               <p className="mt-3 max-w-[760px] text-sm leading-6 text-[#55515F]">{lead.message}</p>
               {lead.attachmentUrl ? (
                 <a
@@ -34,7 +34,7 @@ export function LeadsList({
                   rel="noreferrer"
                   className="mt-3 inline-flex items-center gap-2 rounded-[11px] border border-[#E2DFEA] px-3 py-2 text-sm font-extrabold text-[#16151D]"
                 >
-                  📎 {lead.attachmentName || "Priloga"}
+                  📎 {lead.attachmentName || "Attachment"}
                 </a>
               ) : null}
             </div>
@@ -46,7 +46,7 @@ export function LeadsList({
             </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
-            <a href={`tel:${lead.phone}`} className="rounded-[11px] bg-[#16151D] px-4 py-2 text-sm font-extrabold text-white">Pokliči stranko</a>
+            <a href={`tel:${lead.phone}`} className="rounded-[11px] bg-[#16151D] px-4 py-2 text-sm font-extrabold text-white">Call customer</a>
             <form action={updateLeadStatusAction} className="flex gap-2">
               <input type="hidden" name="leadId" value={lead.id} />
               <Select name="status" defaultValue={lead.status}>
@@ -57,7 +57,7 @@ export function LeadsList({
                   {Object.entries(leadStatusLabels).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}
                 </SelectContent>
               </Select>
-              <SubmitButton size="sm">Shrani</SubmitButton>
+              <SubmitButton size="sm">Save</SubmitButton>
             </form>
             {lead.status === "completed" ? (
               <SendReviewRequestButton
@@ -72,7 +72,7 @@ export function LeadsList({
             </div>
           </div>
           <div className="mt-4 rounded-[14px] border border-[#EEEAF5] bg-[#FBFAFF] p-4 text-sm font-semibold text-[#686473]">
-            AI pomočnik za povzetke in osnutke ponudb: <span className="font-extrabold text-[#6A5AE0]">pride kmalu</span>
+            AI assistant for summaries and quote drafts: <span className="font-extrabold text-[#6A5AE0]">coming soon</span>
           </div>
           <div className="mt-3 text-xs font-bold uppercase tracking-[.06em] text-[#9A96A5]">{formatDate(lead.createdAt)}</div>
         </div>

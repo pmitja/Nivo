@@ -64,19 +64,21 @@ export function CheckList({ items, dark = false }: { items: string[]; dark?: boo
 export function PhonePair({
   contractorLabel = "Vi prejmete SMS",
   customerLabel = "Stranka prejme e-pošto",
+  locale = "sl",
 }: {
   contractorLabel?: string;
   customerLabel?: string;
+  locale?: "sl" | "en";
 }) {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <PhoneCard label={contractorLabel} side="left" />
-      <PhoneCard label={customerLabel} side="right" />
+      <PhoneCard label={contractorLabel} side="left" locale={locale} />
+      <PhoneCard label={customerLabel} side="right" locale={locale} />
     </div>
   );
 }
 
-function PhoneCard({ label, side }: { label: string; side: "left" | "right" }) {
+function PhoneCard({ label, side, locale }: { label: string; side: "left" | "right"; locale: "sl" | "en" }) {
   const isRight = side === "right";
   return (
     <div className="rounded-[22px] border border-[#ECEAF3] bg-white px-4 py-[18px] shadow-[0_20px_48px_rgba(20,19,29,.10)]">
@@ -91,16 +93,16 @@ function PhoneCard({ label, side }: { label: string; side: "left" | "right" }) {
           )}
         >
           {isRight
-            ? "Hvala za povpraševanje. Prejeli smo vaše sporočilo in se vam oglasimo takoj, ko bo mogoče."
-            : "Novo povpraševanje: Janez Novak"}
+            ? locale === "en" ? "Thanks for your inquiry. We received your message and will get back to you shortly." : "Hvala za povpraševanje. Prejeli smo vaše sporočilo in se vam oglasimo takoj, ko bo mogoče."
+            : locale === "en" ? "New inquiry: John Smith" : "Novo povpraševanje: Janez Novak"}
         </div>
         {!isRight ? (
           <div className="max-w-[94%] self-start rounded-[14px] bg-[#F1EFF8] px-[13px] py-2.5 text-[12.5px] leading-[1.45] text-[#54515E]">
-            Obnova kopalnice · Maribor · 041 000 000
+            {locale === "en" ? "Bathroom remodel · Austin · (555) 000-0000" : "Obnova kopalnice · Maribor · 041 000 000"}
           </div>
         ) : null}
         <div className={cn("text-[11px] text-[#A9A6B3]", isRight ? "self-end" : "self-start")}>
-          {isRight ? "E-poštno potrdilo · poslano ✓" : "SMS · zdaj"}
+          {isRight ? locale === "en" ? "Email confirmation · sent ✓" : "E-poštno potrdilo · poslano ✓" : locale === "en" ? "SMS · now" : "SMS · zdaj"}
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ import { noIndexMetadata } from "@/lib/seo";
 
 export const metadata = {
   ...noIndexMetadata,
-  title: "Prijava",
+  title: "Log in",
 };
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {

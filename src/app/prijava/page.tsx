@@ -21,24 +21,24 @@ export default function LoginPage() {
               <div className="mt-16 max-w-[560px]">
                 <p className="text-sm font-bold uppercase tracking-[.1em] text-[#AFA8FF]">Dashboard</p>
                 <h1 className="mt-4 text-[40px] font-extrabold leading-[1.05] md:text-[56px]">
-                  Vi opravljate delo. Mi poskrbimo za stranke.
+                  You do the work. We bring the customers.
                 </h1>
                 <p className="mt-5 max-w-[480px] text-[17px] leading-[1.65] text-[#D8D5E4]">
-                  Pregled povpraševanj, strank, SMS sporočil, ocen in zahtevkov v enem jasnem sistemu.
+                  Inquiries, customers, SMS messages, reviews and website requests in one clear system.
                 </p>
               </div>
             </div>
             <div className="grid gap-3 text-sm text-[#D8D5E4] sm:grid-cols-3">
-              <span>SMS obvestila</span>
-              <span>Google ocene</span>
-              <span>Spletna stran</span>
+              <span>SMS alerts</span>
+              <span>Google reviews</span>
+              <span>Website</span>
             </div>
           </section>
 
           <section className="p-7 md:p-10">
             <div className="mx-auto max-w-[390px] py-8">
-              <h2 className="text-2xl font-extrabold">Prijava</h2>
-              <p className="mt-2 text-[15px] leading-6 text-[#686573]">Dostop za ekipo Obrtio in stranke.</p>
+              <h2 className="text-2xl font-extrabold">Log in</h2>
+              <p className="mt-2 text-[15px] leading-6 text-[#686573]">Access for Obrtio clients and team members.</p>
 
               <form action={action} className="mt-8 grid gap-4">
                 <div className="grid gap-2">
@@ -49,11 +49,11 @@ export default function LoginPage() {
                     type="email"
                     required
                     className="h-12 text-[15px]"
-                    placeholder="ime@podjetje.si"
+                    placeholder="name@company.com"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="password">Geslo</Label>
+                  <Label htmlFor="password">Password</Label>
                   <Input
                     id="password"
                     name="password"
@@ -61,7 +61,7 @@ export default function LoginPage() {
                     autoComplete="current-password"
                     required
                     className="h-12 text-[15px]"
-                    placeholder="Vnesite geslo"
+                    placeholder="Enter your password"
                   />
                 </div>
 
@@ -76,7 +76,7 @@ export default function LoginPage() {
                   disabled={pending}
                   className="mt-2 h-12 text-[15px]"
                 >
-                  {pending ? "Prijavljam..." : "Odpri dashboard"}
+                  {pending ? "Logging in..." : "Open dashboard"}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </form>

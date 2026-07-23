@@ -53,6 +53,12 @@ export default async function AdminCompaniesPage({ searchParams }: { searchParam
               <Field id="company-city" label="Lokacija">
                 <Input id="company-city" name="city" placeholder="Ljubljana" />
               </Field>
+              <Field id="company-country" label="Država (ISO koda)">
+                <Input id="company-country" name="country" maxLength={2} defaultValue="SI" placeholder="SI" />
+              </Field>
+              <Field id="company-service-areas" label="Območja izvajanja">
+                <Input id="company-service-areas" name="serviceAreas" placeholder="Ljubljana, Kranj, Celje" />
+              </Field>
               <Field id="company-domain" label="Domena">
                 <Input id="company-domain" name="domain" placeholder="podjetje.si" />
               </Field>
@@ -95,7 +101,7 @@ export default async function AdminCompaniesPage({ searchParams }: { searchParam
                     <div className="mt-1 text-sm font-semibold text-[#777382]">
                       {company.contactName} · {company.email} · {company.phone}
                     </div>
-                    <div className="mt-1 text-sm text-[#8A8694]">{company.city || "Lokacija ni vpisana"} · {company.domain || "Domena ni vpisana"}</div>
+                    <div className="mt-1 text-sm text-[#8A8694]">{company.city || "Lokacija ni vpisana"}, {company.country} · {company.domain || "Domena ni vpisana"}</div>
                   </div>
                   <StatusPill>{companyStatusLabels[company.status]}</StatusPill>
                 </div>

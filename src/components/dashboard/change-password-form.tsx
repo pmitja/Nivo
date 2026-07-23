@@ -25,15 +25,15 @@ export function ChangePasswordForm() {
   return (
     <form ref={formRef} action={action} className="grid gap-4">
       <div className="grid gap-2">
-        <Label htmlFor="currentPassword">Trenutno geslo</Label>
+        <Label htmlFor="currentPassword">Current password</Label>
         <Input id="currentPassword" name="currentPassword" type="password" autoComplete="current-password" required />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="newPassword">Novo geslo</Label>
+        <Label htmlFor="newPassword">New password</Label>
         <Input id="newPassword" name="newPassword" type="password" autoComplete="new-password" required minLength={10} />
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="confirmPassword">Potrditev novega gesla</Label>
+        <Label htmlFor="confirmPassword">Confirm new password</Label>
         <Input id="confirmPassword" name="confirmPassword" type="password" autoComplete="new-password" required minLength={10} />
       </div>
 
@@ -49,7 +49,7 @@ export function ChangePasswordForm() {
         ) : (
           <LockKeyhole className="h-4 w-4" />
         )}
-        {pending ? "Shranjujem..." : "Spremeni geslo"}
+        {pending ? "Saving..." : "Change password"}
       </Button>
     </form>
   );

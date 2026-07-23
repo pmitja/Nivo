@@ -126,9 +126,9 @@ export function formatDate(date?: Date | string | null) {
 }
 
 export function formatCurrency(value: number) {
-  return new Intl.NumberFormat("sl-SI", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(value);
 }

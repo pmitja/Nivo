@@ -64,7 +64,7 @@ export async function getAdminOverview() {
   return {
     activeCompanies: activeCompanies.value,
     newCompanies: newCompanies.value,
-    mrr: activeCompanies.value * 99,
+    mrr: activeCompanies.value * 199,
     allSms: allSms.value,
     newClientLeads: newLeads.value,
     newInquiries: newContactInquiries.value,

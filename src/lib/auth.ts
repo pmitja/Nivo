@@ -41,12 +41,12 @@ export async function signIn(email: string, password: string) {
 
   const [user] = await db.select().from(users).where(eq(users.email, email.toLowerCase().trim())).limit(1);
   if (!user) {
-    return { ok: false, message: "Email ali geslo ni pravilno." };
+    return { ok: false, message: "The email or password is incorrect." };
   }
 
   const validPassword = await compare(password, user.passwordHash);
   if (!validPassword) {
-    return { ok: false, message: "Email ali geslo ni pravilno." };
+    return { ok: false, message: "The email or password is incorrect." };
   }
 
   const token = randomBytes(32).toString("base64url");

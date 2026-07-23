@@ -9,7 +9,7 @@ import {
   getCompany,
   getCompletedReviewCandidatesPage,
 } from "@/lib/dashboard-data";
-import { formatDate } from "@/lib/labels";
+import { formatDate } from "@/lib/labels-en";
 
 export default async function ClientReviewsPage({
   searchParams,
@@ -39,16 +39,16 @@ export default async function ClientReviewsPage({
   const requests = requestsData.requests;
 
   return (
-    <DashboardShell user={user} mode="client" title="Google ocene" subtitle="Pošljite zahtevo za oceno zaključenim strankam.">
+    <DashboardShell user={user} mode="client" title="Google reviews" subtitle="Send a review request to customers after a completed job.">
       <div className="grid gap-6 xl:grid-cols-[1.15fr_.85fr]">
-        <Panel title="Zaključene stranke">
+        <Panel title="Completed customers">
           {company?.googleReviewUrl ? (
             <div className="overflow-hidden rounded-[16px] border border-[#EEEAF5]">
               <div className="hidden grid-cols-[1fr_.8fr_.8fr_auto] gap-3 border-b border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3 text-xs font-extrabold uppercase tracking-[.06em] text-[#8D8999] md:grid">
-                <div>Stranka</div>
-                <div>Storitev</div>
-                <div>Zadnja zahteva</div>
-                <div className="text-right">Akcija</div>
+                <div>Customer</div>
+                <div>Service</div>
+                <div>Latest request</div>
+                <div className="text-right">Action</div>
               </div>
               <div className="divide-y divide-[#EEEAF5] bg-white">
                 {candidates.length ? (
@@ -56,14 +56,14 @@ export default async function ClientReviewsPage({
                     <div key={candidate.id} className="grid gap-3 px-4 py-3 md:grid-cols-[1fr_.8fr_.8fr_auto] md:items-center">
                       <div>
                         <div className="text-sm font-extrabold">{candidate.displayName}</div>
-                        <div className="mt-1 text-xs font-semibold text-[#8A8694]">{candidate.phone} · {candidate.email || "Brez emaila"}</div>
+                        <div className="mt-1 text-xs font-semibold text-[#8A8694]">{candidate.phone} · {candidate.email || "No email"}</div>
                       </div>
                       <div>
                         <div className="text-sm font-bold text-[#28262F]">{candidate.service}</div>
-                        <div className="mt-1 text-xs font-semibold text-[#8A8694]">{candidate.location || "Brez lokacije"}</div>
+                        <div className="mt-1 text-xs font-semibold text-[#8A8694]">{candidate.location || "No location"}</div>
                       </div>
                       <div className="text-sm font-semibold text-[#686473]">
-                        {candidate.latestReviewSentAt ? formatDate(candidate.latestReviewSentAt) : "Ni poslano"}
+                        {candidate.latestReviewSentAt ? formatDate(candidate.latestReviewSentAt) : "Not sent"}
                       </div>
                       <div className="md:justify-self-end">
                         <SendReviewRequestButton leadId={candidate.id} size="sm" alreadySent={candidate.reviewAlreadySent} />
@@ -72,13 +72,13 @@ export default async function ClientReviewsPage({
                   ))
                 ) : (
                   <div className="p-4">
-                    <EmptyState text="Ko bo povpraševanje označeno kot zaključeno, se bo stranka prikazala tukaj." />
+                    <EmptyState text="Customers appear here when an inquiry is marked as completed." />
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <EmptyState text="Google review povezava še ni nastavljena. Pošljite nam povezavo ali nas kontaktirajte, da jo uredimo za vas." />
+            <EmptyState text="Your Google review link is not set up yet. Send us the link or contact us and we will set it up." />
           )}
           {company?.googleReviewUrl ? (
             <PaginationFooter
@@ -92,7 +92,7 @@ export default async function ClientReviewsPage({
           ) : null}
         </Panel>
 
-        <Panel title="Zadnje zahteve">
+        <Panel title="Recent requests">
           <div className="grid gap-2">
             {requests.length ? (
               requests.map((request) => (
@@ -105,7 +105,7 @@ export default async function ClientReviewsPage({
                 </div>
               ))
             ) : (
-              <EmptyState text="Zahtev za ocene še ni." />
+              <EmptyState text="No review requests yet." />
             )}
           </div>
           <PaginationFooter
@@ -120,7 +120,7 @@ export default async function ClientReviewsPage({
       </div>
 
       <div className="mt-6">
-        <Panel title="Prejete ocene">
+        <Panel title="Received feedback">
           <ReviewFeedbackTable data={feedbacks} />
         </Panel>
       </div>

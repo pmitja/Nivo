@@ -4,6 +4,7 @@ import { ArrowRight, Play } from "lucide-react";
 import { CtaBand, Eyebrow, SectionHeading } from "@/components/site-shell";
 import { FeatureGrid, PhonePair } from "@/components/feature-sections";
 import { HeroVisual } from "@/components/hero-visual";
+import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { createMetadata } from "@/lib/seo";
@@ -13,9 +14,9 @@ export const metadata = createMetadata({
   title: "Websites and lead management for contractors",
   description:
     "Obrtio builds your website and helps you manage leads, SMS alerts, customer reviews and campaigns in one simple system.",
-  path: "/en",
+  path: "/",
   locale: "en_US",
-  languages: { en: "/en", "sl-SI": "/", "x-default": "/" },
+  languages: { en: "/", "sl-SI": "/sl", "x-default": "/" },
   keywords: ["contractor website", "lead management for contractors", "home service marketing"],
 });
 
@@ -24,25 +25,25 @@ export default function EnglishLandingPage() {
     <div lang="en" className="marketing-page w-full overflow-x-clip bg-white">
       <header className="sticky top-0 z-50 border-b border-[#ECEAF3] bg-white/80 backdrop-blur-[10px] backdrop-saturate-150">
         <nav className="mx-auto flex max-w-[1200px] items-center justify-between gap-6 px-5 py-4 md:px-8">
-          <Link href="/en" className="flex items-center gap-2.5 text-[#16151D] no-underline">
+          <Link href="/" className="flex items-center gap-2.5 text-[#16151D] no-underline">
             <span className="flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-[#6A5AE0] shadow-[0_4px_12px_rgba(106,90,224,.35)]">
               <span className="h-[13px] w-[13px] rotate-45 rounded-[3px] border-[2.5px] border-white" />
             </span>
             <span className="text-xl font-extrabold tracking-[-.02em]">Obrtio</span>
           </Link>
           <div className="hidden items-center gap-[30px] md:flex">
-            {["Services", "How it works", "Pricing", "Contact"].map((item) => (
-              <a key={item} href={`#${item.toLowerCase().split(" ")[0]}`} className="text-[14.5px] font-medium text-[#56535F] no-underline hover:text-[#16151D]">
-                {item}
-              </a>
-            ))}
+            <Link href="/services" className="text-[14.5px] font-medium text-[#56535F] no-underline hover:text-[#16151D]">Services</Link>
+            <Link href="/how-it-works" className="text-[14.5px] font-medium text-[#56535F] no-underline hover:text-[#16151D]">How it works</Link>
+            <Link href="/pricing" className="text-[14.5px] font-medium text-[#56535F] no-underline hover:text-[#16151D]">Pricing</Link>
+            <Link href="/contact" className="text-[14.5px] font-medium text-[#56535F] no-underline hover:text-[#16151D]">Contact</Link>
           </div>
           <div className="flex items-center gap-3.5">
-            <a href="#contact" className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline sm:inline">
+            <LanguageSwitcher locale="en" />
+            <Link href="/prijava" className="hidden text-[14.5px] font-semibold text-[#16151D] no-underline lg:inline">
               Log in
-            </a>
-            <Button asChild size="sm">
-              <a href="#contact">Book a free call</a>
+            </Link>
+            <Button asChild size="sm" className="hidden sm:inline-flex">
+              <Link href="/contact">Book a free call</Link>
             </Button>
           </div>
         </nav>
@@ -62,20 +63,20 @@ export default function EnglishLandingPage() {
               Less hassle.
             </h1>
             <p className="mt-[22px] max-w-[490px] text-[18.5px] leading-[1.55] text-[#54515E]">We build your website, automate every lead, collect reviews, and help you win more work.</p>
-            <p className="mt-2.5 max-w-[490px] text-[18.5px] font-semibold leading-[1.55]">All for just <span className="text-[#6A5AE0]">$150 a month.</span></p>
+            <p className="mt-2.5 max-w-[490px] text-[18.5px] font-semibold leading-[1.55]">All for just <span className="text-[#6A5AE0]">$199 a month.</span></p>
             <div className="mt-8 flex flex-wrap items-center gap-3.5">
               <Button asChild>
-                <a href="#contact">
+                <Link href="/contact">
                   Book a free call <ArrowRight size={17} />
-                </a>
+                </Link>
               </Button>
               <Button asChild variant="secondary">
-                <a href="#how">
+              <Link href="/how-it-works">
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#EFEBFF] text-[#6A5AE0]">
                     <Play size={10} fill="currentColor" />
                   </span>
                   See how it works
-                </a>
+              </Link>
               </Button>
             </div>
             <div className="mt-[30px] flex items-center gap-3.5">
@@ -85,7 +86,7 @@ export default function EnglishLandingPage() {
               </div>
             </div>
           </div>
-          <HeroVisual label="[ photo: contractor on the job ]" />
+          <HeroVisual locale="en" label="[ photo: contractor on the job ]" />
         </div>
         <div className="mx-auto max-w-[1200px] px-5 pb-14 md:px-8">
           <div className="text-center text-[13px] font-semibold uppercase tracking-[.06em] text-[#9A97A5]">Built for the trades that keep America running</div>
@@ -133,7 +134,7 @@ export default function EnglishLandingPage() {
               {"The moment a customer submits your form, you get an SMS alert and they receive an email confirmation. You're on the job site; the system keeps everyone informed."}
             </p>
           </div>
-          <PhonePair contractorLabel="You get an SMS" customerLabel="Customer gets an email" />
+          <PhonePair locale="en" contractorLabel="You get an SMS" customerLabel="Customer gets an email" />
         </div>
       </section>
 
@@ -178,7 +179,7 @@ export default function EnglishLandingPage() {
       </section>
 
       <section id="contact">
-        <CtaBand title="Ready to win more jobs?" text="Book a free call and we'll show you how Obrtio would work for your trade, city, and customers." />
+        <CtaBand locale="en" title="Ready to win more jobs?" text="Book a free call and we'll show you how Obrtio would work for your trade, city, and customers." />
       </section>
     </div>
   );

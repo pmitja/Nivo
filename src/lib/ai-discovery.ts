@@ -9,7 +9,7 @@ export function llmsText(): string {
 
 Obrtio je namenjen krovcem, električarjem, vodovodarjem, HVAC podjetjem, gradbincem, fasaderjem, solarnim monterjem in drugim lokalnim izvajalcem v Sloveniji.
 
-Osnovni paket stane 99 EUR na mesec ali 950 EUR za 12 mesecev. Ni začetnih stroškov ali vezave; postavitev spletne strani je vključena v naročnino. Obrtio ne ponuja brezplačne spletne strani v trajno last, ponuja pa brezplačen 20-minutni posvet.
+Osnovni paket stane 199 USD na mesec ali 1,900 USD za 12 mesecev. Ni začetnih stroškov ali vezave; postavitev spletne strani je vključena v naročnino. Obrtio ne ponuja brezplačne spletne strani v trajno last, ponuja pa brezplačen 20-minutni posvet.
 
 ## Glavne strani
 
@@ -26,7 +26,7 @@ Osnovni paket stane 99 EUR na mesec ali 950 EUR za 12 mesecev. Ni začetnih stro
 
 - Ciljni trg: Slovenija
 - Jezik storitve in podpore: slovenščina
-- Cena: 99 EUR/mesec ali 950 EUR/12 mesecev
+- Cena: 199 USD/mesec ali 1,900 USD/12 mesecev
 - Začetni stroški: brez začetnih stroškov
 - Vezava: brez vezave, prekinitev kadarkoli
 - Čas postavitve: praviloma 7–10 dni po brezplačnem posvetu
@@ -47,7 +47,7 @@ Storitev je namenjena predvsem krovcem, električarjem, vodovodarjem, monterjem 
 
 ## Osnovni paket
 
-Cena osnovnega paketa je 99 EUR na mesec ali 950 EUR za 12 mesecev. Paket je brez vezave in brez začetnih stroškov. Postavitev je vključena v naročnino. Če naročnik prekine naročnino, se spletna stran in pripadajoči sistem deaktivirata.
+Cena osnovnega paketa je 199 USD na mesec ali 1,900 USD za 12 mesecev. Paket je brez vezave in brez začetnih stroškov. Postavitev je vključena v naročnino. Če naročnik prekine naročnino, se spletna stran in pripadajoči sistem deaktivirata.
 
 Paket vključuje:
 
@@ -68,8 +68,8 @@ Obrtio ne ponuja brezplačne spletne strani v trajno last. Spletna stran nima lo
 
 ## Dodatne storitve
 
-- ureditev Google Business Profila: 500 EUR enkratno
-- SEO: 500 EUR enkratno
+- ureditev Google Business Profila: 500 USD enkratno
+- SEO: 500 USD enkratno
 - oglaševanje na Google Ads, Facebook Ads, Instagram Ads in TikTok Ads: po ponudbi
 - izdelava slikovnih oglasov je vključljiva; video produkcija ni vključena
 

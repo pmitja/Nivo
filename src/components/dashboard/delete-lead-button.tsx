@@ -32,21 +32,20 @@ export function DeleteLeadButton({ leadId, leadName }: { leadId: string; leadNam
           className="border-[#F2D4D1] text-[#B42318] hover:border-[#E4A9A3] hover:text-[#912018]"
         >
           <Trash2 className="h-4 w-4" aria-hidden="true" />
-          Izbriši
+          Delete
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Izbriši povpraševanje?</DialogTitle>
+          <DialogTitle>Delete inquiry?</DialogTitle>
           <DialogDescription>
-            Povpraševanje stranke {leadName} bo trajno izbrisano, skupaj z zgodovino statusov. Tega dejanja ni mogoče
-            razveljaviti.
+            The inquiry from {leadName} will be permanently deleted together with its status history. This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <form action={formAction} className="flex flex-wrap justify-end gap-2 p-4 pt-0">
           <input type="hidden" name="leadId" value={leadId} />
           <Button type="button" size="sm" variant="secondary" onClick={() => setOpen(false)} disabled={isPending}>
-            Prekliči
+            Cancel
           </Button>
           <Button
             type="submit"
@@ -57,10 +56,10 @@ export function DeleteLeadButton({ leadId, leadName }: { leadId: string; leadNam
             {isPending ? (
               <>
                 <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-                Brišem...
+                Deleting...
               </>
             ) : (
-              "Da, izbriši"
+              "Yes, delete"
             )}
           </Button>
         </form>

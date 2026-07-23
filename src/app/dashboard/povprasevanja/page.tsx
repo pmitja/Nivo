@@ -14,9 +14,9 @@ export default async function ClientLeadsPage({ searchParams }: { searchParams: 
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Povpraševanja" subtitle="Nova povpraševanja, ki še čakajo na obravnavo.">
-      <Panel title="Nova povpraševanja">
-        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Novih povpraševanj ni." />
+    <DashboardShell user={user} mode="client" title="Inquiries" subtitle="New inquiries waiting for your response.">
+      <Panel title="New inquiries">
+        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="No new inquiries." />
         <PaginationFooter
           page={data.page}
           pageCount={data.pageCount}

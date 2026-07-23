@@ -27,7 +27,7 @@ export default async function PublicReviewPage({ params }: { params: Promise<{ r
           <div className="mx-auto max-w-[620px] text-center">
             <div className="text-[34px] font-extrabold leading-tight tracking-[-.03em] md:text-[48px]">{request.companyName}</div>
             <p className="mt-3 text-[17px] font-semibold leading-7 text-[#686473]">
-              Vaša ocena nam pomaga izboljšati storitev.
+              Your feedback helps us improve our service.
             </p>
           </div>
 

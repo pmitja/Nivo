@@ -18,9 +18,9 @@ export function PublicReviewForm({ requestId }: { requestId: string }) {
   if (state.ok) {
     return (
       <div className="rounded-[18px] border border-[#D9F4E5] bg-[#F2FFF7] p-6 text-center">
-        <div className="text-xl font-extrabold text-[#167E53]">Hvala za povratno informacijo.</div>
+        <div className="text-xl font-extrabold text-[#167E53]">Thank you for your feedback.</div>
         <p className="mt-2 text-sm font-semibold leading-6 text-[#41745B]">
-          Vaše sporočilo smo posredovali podjetju, da lahko izboljša storitev.
+          Your message was sent to the company so they can improve their service.
         </p>
       </div>
     );
@@ -32,7 +32,7 @@ export function PublicReviewForm({ requestId }: { requestId: string }) {
       <input type="hidden" name="rating" value={rating ?? ""} />
 
       <div>
-        <Label>Kako bi ocenili storitev?</Label>
+        <Label>How would you rate the service?</Label>
         <div className="mt-3 grid gap-2">
           {ratings.map((value) => (
             <button
@@ -50,7 +50,7 @@ export function PublicReviewForm({ requestId }: { requestId: string }) {
                   <Star key={index} className="h-4 w-4 fill-[#F5A623] text-[#F5A623]" />
                 ))}
               </span>
-              <span className="text-sm font-extrabold text-[#55515F]">{value} zvezdic</span>
+              <span className="text-sm font-extrabold text-[#55515F]">{value} stars</span>
             </button>
           ))}
         </div>
@@ -58,22 +58,22 @@ export function PublicReviewForm({ requestId }: { requestId: string }) {
 
       {needsFeedback ? (
         <div className="rounded-[18px] border border-[#EEEAF5] bg-[#FBFAFF] p-4">
-          <h2 className="text-lg font-extrabold">Žal nam je, da niste bili zadovoljni.</h2>
+          <h2 className="text-lg font-extrabold">We’re sorry the service did not meet your expectations.</h2>
           <p className="mt-1 text-sm font-semibold leading-6 text-[#777382]">
-            Prosimo napišite, kaj lahko podjetje izboljša.
+            Please tell the company what they could improve.
           </p>
           <div className="mt-4 grid gap-3">
             <div className="grid gap-2">
-              <Label htmlFor="review-name">Ime (neobvezno)</Label>
-              <Input id="review-name" name="name" placeholder="Ime" />
+              <Label htmlFor="review-name">Name (optional)</Label>
+              <Input id="review-name" name="name" placeholder="Name" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="review-email">Email (neobvezno)</Label>
-              <Input id="review-email" name="email" type="email" placeholder="email@primer.si" />
+              <Label htmlFor="review-email">Email (optional)</Label>
+              <Input id="review-email" name="email" type="email" placeholder="name@example.com" />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="review-feedback">Vaša povratna informacija</Label>
-              <Textarea id="review-feedback" name="feedback" required minLength={5} className="min-h-28" placeholder="Kaj lahko izboljšamo?" />
+              <Label htmlFor="review-feedback">Your feedback</Label>
+              <Textarea id="review-feedback" name="feedback" required minLength={5} className="min-h-28" placeholder="What could be improved?" />
             </div>
           </div>
         </div>
@@ -86,12 +86,12 @@ export function PublicReviewForm({ requestId }: { requestId: string }) {
       <Button type="submit" disabled={pending || rating === null} className="h-12 justify-self-stretch">
         {rating && rating >= 4 ? (
           <>
-            Nadaljuj na Google
+            Continue to Google
             <ArrowRight className="h-4 w-4" />
           </>
         ) : (
           <>
-            {pending ? "Pošiljam..." : "Pošlji povratno informacijo"}
+            {pending ? "Sending..." : "Send feedback"}
             <Send className="h-4 w-4" />
           </>
         )}

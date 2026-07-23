@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatDate, smsStatusLabels, smsTypeLabels } from "@/lib/labels";
+import { formatDate, smsStatusLabels, smsTypeLabels } from "@/lib/labels-en";
 import type { getClientSmsPage } from "@/lib/dashboard-data";
 
 type SmsPage = Awaited<ReturnType<typeof getClientSmsPage>>;
@@ -10,7 +10,7 @@ export function SmsLogTable({ data }: { data: SmsPage }) {
   if (data.messages.length === 0) {
     return (
       <div className="rounded-[16px] border border-dashed border-[#DCD8E6] bg-[#FBFAFF] px-5 py-8 text-center text-sm font-semibold text-[#777382]">
-        SMS sporočil še ni.
+        No SMS messages yet.
       </div>
     );
   }
@@ -22,8 +22,8 @@ export function SmsLogTable({ data }: { data: SmsPage }) {
     <div className="overflow-hidden rounded-[16px] border border-[#EEEAF5]">
       <div className="hidden grid-cols-[.9fr_.85fr_1.4fr_auto] gap-3 border-b border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3 text-xs font-extrabold uppercase tracking-[.06em] text-[#8D8999] md:grid">
         <div>Tip</div>
-        <div>Telefon</div>
-        <div>Sporočilo</div>
+        <div>Phone</div>
+        <div>Message</div>
         <div className="text-right">Status</div>
       </div>
       <div className="divide-y divide-[#EEEAF5] bg-white">
@@ -47,13 +47,13 @@ export function SmsLogTable({ data }: { data: SmsPage }) {
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="secondary" size="sm" disabled={data.page <= 1}>
-            <Link href={`/dashboard/sms?smsPage=${Math.max(1, data.page - 1)}`}>Nazaj</Link>
+            <Link href={`/dashboard/sms?smsPage=${Math.max(1, data.page - 1)}`}>Previous</Link>
           </Button>
           <span className="text-xs font-extrabold text-[#827E8D]">
             {data.page}/{data.pageCount}
           </span>
           <Button asChild variant="secondary" size="sm" disabled={data.page >= data.pageCount}>
-            <Link href={`/dashboard/sms?smsPage=${Math.min(data.pageCount, data.page + 1)}`}>Naprej</Link>
+            <Link href={`/dashboard/sms?smsPage=${Math.min(data.pageCount, data.page + 1)}`}>Next</Link>
           </Button>
         </div>
       </div>

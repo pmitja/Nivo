@@ -1,4 +1,4 @@
-import { inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { cache } from "react";
 
 import { db } from "@/db";
@@ -120,6 +120,28 @@ export function getTrade(slug: string): Trade | undefined {
   return trades.find((trade) => trade.slug === slug);
 }
 
+const englishTradeSlugs: Record<string, string> = {
+  elektricar: "electrician",
+  vodovodar: "plumber",
+  krovec: "roofer",
+  fasader: "exterior-contractor",
+  "monter-klim": "hvac",
+  "toplotne-crpalke": "heat-pump-installer",
+  "soncne-elektrarne": "solar-installer",
+  "gradbeno-podjetje": "general-contractor",
+  keramicar: "tile-installer",
+  mizar: "carpenter",
+  slikopleskar: "painter",
+};
+
+export function getEnglishTradeSlug(trade: Trade) {
+  return englishTradeSlugs[trade.slug] ?? trade.slug;
+}
+
+export function getTradeByEnglishSlug(slug: string): Trade | undefined {
+  return trades.find((trade) => getEnglishTradeSlug(trade) === slug);
+}
+
 const DIACRITICS: Record<string, string> = { č: "c", š: "s", ž: "z", ć: "c", đ: "d" };
 
 function normalize(value: string): string {
@@ -147,6 +169,7 @@ export type DirectoryCompany = {
   name: string;
   city: string;
   citySlug: string;
+  country: string;
   industry: string;
   phone: string;
   email: string;
@@ -157,12 +180,13 @@ export type DirectoryCompany = {
 
 const VISIBLE_STATUSES: Company["status"][] = ["active"];
 
-export const getDirectoryCompanies = cache(async (): Promise<DirectoryCompany[]> => {
+export const getDirectoryCompanies = cache(async (country = "SI"): Promise<DirectoryCompany[]> => {
   const rows = await db
     .select({
       id: companies.id,
       name: companies.name,
       city: companies.city,
+      country: companies.country,
       industry: companies.industry,
       phone: companies.phone,
       email: companies.email,
@@ -170,7 +194,7 @@ export const getDirectoryCompanies = cache(async (): Promise<DirectoryCompany[]>
       logoUrl: companies.logoUrl,
     })
     .from(companies)
-    .where(inArray(companies.status, VISIBLE_STATUSES))
+    .where(and(inArray(companies.status, VISIBLE_STATUSES), eq(companies.country, country.toUpperCase())))
     .orderBy(companies.name);
 
   return rows.flatMap((row) => {
@@ -182,6 +206,7 @@ export const getDirectoryCompanies = cache(async (): Promise<DirectoryCompany[]>
         name: row.name,
         city: row.city.trim(),
         citySlug: slugifyCity(row.city),
+        country: row.country,
         industry: row.industry!.trim(),
         phone: row.phone,
         email: row.email,
@@ -193,10 +218,19 @@ export const getDirectoryCompanies = cache(async (): Promise<DirectoryCompany[]>
   });
 });
 
-export async function getCompaniesForTrade(tradeSlug: string): Promise<DirectoryCompany[]> {
-  const all = await getDirectoryCompanies();
+export async function getCompaniesForTrade(tradeSlug: string, country = "SI"): Promise<DirectoryCompany[]> {
+  const all = await getDirectoryCompanies(country);
   return all.filter((company) => company.trade.slug === tradeSlug);
 }
+
+export const getDirectoryCountries = cache(async (): Promise<string[]> => {
+  const rows = await db
+    .selectDistinct({ country: companies.country })
+    .from(companies)
+    .where(inArray(companies.status, VISIBLE_STATUSES))
+    .orderBy(companies.country);
+  return rows.map((row) => row.country).filter(Boolean);
+});
 
 export type CityGroup = { citySlug: string; city: string; companies: DirectoryCompany[] };
 

@@ -35,10 +35,13 @@ const addonMeta: Record<string, { badge: string; gradient: string }> = {
 export function AddonPricingCards({
   items,
   columns = "four",
+  locale = "sl",
 }: {
   items: AddonPricingCard[];
   columns?: "three" | "four";
+  locale?: "sl" | "en";
 }) {
+  const english = locale === "en";
   return (
     <div className={cn("grid gap-5 sm:grid-cols-2", columns === "three" ? "lg:grid-cols-3" : "lg:grid-cols-4")}>
       {items.map((addon) => {
@@ -75,14 +78,14 @@ export function AddonPricingCards({
                 {addon.note ? <div className="mt-3 text-[12.5px] italic leading-[1.45] text-[#9A97A5]">{addon.note}</div> : null}
                 {comingSoon ? (
                   <div className="mt-6 inline-flex min-h-11 items-center justify-center rounded-full border border-[#E2DFEA] bg-[#F7F6FB] px-5 py-3 text-[14px] font-bold text-[#6A6775]">
-                    Pride kmalu
+                    {english ? "Coming soon" : "Pride kmalu"}
                   </div>
                 ) : (
                   <Link
-                    href="/kontakt"
+                    href={english ? "/contact" : "/kontakt"}
                     className="mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-[#16151D] px-5 py-3 text-[14px] font-bold text-white no-underline transition-colors duration-200 hover:bg-[#4B3BC9] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/20"
                   >
-                    Izberi <ArrowRight size={15} />
+                    {english ? "Choose" : "Izberi"} <ArrowRight size={15} />
                   </Link>
                 )}
               </div>

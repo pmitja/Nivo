@@ -114,6 +114,8 @@ export const companies = pgTable("companies", {
   phone: text("phone").notNull(),
   address: text("address"),
   city: text("city"),
+  country: text("country").default("SI").notNull(),
+  serviceAreas: jsonb("service_areas").$type<string[]>().default([]).notNull(),
   domain: text("domain"),
   status: companyStatusEnum("status").default("setup").notNull(),
   plan: planEnum("plan").default("basic").notNull(),

@@ -14,9 +14,9 @@ export default async function WonLeadsPage({ searchParams }: { searchParams: Pro
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Dogovorjeno" subtitle="Povpraševanja, kjer je posel dogovorjen.">
-      <Panel title="Dogovorjeno">
-        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Ni dogovorjenih poslov." />
+    <DashboardShell user={user} mode="client" title="Won" subtitle="Inquiries that turned into booked work.">
+      <Panel title="Won">
+        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="No won jobs." />
         <PaginationFooter
           page={data.page}
           pageCount={data.pageCount}

@@ -1,7 +1,7 @@
 const stats = [
   { value: "7–10 dni", label: "do delujočega sistema" },
   { value: "99 €", label: "na mesec, brez vezave" },
-  { value: "0 €", label: "začetnih stroškov" },
+  { value: "$0", label: "začetnih stroškov" },
   { value: "24/7", label: "sistem sprejema povpraševanja" },
 ];
 

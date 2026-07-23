@@ -14,9 +14,9 @@ export default async function QuoteSentLeadsPage({ searchParams }: { searchParam
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Ponudbe poslane" subtitle="Povpraševanja, kjer ste že poslali ponudbo.">
-      <Panel title="Ponudbe poslane">
-        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Ni poslanih ponudb." />
+    <DashboardShell user={user} mode="client" title="Quotes sent" subtitle="Inquiries for which you have sent a quote.">
+      <Panel title="Quotes sent">
+        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="No quotes sent." />
         <PaginationFooter
           page={data.page}
           pageCount={data.pageCount}

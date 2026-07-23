@@ -29,7 +29,7 @@ export function SendReviewRequestButton({
   if (sent) {
     return (
       <Button {...buttonProps} disabled>
-        Zahteva poslana
+        Request sent
       </Button>
     );
   }
@@ -41,9 +41,9 @@ export function SendReviewRequestButton({
         {isPending ? (
           <>
             <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-            Pošiljam...
+            Sending...
           </>
-        ) : "Pošlji zahtevo za oceno"}
+        ) : "Send review request"}
       </Button>
     </form>
   );

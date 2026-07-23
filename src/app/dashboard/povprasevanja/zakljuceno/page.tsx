@@ -14,9 +14,9 @@ export default async function CompletedLeadsPage({ searchParams }: { searchParam
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Zaključeno" subtitle="Zaključena povpraševanja in opravljena dela.">
-      <Panel title="Zaključeno">
-        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Ni zaključenih povpraševanj." />
+    <DashboardShell user={user} mode="client" title="Completed" subtitle="Completed inquiries and finished jobs.">
+      <Panel title="Completed">
+        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="No completed inquiries." />
         <PaginationFooter
           page={data.page}
           pageCount={data.pageCount}

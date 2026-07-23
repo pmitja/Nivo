@@ -14,8 +14,8 @@ export default async function ClientSmsPage({
   const smsPage = await getClientSmsPage(user.companyId!, Number.isFinite(page) ? page : 1, 10);
 
   return (
-    <DashboardShell user={user} mode="client" title="SMS" subtitle="Zgodovina SMS obvestil obrtniku in sporočil za Google ocene.">
-      <Panel title="SMS zgodovina">
+    <DashboardShell user={user} mode="client" title="SMS" subtitle="History of inquiry alerts and Google review messages.">
+      <Panel title="SMS history">
         <SmsLogTable data={smsPage} />
       </Panel>
     </DashboardShell>

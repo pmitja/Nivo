@@ -14,9 +14,9 @@ export default async function ContactedLeadsPage({ searchParams }: { searchParam
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Kontaktirano" subtitle="Povpraševanja, ki ste jih že kontaktirali.">
-      <Panel title="Kontaktirano">
-        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Ni kontaktiranih povpraševanj." />
+    <DashboardShell user={user} mode="client" title="Contacted" subtitle="Inquiries you have already contacted.">
+      <Panel title="Contacted">
+        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="No contacted inquiries." />
         <PaginationFooter
           page={data.page}
           pageCount={data.pageCount}

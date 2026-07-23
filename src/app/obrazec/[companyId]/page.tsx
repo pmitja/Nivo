@@ -21,17 +21,17 @@ export default async function PublicLeadFormPage({ params }: { params: Promise<{
         <div className="mb-8">
           <p className="text-sm font-extrabold uppercase tracking-[.08em] text-[#6A5AE0]">{company.name}</p>
           <h1 className="mt-3 text-[34px] font-extrabold leading-[1.08] tracking-[-.03em] md:text-[48px]">
-            {form?.title ?? "Pošljite povpraševanje"}
+            {form?.title ?? "Request a quote"}
           </h1>
           <p className="mt-4 max-w-[620px] text-[16px] leading-7 text-[#65616F]">
-            {form?.intro ?? "Opišite, kaj potrebujete, in kontaktirali vas bomo v najkrajšem možnem času."}
+            {form?.intro ?? "Tell us what you need and we will get back to you as soon as possible."}
           </p>
         </div>
         <PublicLeadForm
           companyId={company.id}
-          fields={withRequiredEmail(form?.fields ?? defaultFields)}
-          submitLabel={form?.submitLabel ?? "Pošlji povpraševanje"}
-          successMessage={form?.successMessage ?? "Hvala za povpraševanje. Prejeli smo vaše sporočilo."}
+          fields={withRequiredEmail(form?.fields ?? defaultFields).map(translateLegacyField)}
+          submitLabel={form?.submitLabel === "Pošlji povpraševanje" || !form?.submitLabel ? "Send inquiry" : form.submitLabel}
+          successMessage={form?.successMessage === "Hvala za povpraševanje." || !form?.successMessage ? "Thank you. We received your inquiry." : form.successMessage}
         />
       </div>
     </main>
@@ -39,12 +39,12 @@ export default async function PublicLeadFormPage({ params }: { params: Promise<{
 }
 
 const defaultFields: ContactFormField[] = [
-  { name: "name", label: "Ime in priimek", type: "text", required: true, enabled: true },
-  { name: "phone", label: "Telefon", type: "tel", required: true, enabled: true },
-  { name: "email", label: "E-pošta", type: "email", required: true, enabled: true },
-  { name: "location", label: "Lokacija", type: "text", required: false, enabled: true },
-  { name: "service", label: "Kaj potrebujete?", type: "text", required: true, enabled: true },
-  { name: "message", label: "Sporočilo", type: "textarea", required: true, enabled: true },
+  { name: "name", label: "Full name", type: "text", required: true, enabled: true },
+  { name: "phone", label: "Phone", type: "tel", required: true, enabled: true },
+  { name: "email", label: "Email", type: "email", required: true, enabled: true },
+  { name: "location", label: "Location", type: "text", required: false, enabled: true },
+  { name: "service", label: "What do you need?", type: "text", required: true, enabled: true },
+  { name: "message", label: "Message", type: "textarea", required: true, enabled: true },
 ];
 
 function withRequiredEmail(fields: ContactFormField[]): ContactFormField[] {
@@ -54,7 +54,7 @@ function withRequiredEmail(fields: ContactFormField[]): ContactFormField[] {
   );
   const requiredEmailField: ContactFormField = {
     name: "email",
-    label: "E-pošta",
+    label: "Email",
     type: "email",
     required: true,
     enabled: true,
@@ -63,4 +63,16 @@ function withRequiredEmail(fields: ContactFormField[]): ContactFormField[] {
   return hasEmail
     ? normalized
     : [...normalized, requiredEmailField];
+}
+
+function translateLegacyField(field: ContactFormField): ContactFormField {
+  const labels: Partial<Record<ContactFormField["name"], string>> = {
+    name: "Full name",
+    phone: "Phone",
+    email: "Email",
+    location: "Location",
+    service: "What do you need?",
+    message: "Message",
+  };
+  return { ...field, label: labels[field.name] ?? field.label };
 }

@@ -14,9 +14,9 @@ export default async function LostLeadsPage({ searchParams }: { searchParams: Pr
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Izgubljeno" subtitle="Povpraševanja, ki se niso zaključila s poslom.">
-      <Panel title="Izgubljeno">
-        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="Ni izgubljenih povpraševanj." />
+    <DashboardShell user={user} mode="client" title="Lost" subtitle="Inquiries that did not turn into booked work.">
+      <Panel title="Lost">
+        <LeadsList leads={data.leads} sentReviewLeadIds={sentReviewLeadIds} emptyText="No lost inquiries." />
         <PaginationFooter
           page={data.page}
           pageCount={data.pageCount}

@@ -35,17 +35,17 @@ export function PaginationFooter({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3">
       <div className="text-xs font-bold text-[#827E8D]">
-        Prikaz {start}-{end} od {total}
+        Showing {start}-{end} of {total}
       </div>
       <div className="flex items-center gap-2">
         <Button asChild variant="secondary" size="sm" disabled={page <= 1}>
-          <Link href={buildHref(Math.max(1, page - 1))}>Nazaj</Link>
+          <Link href={buildHref(Math.max(1, page - 1))}>Previous</Link>
         </Button>
         <span className="text-xs font-extrabold text-[#827E8D]">
           {page}/{pageCount}
         </span>
         <Button asChild variant="secondary" size="sm" disabled={page >= pageCount}>
-          <Link href={buildHref(Math.min(pageCount, page + 1))}>Naprej</Link>
+          <Link href={buildHref(Math.min(pageCount, page + 1))}>Next</Link>
         </Button>
       </div>
     </div>

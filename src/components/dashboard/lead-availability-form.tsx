@@ -51,33 +51,33 @@ export function LeadAvailabilityForm({
           className="mt-0.5 h-5 w-5"
         />
         <span>
-          <span className="block text-sm font-bold text-[#24262B]">Trenutno ne sprejemamo novih povpraševanj</span>
+          <span className="block text-sm font-bold text-[#24262B]">We are not accepting new inquiries right now</span>
           <span className="mt-1 block text-xs leading-5 text-[#777A83]">
-            Povpraševanja se še vedno shranijo, vendar se SMS-i ne pošljejo.
+            Inquiries are still saved, but SMS alerts are paused.
           </span>
         </span>
       </label>
 
       {paused ? (
         <div className="grid gap-2">
-          <Label htmlFor="pause-reason">Razlog</Label>
+          <Label htmlFor="pause-reason">Reason</Label>
           <Select name="pauseReason" defaultValue={pauseReason ?? "vacation"}>
             <SelectTrigger id="pause-reason" className="min-h-11">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="vacation">Dopust ali odsotnost</SelectItem>
-              <SelectItem value="capacity">Trenutno smo polni</SelectItem>
+              <SelectItem value="vacation">Vacation or away</SelectItem>
+              <SelectItem value="capacity">We are fully booked</SelectItem>
             </SelectContent>
           </Select>
           <p className="text-xs leading-5 text-[#777A83]">
-            Ta razlog bo jasno naveden v e-pošti pošiljatelju in na shranjenem povpraševanju.
+            This reason will be shown in the customer email and on the saved inquiry.
           </p>
         </div>
       ) : (
         <div className="flex items-start gap-3 rounded-xl bg-[#EEF9F4] p-3.5 text-sm text-[#176B4C]">
           <CalendarOff className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-          <p className="font-semibold leading-5">Povpraševanja sprejemate normalno, vključno z SMS obvestili.</p>
+          <p className="font-semibold leading-5">You are accepting inquiries normally, including SMS alerts.</p>
         </div>
       )}
 
@@ -85,9 +85,9 @@ export function LeadAvailabilityForm({
         {pending ? (
           <>
             <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-            Shranjujem...
+            Saving...
           </>
-        ) : "Shrani nastavitev"}
+        ) : "Save setting"}
       </Button>
     </form>
   );

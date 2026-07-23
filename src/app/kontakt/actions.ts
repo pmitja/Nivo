@@ -22,6 +22,7 @@ const inquirySchema = z.object({
   panoga: z.string().trim().max(100).default(""),
   message: z.string().trim().max(5000).default(""),
   website: z.string().max(200).default(""),
+  locale: z.enum(["sl", "en"]).default("sl"),
   formStartedAt: z.coerce.number().int().positive(),
 });
 
@@ -33,7 +34,7 @@ export async function submitContactInquiry(input: unknown): Promise<ContactInqui
     return { ok: false, error: parsed.error.issues[0]?.message ?? "Preverite vnesene podatke." };
   }
 
-  const { website, formStartedAt, ...inquiry } = parsed.data;
+  const { website, formStartedAt, locale, ...inquiry } = parsed.data;
   if (website || isSuspiciouslyFast(formStartedAt)) {
     return { ok: true };
   }
@@ -68,7 +69,7 @@ export async function submitContactInquiry(input: unknown): Promise<ContactInqui
   }
 
   try {
-    await sendContactInquiryConfirmationEmail(inquiry);
+    await sendContactInquiryConfirmationEmail(inquiry, locale);
     await db
       .update(contactInquiries)
       .set({ confirmationEmailSentAt: new Date(), confirmationEmailError: null })

@@ -18,7 +18,7 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
   }
 
   const initials = user.name.split(" ").map((part) => part[0]).slice(0, 2).join("").toUpperCase();
-  const today = new Intl.DateTimeFormat("sl-SI", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
+  const today = new Intl.DateTimeFormat(mode === "admin" ? "sl-SI" : "en-US", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
 
   return (
     <div className="min-h-screen bg-[#F6F7F9] text-[#17181C]">
@@ -31,13 +31,13 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
         <div className="border-t border-[#E6E7EA] pt-3">
           {mode === "client" ? (
             <Link href="/dashboard/podpora" className="group mb-2 flex min-h-11 items-center justify-between rounded-xl px-3 text-[13px] font-semibold text-[#60636B] transition hover:bg-white hover:text-[#17181C] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15">
-              Potrebujete pomoč?<ChevronRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+              Need help?<ChevronRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
             </Link>
           ) : null}
           <div className="flex items-center gap-3 rounded-xl bg-white p-2.5 shadow-[0_1px_2px_rgba(16,24,40,.04)] ring-1 ring-[#E6E7EA]">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#EEEAFE] text-xs font-extrabold text-[#5848CC]">{initials}</div>
             <div className="min-w-0 flex-1"><div className="truncate text-[13px] font-bold">{user.name}</div><div className="truncate text-[11px] text-[#858891]">{user.email}</div></div>
-            <form action={signOut}><button type="submit" aria-label="Odjava" className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-[#777A83] transition hover:bg-[#F3F3F5] hover:text-[#17181C] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15"><LogOut className="h-4 w-4" /></button></form>
+            <form action={signOut}><button type="submit" aria-label={mode === "admin" ? "Odjava" : "Log out"} className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-[#777A83] transition hover:bg-[#F3F3F5] hover:text-[#17181C] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15"><LogOut className="h-4 w-4" /></button></form>
           </div>
         </div>
       </aside>
@@ -47,7 +47,7 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
           <div className="flex h-16 items-center justify-between gap-3 px-4 md:px-7 lg:px-10">
             <Link
               href={mode === "admin" ? "/admin" : "/dashboard"}
-              aria-label="Obrtio – pregled"
+              aria-label={mode === "admin" ? "Obrtio – pregled" : "Obrtio overview"}
               className="flex min-h-11 min-w-0 items-center rounded-xl pr-2 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15 lg:hidden"
             >
               <Logo className="h-7 w-[108px]" />
@@ -57,8 +57,8 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
               <form action={signOut} className="lg:hidden">
                 <button
                   type="submit"
-                  aria-label="Odjava"
-                  title="Odjava"
+                  aria-label={mode === "admin" ? "Odjava" : "Log out"}
+                  title={mode === "admin" ? "Odjava" : "Log out"}
                   className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[#E2E4E8] bg-white text-[#555861] transition active:bg-[#F3F1FC] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15"
                 >
                   <LogOut className="h-[18px] w-[18px]" />
@@ -70,7 +70,7 @@ export function DashboardShell({ user, mode, title, subtitle, children }: { user
         <div className="px-4 md:px-7 lg:hidden"><MobileTabs mode={mode} /></div>
         <main className="mx-auto max-w-[1500px] px-4 pb-24 pt-7 md:px-7 md:pb-28 md:pt-9 lg:px-10 lg:pb-9">
           <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-            <div><p className="mb-1.5 text-[12px] font-bold uppercase tracking-[.12em] text-[#777A83]">{mode === "admin" ? "Upravljanje platforme" : "Vaše poslovanje"}</p><h1 className="text-[28px] font-bold leading-tight tracking-[-.035em] md:text-[34px]">{title}</h1>{subtitle ? <p className="mt-1.5 text-[15px] text-[#6D7078]">{subtitle}</p> : null}</div>
+            <div><p className="mb-1.5 text-[12px] font-bold uppercase tracking-[.12em] text-[#777A83]">{mode === "admin" ? "Upravljanje platforme" : "Your business"}</p><h1 className="text-[28px] font-bold leading-tight tracking-[-.035em] md:text-[34px]">{title}</h1>{subtitle ? <p className="mt-1.5 text-[15px] text-[#6D7078]">{subtitle}</p> : null}</div>
           </div>
           {children}
         </main>

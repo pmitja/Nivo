@@ -17,17 +17,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { ClientCustomerBoardItem } from "@/lib/dashboard-data";
-import { customerStatusLabels, formatDate, leadStatusLabels } from "@/lib/labels";
+import { customerStatusLabels, formatDate, leadStatusLabels } from "@/lib/labels-en";
 
 type LeadStatus = keyof typeof leadStatusLabels;
 
 const statusTabs: Array<{ value: LeadStatus; label: string }> = [
-  { value: "new", label: "Nove" },
-  { value: "contacted", label: "Kontaktirane" },
-  { value: "quote_sent", label: "Ponudba poslana" },
-  { value: "won", label: "Dogovorjeno" },
-  { value: "completed", label: "Zaključeno" },
-  { value: "lost", label: "Izgubljeno" },
+  { value: "new", label: "Now" },
+  { value: "contacted", label: "Contacted" },
+  { value: "quote_sent", label: "Quote sent" },
+  { value: "won", label: "Won" },
+  { value: "completed", label: "Completed" },
+  { value: "lost", label: "Lost" },
 ];
 
 export function CustomerStatusBoard({ customers }: { customers: ClientCustomerBoardItem[] }) {
@@ -79,7 +79,7 @@ export function CustomerStatusBoard({ customers }: { customers: ClientCustomerBo
   if (customers.length === 0) {
     return (
       <div className="rounded-[16px] border border-dashed border-[#DCD8E6] bg-[#FBFAFF] px-5 py-8 text-center text-sm font-semibold text-[#777382]">
-        Kontakti se ustvarijo ob oddaji obrazca.
+        Contacts are created when a customer submits a form.
       </div>
     );
   }
@@ -88,24 +88,24 @@ export function CustomerStatusBoard({ customers }: { customers: ClientCustomerBo
     <Tabs defaultValue="new" className="w-full">
       <div className="mb-4 grid gap-3 lg:grid-cols-[1fr_240px]">
         <div className="grid gap-2">
-          <Label htmlFor="customer-search">Išči stranke</Label>
+          <Label htmlFor="customer-search">Search customers</Label>
           <Input
             id="customer-search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Ime, telefon, email, kraj ali storitev"
+            placeholder="Name, phone, email, city or service"
           />
         </div>
         <div className="grid gap-2">
-          <Label>Marketing soglasje</Label>
+          <Label>Marketing consent</Label>
           <Select value={consentFilter} onValueChange={setConsentFilter}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Vse stranke</SelectItem>
-              <SelectItem value="with_consent">S soglasjem</SelectItem>
-              <SelectItem value="without_consent">Brez soglasja</SelectItem>
+              <SelectItem value="all">All customers</SelectItem>
+              <SelectItem value="with_consent">With consent</SelectItem>
+              <SelectItem value="without_consent">Without consent</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -124,7 +124,7 @@ export function CustomerStatusBoard({ customers }: { customers: ClientCustomerBo
 
       {statusTabs.map((tab) => (
         <TabsContent key={tab.value} value={tab.value}>
-          <CompactCustomerList customers={customersByStatus[tab.value]} emptyText={`V kategoriji "${tab.label}" ni zadetkov.`} />
+          <CompactCustomerList customers={customersByStatus[tab.value]} emptyText={`There are no results in “${tab.label}”.`} />
         </TabsContent>
       ))}
     </Tabs>
@@ -149,10 +149,10 @@ function CompactCustomerList({ customers, emptyText }: { customers: ClientCustom
   return (
     <div className="overflow-hidden rounded-[16px] border border-[#EEEAF5]">
       <div className="hidden grid-cols-[1.1fr_.9fr_.9fr_auto] gap-3 border-b border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3 text-xs font-extrabold uppercase tracking-[.06em] text-[#8D8999] md:grid">
-        <div>Stranka</div>
-        <div>Zadnja storitev</div>
-        <div>Kontakt</div>
-        <div className="text-right">Podrobnosti</div>
+        <div>Customer</div>
+        <div>Latest service</div>
+        <div>Contact</div>
+        <div className="text-right">Details</div>
       </div>
       <div className="divide-y divide-[#EEEAF5] bg-white">
         {visibleCustomers.map((customer) => (
@@ -165,7 +165,7 @@ function CompactCustomerList({ customers, emptyText }: { customers: ClientCustom
         total={customers.length}
         pageSize={pageSize}
         onPrevious={() => setPage((current) => Math.max(1, current - 1))}
-        onNext={() => setPage((current) => Math.min(pageCount, current + 1))}
+        onNoxt={() => setPage((current) => Math.min(pageCount, current + 1))}
       />
     </div>
   );
@@ -177,14 +177,14 @@ function PaginationFooter({
   total,
   pageSize,
   onPrevious,
-  onNext,
+  onNoxt,
 }: {
   page: number;
   pageCount: number;
   total: number;
   pageSize: number;
   onPrevious: () => void;
-  onNext: () => void;
+  onNoxt: () => void;
 }) {
   const start = total === 0 ? 0 : (page - 1) * pageSize + 1;
   const end = Math.min(page * pageSize, total);
@@ -192,17 +192,17 @@ function PaginationFooter({
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#EEEAF5] bg-[#FBFAFF] px-4 py-3">
       <div className="text-xs font-bold text-[#827E8D]">
-        Prikaz {start}-{end} od {total}
+        Showing {start}-{end} of {total}
       </div>
       <div className="flex items-center gap-2">
         <Button type="button" variant="secondary" size="sm" disabled={page <= 1} onClick={onPrevious}>
-          Nazaj
+          Previous
         </Button>
         <span className="text-xs font-extrabold text-[#827E8D]">
           {page}/{pageCount}
         </span>
-        <Button type="button" variant="secondary" size="sm" disabled={page >= pageCount} onClick={onNext}>
-          Naprej
+        <Button type="button" variant="secondary" size="sm" disabled={page >= pageCount} onClick={onNoxt}>
+          Next
         </Button>
       </div>
     </div>
@@ -219,16 +219,16 @@ function CustomerRow({ customer }: { customer: ClientCustomerBoardItem }) {
           <div className="truncate text-sm font-extrabold">{customer.name}</div>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-[#827E8D]">
             <Badge variant="outline">{leadStatusLabels[status]}</Badge>
-            <span>{customer.city || "Brez kraja"}</span>
+            <span>{customer.city || "No city"}</span>
           </div>
         </DialogTrigger>
         <div className="text-sm">
-          <div className="font-bold text-[#28262F]">{customer.latestLead?.service ?? "Brez povpraševanja"}</div>
+          <div className="font-bold text-[#28262F]">{customer.latestLead?.service ?? "No inquiry"}</div>
           <div className="mt-1 text-xs font-semibold text-[#8A8694]">{customer.latestLead ? formatDate(customer.latestLead.createdAt) : formatDate(customer.createdAt)}</div>
         </div>
         <div className="min-w-0 text-sm font-semibold text-[#686473]">
           <div className="truncate">{customer.phone}</div>
-          <div className="mt-1 truncate text-xs text-[#8A8694]">{customer.email || "Brez emaila"}</div>
+          <div className="mt-1 truncate text-xs text-[#8A8694]">{customer.email || "No email"}</div>
         </div>
         <DialogTrigger asChild>
           <Button variant="secondary" size="sm" className="justify-self-start md:justify-self-end">
@@ -249,25 +249,25 @@ function CustomerDialogContent({ customer }: { customer: ClientCustomerBoardItem
       <DialogHeader>
         <DialogTitle>{customer.name}</DialogTitle>
         <DialogDescription>
-          {leadStatusLabels[status]} · {customerStatusLabels[customer.customerStatus]} · dodano {formatDate(customer.createdAt)}
+          {leadStatusLabels[status]} · {customerStatusLabels[customer.customerStatus]} · added {formatDate(customer.createdAt)}
         </DialogDescription>
       </DialogHeader>
 
       <div className="max-h-[calc(88vh-110px)] overflow-y-auto p-6">
         <div className="grid gap-3 sm:grid-cols-2">
-          <Info icon={Phone} label="Telefon" value={customer.phone} />
-          <Info icon={Mail} label="Email" value={customer.email || "Brez emaila"} />
-          <Info icon={MapPin} label="Lokacija" value={customer.city || customer.address || "Brez lokacije"} />
-          <Info icon={MessageSquareText} label="Vir" value={customer.source || "Ni vpisano"} />
+          <Info icon={Phone} label="Phone" value={customer.phone} />
+          <Info icon={Mail} label="Email" value={customer.email || "No email"} />
+          <Info icon={MapPin} label="Location" value={customer.city || customer.address || "No location"} />
+          <Info icon={MessageSquareText} label="Vir" value={customer.source || "Not provided"} />
         </div>
 
         <div className="mt-5 rounded-[16px] border border-[#EEEAF5] bg-[#FBFAFF] p-4">
-          <div className="text-sm font-extrabold">Soglasja</div>
+          <div className="text-sm font-extrabold">Consent</div>
           <div className="mt-2 grid gap-2 text-sm font-semibold text-[#686473] sm:grid-cols-2">
-            <div>Marketing: {customer.marketingConsent && !customer.optOut ? "Da" : "Ne"}</div>
-            <div>Odjava: {customer.optOut ? "Da" : "Ne"}</div>
+            <div>Marketing: {customer.marketingConsent && !customer.optOut ? "Yes" : "No"}</div>
+            <div>Opted out: {customer.optOut ? "Yes" : "No"}</div>
             <div className="sm:col-span-2">
-              Vir soglasja: {customer.marketingConsentSource || "Ni vpisano"}
+              Consent source: {customer.marketingConsentSource || "Not provided"}
               {customer.marketingConsentAt ? ` · ${formatDate(customer.marketingConsentAt)}` : ""}
             </div>
           </div>
@@ -277,7 +277,7 @@ function CustomerDialogContent({ customer }: { customer: ClientCustomerBoardItem
           <div className="mt-5 rounded-[16px] border border-[#EEEAF5] p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <div className="text-sm font-extrabold">Zadnje povpraševanje</div>
+                <div className="text-sm font-extrabold">Latest inquiry</div>
                 <div className="mt-1 text-sm font-semibold text-[#777382]">
                   {customer.latestLead.service} · {formatDate(customer.latestLead.createdAt)}
                 </div>
@@ -286,7 +286,7 @@ function CustomerDialogContent({ customer }: { customer: ClientCustomerBoardItem
             </div>
             <p className="mt-3 text-sm leading-6 text-[#55515F]">{customer.latestLead.message}</p>
             <div className="mt-3 rounded-[12px] bg-[#F1EFF8] p-3 text-sm font-semibold leading-6 text-[#514AA8]">
-              AI povzetki in osnutki ponudb: pride kmalu.
+              AI summaries and quote drafts are coming soon.
             </div>
           </div>
         ) : null}
@@ -294,7 +294,7 @@ function CustomerDialogContent({ customer }: { customer: ClientCustomerBoardItem
         <div className="mt-5">
           <div className="mb-3 flex items-center gap-2 text-sm font-extrabold">
             <CalendarDays className="h-4 w-4 text-[#6A5AE0]" />
-            Zgodovina povpraševanj
+            Inquiry history
           </div>
           <div className="grid gap-2">
             {customer.leads.length ? (
@@ -304,12 +304,12 @@ function CustomerDialogContent({ customer }: { customer: ClientCustomerBoardItem
                     <div className="text-sm font-extrabold">{lead.service}</div>
                     <Badge variant="outline">{leadStatusLabels[lead.status]}</Badge>
                   </div>
-                  <div className="mt-1 text-xs font-semibold text-[#8A8694]">{formatDate(lead.createdAt)} · {lead.location || "Brez lokacije"}</div>
+                  <div className="mt-1 text-xs font-semibold text-[#8A8694]">{formatDate(lead.createdAt)} · {lead.location || "No location"}</div>
                 </div>
               ))
             ) : (
               <div className="rounded-[14px] border border-dashed border-[#DCD8E6] bg-[#FBFAFF] px-4 py-5 text-center text-sm font-semibold text-[#777382]">
-                Ta stranka še nima povpraševanj.
+                This customer has no inquiries yet.
               </div>
             )}
           </div>

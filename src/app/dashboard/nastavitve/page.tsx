@@ -4,7 +4,7 @@ import { CompanySettingsForm } from "@/components/dashboard/company-settings-for
 import { Button } from "@/components/ui/button";
 import { requireClientUser } from "@/lib/auth";
 import { getClientCompanyDocuments, getCompany } from "@/lib/dashboard-data";
-import { formatDate } from "@/lib/labels";
+import { formatDate } from "@/lib/labels-en";
 
 export default async function ClientSettingsPage() {
   const user = await requireClientUser();
@@ -14,41 +14,41 @@ export default async function ClientSettingsPage() {
   ]);
 
   return (
-    <DashboardShell user={user} mode="client" title="Nastavitve" subtitle="Podatki podjetja in osnovne nastavitve.">
+    <DashboardShell user={user} mode="client" title="Settings" subtitle="Company details and account settings.">
       <div className="grid gap-6 xl:grid-cols-[1.1fr_.9fr]">
-        <Panel title="Podatki podjetja">
+        <Panel title="Company details">
           {company ? <CompanySettingsForm company={company} /> : null}
           <p className="mt-5 rounded-[14px] bg-[#FBFAFF] p-4 text-sm font-semibold leading-6 text-[#666271]">
-            Cene paketa, aktivne storitve, plačila in sistemske nastavitve ureja ekipa Obrtio.
+            The Obrtio team manages plan pricing, active services, billing and system settings.
           </p>
         </Panel>
-        <Panel title="Sistemski podatki">
+        <Panel title="System details">
           <div className="grid gap-4">
             <div className="rounded-[14px] border border-[#EEEAF5] p-4">
-              <div className="text-xs font-extrabold uppercase tracking-[.08em] text-[#9A96A5]">Logo podjetja</div>
+              <div className="text-xs font-extrabold uppercase tracking-[.08em] text-[#9A96A5]">Company logo</div>
               {company?.logoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={company.logoUrl}
-                  alt={`Logo podjetja ${company.name}`}
+                  alt={`Company logo ${company.name}`}
                   className="mt-3 max-h-20 max-w-48 rounded-[10px] object-contain"
                 />
               ) : (
-                <div className="mt-1 font-extrabold">Ni dodan</div>
+                <div className="mt-1 font-extrabold">Not added</div>
               )}
             </div>
-            <Info label="Podjetje" value={company?.name} />
+            <Info label="Company" value={company?.name} />
             <Info label="Domena" value={company?.domain} />
-            <Info label="Status spletne strani" value={company?.websiteStatus} />
+            <Info label="Website status" value={company?.websiteStatus} />
             <Info label="Google Business Profil" value={company?.googleBusinessProfileStatus} />
             <Info label="SEO" value={company?.seoStatus} />
-            <Info label="Oglaševanje" value={company?.advertisingStatus} />
+            <Info label="Advertising" value={company?.advertisingStatus} />
           </div>
         </Panel>
-        <Panel title="Varnost prijave">
+        <Panel title="Login security">
           <ChangePasswordForm />
         </Panel>
-        <Panel title="Dokumenti podjetja">
+        <Panel title="Company documents">
           <div className="grid gap-2">
             {documents.length ? (
               documents.map((document) => (
@@ -68,7 +68,7 @@ export default async function ClientSettingsPage() {
                 </div>
               ))
             ) : (
-              <EmptyState text="Dokumenti še niso dodani." />
+              <EmptyState text="No documents have been added yet." />
             )}
           </div>
         </Panel>
@@ -81,7 +81,7 @@ function Info({ label, value }: { label: string; value?: string | null }) {
   return (
     <div className="rounded-[14px] border border-[#EEEAF5] p-4">
       <div className="text-xs font-extrabold uppercase tracking-[.08em] text-[#9A96A5]">{label}</div>
-      <div className="mt-1 font-extrabold">{value || "Ni vpisano"}</div>
+      <div className="mt-1 font-extrabold">{value || "Not provided"}</div>
     </div>
   );
 }

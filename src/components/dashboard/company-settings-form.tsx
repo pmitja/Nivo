@@ -15,6 +15,8 @@ type CompanySettingsFormProps = {
     phone: string;
     address: string | null;
     city: string | null;
+    country: string;
+    serviceAreas: string[];
     googleReviewUrl: string | null;
   };
 };
@@ -33,23 +35,29 @@ export function CompanySettingsForm({ company }: CompanySettingsFormProps) {
   return (
     <form action={formAction} className="grid gap-4">
       <div className="grid gap-3 md:grid-cols-2">
-        <Field id="settings-contact-name" label="Kontaktna oseba">
+        <Field id="settings-contact-name" label="Contact person">
           <Input id="settings-contact-name" name="contactName" required defaultValue={company.contactName} />
         </Field>
         <Field id="settings-email" label="Email">
           <Input id="settings-email" name="email" required type="email" defaultValue={company.email} />
         </Field>
-        <Field id="settings-phone" label="Telefon">
+        <Field id="settings-phone" label="Phone">
           <Input id="settings-phone" name="phone" required defaultValue={company.phone} />
         </Field>
-        <Field id="settings-city" label="Kraj">
+        <Field id="settings-city" label="City">
           <Input id="settings-city" name="city" defaultValue={company.city ?? ""} />
         </Field>
-        <Field id="settings-address" label="Naslov">
+        <Field id="settings-country" label="Country code">
+          <Input id="settings-country" name="country" maxLength={2} defaultValue={company.country} placeholder="SI" />
+        </Field>
+        <Field id="settings-address" label="Address">
           <Input id="settings-address" name="address" defaultValue={company.address ?? ""} />
         </Field>
-        <Field id="settings-review-url" label="Google review povezava">
+        <Field id="settings-review-url" label="Google review link">
           <Input id="settings-review-url" name="googleReviewUrl" defaultValue={company.googleReviewUrl ?? ""} placeholder="https://..." />
+        </Field>
+        <Field id="settings-service-areas" label="Service areas">
+          <Input id="settings-service-areas" name="serviceAreas" defaultValue={company.serviceAreas.join(", ")} placeholder="Ljubljana, Kranj, Celje" />
         </Field>
       </div>
       {state.message ? (
@@ -61,9 +69,9 @@ export function CompanySettingsForm({ company }: CompanySettingsFormProps) {
         {pending ? (
           <>
             <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
-            Shranjujem...
+            Saving...
           </>
-        ) : "Shrani podatke"}
+        ) : "Save details"}
       </Button>
     </form>
   );

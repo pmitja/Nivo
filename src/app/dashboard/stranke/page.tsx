@@ -8,8 +8,8 @@ export default async function ClientCustomersPage() {
   const customers = await getClientCustomerBoard(user.companyId!);
 
   return (
-    <DashboardShell user={user} mode="client" title="Stranke" subtitle="Osnovni CRM za kontakte in zgodovino.">
-      <Panel title="Stranke po statusu">
+    <DashboardShell user={user} mode="client" title="Customers" subtitle="A simple overview of contacts and customer history.">
+      <Panel title="Customers by status">
         <CustomerStatusBoard customers={customers} />
       </Panel>
     </DashboardShell>

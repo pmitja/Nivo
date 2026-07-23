@@ -47,10 +47,12 @@ export function CtaBand({
   title,
   text,
   dark,
+  locale = "sl",
 }: {
   title: string;
   text: string;
   dark?: boolean;
+  locale?: "sl" | "en";
 }) {
   return (
     <section className={cn("bg-white px-5 py-20 md:px-8", dark && "bg-[#FBFAFF]")}>
@@ -67,8 +69,8 @@ export function CtaBand({
           </h2>
           <p className="mx-auto mt-[18px] max-w-[540px] text-lg leading-[1.55] text-white/85">{text}</p>
           <Button asChild variant={dark ? "default" : "inverse"} size="lg" className="mt-[30px]">
-            <Link href="/kontakt">
-              Rezerviraj brezplačen posvet <ArrowRight size={17} />
+            <Link href={locale === "en" ? "/contact" : "/kontakt"}>
+              {locale === "en" ? "Book a free call" : "Rezerviraj brezplačen posvet"} <ArrowRight size={17} />
             </Link>
           </Button>
         </div>

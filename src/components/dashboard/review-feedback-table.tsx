@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/dashboard/dashboard-shell";
 import { PaginationFooter } from "@/components/dashboard/pagination-footer";
-import { formatDate } from "@/lib/labels";
+import { formatDate } from "@/lib/labels-en";
 import type { getClientReviewFeedbacksPage } from "@/lib/dashboard-data";
 
 type FeedbackPage = Awaited<ReturnType<typeof getClientReviewFeedbacksPage>>;
@@ -55,7 +55,7 @@ export function ReviewFeedbackTable({ data }: { data: FeedbackPage }) {
                 <div>
                   <div className="text-sm font-extrabold">{feedback.name || "Stranka brez imena"}</div>
                   <div className="mt-0.5 text-xs font-semibold text-[#8A8694]">
-                    {feedback.leadService || "Brez storitve"}
+                    {feedback.leadService || "No service"}
                   </div>
                 </div>
                 <p className="line-clamp-2 text-sm leading-5 text-[#55515F]">
@@ -78,7 +78,7 @@ export function ReviewFeedbackTable({ data }: { data: FeedbackPage }) {
           />
         </div>
       ) : (
-        <EmptyState text="Za izbrani filter še ni internih povratnih informacij." />
+        <EmptyState text="There is no private feedback for this filter yet." />
       )}
     </div>
   );

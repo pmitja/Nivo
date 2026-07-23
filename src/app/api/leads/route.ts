@@ -66,19 +66,19 @@ export async function POST(request: Request) {
 
   // Zahtevek brez Origin glave (strežnik, curl) pustimo skozi; brskalnik ga vedno poslje.
   if (request.headers.get("origin") && !origin) {
-    return NextResponse.json({ message: "Domena ni dovoljena." }, { status: 403 });
+    return NextResponse.json({ message: "This domain is not allowed." }, { status: 403 });
   }
 
   const contentLength = Number(request.headers.get("content-length") ?? 0);
   if (contentLength > MAX_JSON_BODY_SIZE) {
-    return NextResponse.json({ message: "Zahtevek je prevelik." }, { status: 413 });
+    return NextResponse.json({ message: "The request is too large." }, { status: 413 });
   }
 
   let body: unknown;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ message: "Neveljaven zahtevek." }, { status: 400 });
+    return NextResponse.json({ message: "Invalid request." }, { status: 400 });
   }
 
   const response = await submitLead(body, undefined, null, request.headers);
@@ -101,7 +101,7 @@ export async function submitLead(
   );
 
   if (!parsed.success) {
-    return NextResponse.json({ message: "Preverite obvezna polja obrazca." }, { status: 400 });
+    return NextResponse.json({ message: "Check the required form fields." }, { status: 400 });
   }
 
   if (parsed.data.website || (parsed.data.formStartedAt && isSuspiciouslyFast(parsed.data.formStartedAt))) {
@@ -110,10 +110,10 @@ export async function submitLead(
 
   if (attachment && attachment.size > 0) {
     if (attachment.size > MAX_ATTACHMENT_SIZE) {
-      return NextResponse.json({ message: "Priloga je lahko velika največ 10 MB." }, { status: 400 });
+      return NextResponse.json({ message: "The attachment can be up to 10 MB." }, { status: 400 });
     }
     if (!isUploadableLeadAttachment(attachment)) {
-      return NextResponse.json({ message: "Priloga mora biti Excel (XLS, XLSX) ali CSV datoteka." }, { status: 400 });
+      return NextResponse.json({ message: "The attachment must be an Excel (XLS, XLSX) or CSV file." }, { status: 400 });
     }
   }
 
@@ -121,12 +121,12 @@ export async function submitLead(
   const [company] = await db.select().from(companies).where(eq(companies.id, data.companyId)).limit(1);
 
   if (!company || company.status === "cancelled" || company.status === "suspended") {
-    return NextResponse.json({ message: "Obrazec trenutno ni aktiven." }, { status: 404 });
+    return NextResponse.json({ message: "This form is not active." }, { status: 404 });
   }
 
   const [contactForm] = await db.select().from(contactForms).where(eq(contactForms.companyId, company.id)).limit(1);
   if (contactForm?.active === false) {
-    return NextResponse.json({ message: "Obrazec trenutno ni aktiven." }, { status: 404 });
+    return NextResponse.json({ message: "This form is not active." }, { status: 404 });
   }
   const clientIdentifier = getClientIdentifier(requestHeaders ?? new Headers());
   const normalizedPhone = data.phone.replace(/\D/g, "");
@@ -138,7 +138,7 @@ export async function submitLead(
 
   if (!rateLimit.allowed) {
     return NextResponse.json(
-      { message: "Preveč poskusov. Poskusite znova pozneje." },
+      { message: "Too many attempts. Please try again later." },
       { status: 429, headers: { "Retry-After": String(rateLimit.retryAfterSeconds) } },
     );
   }
@@ -157,7 +157,7 @@ export async function submitLead(
     .limit(1);
 
   if (recentLead) {
-    return NextResponse.json({ message: "Povpraševanje smo že prejeli." }, { status: 429 });
+    return NextResponse.json({ message: "We already received this inquiry." }, { status: 429 });
   }
 
   const missingRequiredField = contactForm?.fields.some((field) => {
@@ -165,7 +165,7 @@ export async function submitLead(
     return String(data[field.name] ?? "").trim().length === 0;
   });
   if (missingRequiredField) {
-    return NextResponse.json({ message: "Izpolnite vsa obvezna polja." }, { status: 400 });
+    return NextResponse.json({ message: "Complete all required fields." }, { status: 400 });
   }
 
   const [customer] = await db

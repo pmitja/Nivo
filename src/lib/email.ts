@@ -47,7 +47,7 @@ export async function sendLeadConfirmationEmail({ customerEmail, ...lead }: Lead
   }
 }
 
-export async function sendContactInquiryConfirmationEmail(inquiry: ContactInquiry) {
+export async function sendContactInquiryConfirmationEmail(inquiry: ContactInquiry, locale: "sl" | "en" = "sl") {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error("RESEND_API_KEY ni nastavljen.");
@@ -56,7 +56,7 @@ export async function sendContactInquiryConfirmationEmail(inquiry: ContactInquir
   const resend = new Resend(apiKey);
   const from = process.env.EMAIL_FROM || DEFAULT_FROM;
 
-  const confirmation = contactInquiryConfirmationEmail(inquiry);
+  const confirmation = contactInquiryConfirmationEmail(inquiry, locale);
   const { error: confirmationError } = await resend.emails.send({
     from,
     to: recipient(inquiry.email),

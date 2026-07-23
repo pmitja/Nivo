@@ -132,64 +132,83 @@ export function leadConfirmationEmail(lead: LeadConfirmation) {
   const firstName = lead.customerName.trim().split(/\s+/)[0];
   const isPaused = Boolean(lead.pauseReason);
   const availabilityMessage = lead.pauseReason === "capacity"
-    ? `Podjetje <strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> ima trenutno zapolnjene kapacitete. Vaše povpraševanje za <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> je vseeno varno shranjeno in ga bodo pregledali, ko bodo ponovno sprejemali nova dela.`
-    : `Podjetje <strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> je trenutno odsotno. Vaše povpraševanje za <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> je vseeno varno shranjeno in ga bodo pregledali po vrnitvi.`;
+    ? `<strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> is currently fully booked. Your inquiry about <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> has been saved and will be reviewed when they are accepting new work again.`
+    : `<strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> is currently away. Your inquiry about <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> has been saved and will be reviewed when they return.`;
   const rows = [
-    detailRow("Storitev", lead.service),
-    detailRow("Izvajalec", lead.companyName),
-    detailRow("Telefon", lead.companyPhone),
-    detailRow("E-pošta", lead.companyEmail),
+    detailRow("Service", lead.service),
+    detailRow("Contractor", lead.companyName),
+    detailRow("Phone", lead.companyPhone),
+    detailRow("Email", lead.companyEmail),
   ].join("");
 
   const html = layout({
     preheader: isPaused
-      ? `${lead.companyName} trenutno ne sprejema novih povpraševanj, vaše sporočilo pa je shranjeno.`
-      : `${lead.companyName} je prejel vaše povpraševanje za ${lead.service}.`,
+      ? `${lead.companyName} is not accepting new inquiries right now, but your message has been saved.`
+      : `${lead.companyName} received your inquiry about ${lead.service}.`,
     body: `
-<div style="font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${BRAND};">${isPaused ? "Povpraševanje shranjeno" : "Povpraševanje prejeto"}</div>
-<h1 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.5px;color:${INK};line-height:1.2;">Hvala, ${escapeHtml(firstName)}!</h1>
-<p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">${isPaused ? availabilityMessage : `Podjetje <strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> je prejelo vaše povpraševanje za <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> in se vam javi v najkrajšem možnem času.`}</p>
-<div style="margin-top:26px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${FAINT};">Vaš izvajalec</div>
+<div style="font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${BRAND};">${isPaused ? "Inquiry saved" : "Inquiry received"}</div>
+<h1 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.5px;color:${INK};line-height:1.2;">Thanks, ${escapeHtml(firstName)}!</h1>
+<p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">${isPaused ? availabilityMessage : `<strong style="color:${INK};">${escapeHtml(lead.companyName)}</strong> received your inquiry about <strong style="color:${INK};">${escapeHtml(lead.service)}</strong> and will get back to you as soon as possible.`}</p>
+<div style="margin-top:26px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${FAINT};">Your contractor</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;border:1px solid ${BORDER};border-radius:14px;border-collapse:separate;overflow:hidden;">
 ${rows}
 </table>
-${isPaused ? "" : ctaButton(`tel:${lead.companyPhone.replace(/\s+/g, "")}`, `Pokličite ${lead.companyName}`)}
-<p style="margin:28px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Če želite kaj dodati ali popraviti, kar odgovorite na to sporočilo — odgovor gre neposredno podjetju ${escapeHtml(lead.companyName)}, ne Obrtiu.</p>
-<p style="margin:20px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Lep pozdrav,<br><strong style="color:${INK};">ekipa Obrtio</strong></p>
+${isPaused ? "" : ctaButton(`tel:${lead.companyPhone.replace(/\s+/g, "")}`, `Call ${lead.companyName}`)}
+<p style="margin:28px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">To add or correct anything, reply to this email. Your reply goes directly to ${escapeHtml(lead.companyName)}.</p>
+<p style="margin:20px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Best regards,<br><strong style="color:${INK};">The Obrtio team</strong></p>
 `,
   });
 
   const statusText = lead.pauseReason === "capacity"
-    ? `podjetje ${lead.companyName} ima trenutno zapolnjene kapacitete. Vaše povpraševanje za ${lead.service} je shranjeno in ga bodo pregledali, ko bodo ponovno sprejemali nova dela.`
-    : `podjetje ${lead.companyName} je trenutno odsotno. Vaše povpraševanje za ${lead.service} je shranjeno in ga bodo pregledali po vrnitvi.`;
+    ? `${lead.companyName} is currently fully booked. Your inquiry about ${lead.service} has been saved.`
+    : `${lead.companyName} is currently away. Your inquiry about ${lead.service} has been saved.`;
 
   const text = [
-    `Pozdravljeni ${firstName},`,
+    `Hi ${firstName},`,
     "",
-    isPaused ? statusText : `podjetje ${lead.companyName} je prejelo vaše povpraševanje za ${lead.service} in se vam javi v najkrajšem možnem času.`,
+    isPaused ? statusText : `${lead.companyName} received your inquiry about ${lead.service} and will get back to you as soon as possible.`,
     "",
-    "Vaš izvajalec:",
+    "Your contractor:",
     `${lead.companyName}`,
-    `Telefon: ${lead.companyPhone}`,
-    `E-pošta: ${lead.companyEmail}`,
+    `Phone: ${lead.companyPhone}`,
+    `Email: ${lead.companyEmail}`,
     "",
-    `Če želite kaj dodati, odgovorite na to sporočilo — odgovor gre neposredno podjetju ${lead.companyName}.`,
+    `To add anything, reply to this message. Your reply goes directly to ${lead.companyName}.`,
     "",
-    "Lep pozdrav,",
-    "ekipa Obrtio",
+    "Best regards,",
+    "The Obrtio team",
   ].join("\n");
 
   return {
     subject: isPaused
-      ? `Vaše povpraševanje za ${lead.service} je shranjeno`
-      : `Prejeli smo vaše povpraševanje za ${lead.service}`,
+      ? `Your inquiry about ${lead.service} has been saved`
+      : `We received your inquiry about ${lead.service}`,
     html,
     text,
   };
 }
 
-export function contactInquiryConfirmationEmail(inquiry: ContactInquiry) {
+export function contactInquiryConfirmationEmail(inquiry: ContactInquiry, locale: "sl" | "en" = "sl") {
   const firstName = inquiry.name.trim().split(/\s+/)[0];
+  if (locale === "en") {
+    const steps = [
+      ["1", "We review your request", "We look at your trade and what you need."],
+      ["2", "We call you within 24 hours", "A practical 20-minute conversation with no obligation."],
+      ["3", "We recommend the next step", "We show you how Obrtio can work for your business."],
+    ].map(([num, title, desc]) => `<tr><td style="padding:0 0 16px;vertical-align:top;width:40px;"><span style="display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;border-radius:9px;background-color:#EFEBFF;color:${BRAND};font-size:14px;font-weight:800;">${num}</span></td><td style="padding:0 0 16px;"><div style="font-size:15px;font-weight:700;color:${INK};">${title}</div><div style="margin-top:2px;font-size:13.5px;line-height:1.5;color:${MUTED};">${desc}</div></td></tr>`).join("");
+    const html = layout({
+      preheader: "We received your request and will get back to you within 24 hours.",
+      body: `<div style="font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${BRAND};">Request received</div>
+<h1 style="margin:12px 0 0;font-size:26px;font-weight:800;letter-spacing:-0.5px;color:${INK};line-height:1.2;">Thanks, ${escapeHtml(firstName)}!</h1>
+<p style="margin:12px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">We received your request and will contact you <strong style="color:${INK};">within 24 hours</strong>, usually much sooner, at <strong style="color:${INK};">${escapeHtml(inquiry.phone)}</strong>.</p>
+<div style="margin-top:26px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:${FAINT};">What happens next</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">${steps}</table>
+${ctaButton(`${SITE_URL}/how-it-works`, "See how Obrtio works")}
+<p style="margin:28px 0 0;font-size:15px;line-height:1.6;color:${MUTED};">Best regards,<br><strong style="color:${INK};">The Obrtio team</strong></p>`,
+    });
+    const text = [`Hi ${firstName},`,"",`We received your request and will contact you within 24 hours at ${inquiry.phone}.`,"","What happens next:","1. We review your request","2. We call you within 24 hours","3. We recommend the next step","",`How Obrtio works: ${SITE_URL}/how-it-works`,"","Best regards,","The Obrtio team"].join("\n");
+    return { subject: "We received your request — we’ll be in touch within 24 hours", html, text };
+  }
   const steps = [
     ["1", "Pregledamo vaše povpraševanje", "Pogledamo panogo in kaj potrebujete."],
     ["2", "Pokličemo vas v 24 urah", "20-minutni pogovor, brez obveznosti."],

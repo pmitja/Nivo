@@ -90,7 +90,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="sl"
+      lang="en"
       data-scroll-behavior="smooth"
       className={`${jakarta.variable} ${jetbrains.variable} h-full antialiased`}
     >

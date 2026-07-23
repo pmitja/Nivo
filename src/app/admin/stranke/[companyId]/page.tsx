@@ -151,6 +151,12 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
               <Field id="company-city" label="Kraj">
                 <Input id="company-city" name="city" defaultValue={company.city ?? ""} />
               </Field>
+              <Field id="company-country" label="Država (ISO koda)">
+                <Input id="company-country" name="country" maxLength={2} defaultValue={company.country} placeholder="SI" />
+              </Field>
+              <Field id="company-service-areas" label="Območja izvajanja">
+                <Input id="company-service-areas" name="serviceAreas" defaultValue={company.serviceAreas.join(", ")} placeholder="Ljubljana, Kranj, Celje" />
+              </Field>
               <Field id="company-address" label="Naslov">
                 <Input id="company-address" name="address" defaultValue={company.address ?? ""} />
               </Field>
@@ -217,7 +223,7 @@ export default async function AdminCompanyProfilePage({ params }: { params: Prom
                 {company.logoName ? <div className="mt-2 text-xs font-semibold text-[#8A8694]">{company.logoName}</div> : null}
               </div>
               <Info label="Status" value={companyStatusLabels[company.status]} />
-              <Info label="Paket" value="Osnovni paket: 99 €/mesec ali 950 € za 12 mesecev" />
+              <Info label="Paket" value="Osnovni paket: $199/mesec ali $1,900 za 12 mesecev" />
               <Info label="AI pomočnik" value="Pride kmalu" />
               <Info label="Domena" value={company.domain || "Ni vpisano"} />
               <Info label="Google review link" value={company.googleReviewUrl || "Ni nastavljen"} />

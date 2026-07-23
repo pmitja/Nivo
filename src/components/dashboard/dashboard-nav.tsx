@@ -47,28 +47,28 @@ const adminNav: NavItem[] = [
 ];
 
 const clientNav: NavItem[] = [
-  { href: "/dashboard", label: "Pregled", icon: Home },
+  { href: "/dashboard", label: "Overview", icon: Home },
   {
     href: "/dashboard/povprasevanja",
-    label: "Povpraševanja",
+    label: "Inquiries",
     icon: FileText,
     children: [
-      { href: "/dashboard/povprasevanja", label: "Nova" },
-      { href: "/dashboard/povprasevanja/kontaktirano", label: "Kontaktirano" },
-      { href: "/dashboard/povprasevanja/ponudbe-poslane", label: "Ponudbe poslane" },
-      { href: "/dashboard/povprasevanja/dogovorjeno", label: "Dogovorjeno" },
-      { href: "/dashboard/povprasevanja/zakljuceno", label: "Zaključeno" },
-      { href: "/dashboard/povprasevanja/izgubljeno", label: "Izgubljeno" },
+      { href: "/dashboard/povprasevanja", label: "New" },
+      { href: "/dashboard/povprasevanja/kontaktirano", label: "Contacted" },
+      { href: "/dashboard/povprasevanja/ponudbe-poslane", label: "Quotes sent" },
+      { href: "/dashboard/povprasevanja/dogovorjeno", label: "Won" },
+      { href: "/dashboard/povprasevanja/zakljuceno", label: "Completed" },
+      { href: "/dashboard/povprasevanja/izgubljeno", label: "Lost" },
     ],
   },
-  { href: "/dashboard/stranke", label: "Stranke", icon: Users },
+  { href: "/dashboard/stranke", label: "Customers", icon: Users },
   { href: "/dashboard/sms", label: "SMS", icon: MessageSquareText },
-  { href: "/dashboard/google-ocene", label: "Google ocene", icon: Star },
-  { href: "/dashboard/kampanje", label: "Kampanje", icon: Megaphone, comingSoon: true },
-  { href: "/dashboard/spletna-stran", label: "Spletna stran", icon: Building2 },
-  { href: "/dashboard/analitika", label: "Analitika", icon: BarChart3 },
-  { href: "/dashboard/podpora", label: "Podpora", icon: LifeBuoy },
-  { href: "/dashboard/nastavitve", label: "Nastavitve", icon: Settings },
+  { href: "/dashboard/google-ocene", label: "Google reviews", icon: Star },
+  { href: "/dashboard/kampanje", label: "Campaigns", icon: Megaphone, comingSoon: true },
+  { href: "/dashboard/spletna-stran", label: "Website", icon: Building2 },
+  { href: "/dashboard/analitika", label: "Analytics", icon: BarChart3 },
+  { href: "/dashboard/podpora", label: "Support", icon: LifeBuoy },
+  { href: "/dashboard/nastavitve", label: "Settings", icon: Settings },
 ];
 
 function useNav(mode: "admin" | "client") {
@@ -102,7 +102,7 @@ export function SidebarNav({ mode }: { mode: "admin" | "client" }) {
           >
             <item.icon className="h-4 w-4" />
             {item.label}
-            <Badge className="ml-auto text-[10px]">Pride kmalu</Badge>
+            <Badge className="ml-auto text-[10px]">{mode === "admin" ? "Pride kmalu" : "Coming soon"}</Badge>
           </div>
         ) : (
           <div key={item.href}>
@@ -165,7 +165,7 @@ export function MobileTabs({ mode }: { mode: "admin" | "client" }) {
   return (
     <div className="lg:hidden">
       {activeParent?.children ? (
-        <nav aria-label="Statusi povpraševanj" className="flex gap-2 overflow-x-auto pb-3 pt-1 no-scrollbar">
+        <nav aria-label={mode === "admin" ? "Statusi povpraševanj" : "Inquiry statuses"} className="flex gap-2 overflow-x-auto pb-3 pt-1 no-scrollbar">
           {activeParent.children.map((child) => (
             <Link
               key={child.href}
@@ -184,7 +184,7 @@ export function MobileTabs({ mode }: { mode: "admin" | "client" }) {
         </nav>
       ) : null}
 
-      <nav aria-label="Glavna navigacija" className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2E4E8] bg-white/95 px-2 pb-[max(.45rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-8px_28px_rgba(16,24,40,.08)] backdrop-blur-xl lg:hidden">
+      <nav aria-label={mode === "admin" ? "Glavna navigacija" : "Main navigation"} className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E2E4E8] bg-white/95 px-2 pb-[max(.45rem,env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-8px_28px_rgba(16,24,40,.08)] backdrop-blur-xl lg:hidden">
         <div className="mx-auto grid max-w-lg grid-cols-5">
           {primaryItems.map((item) => (
             <Link
@@ -207,18 +207,18 @@ export function MobileTabs({ mode }: { mode: "admin" | "client" }) {
             <DialogTrigger asChild>
               <button type="button" className={cn("flex min-h-[52px] min-w-0 cursor-pointer flex-col items-center justify-center gap-1 rounded-xl px-1 text-[10px] font-bold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6A5AE0]/15", isMoreActive ? "text-[#5747C4]" : "text-[#777A83] active:bg-[#F3F1FC]")}>
                 <span className={cn("flex h-7 w-10 items-center justify-center rounded-xl", isMoreActive && "bg-[#EEEAFE]")}><MoreHorizontal className="h-5 w-5" /></span>
-                Več
+                {mode === "admin" ? "Več" : "More"}
               </button>
             </DialogTrigger>
             <DialogContent className="bottom-0 left-0 top-auto w-full max-w-none translate-x-0 translate-y-0 rounded-b-none rounded-t-[24px] border-x-0 border-b-0 pb-[max(1rem,env(safe-area-inset-bottom))] sm:left-1/2 sm:bottom-auto sm:top-1/2 sm:w-[calc(100vw-32px)] sm:max-w-md sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[20px] sm:border">
               <DialogHeader>
-                <DialogTitle>Vse možnosti</DialogTitle>
-                <DialogDescription>Odprite ostale dele nadzorne plošče.</DialogDescription>
+                <DialogTitle>{mode === "admin" ? "Vse možnosti" : "All sections"}</DialogTitle>
+                <DialogDescription>{mode === "admin" ? "Odprite ostale dele nadzorne plošče." : "Open the other areas of your dashboard."}</DialogDescription>
               </DialogHeader>
               <div className="grid max-h-[60vh] grid-cols-2 gap-2 overflow-y-auto p-4">
                 {moreItems.map((item) => item.comingSoon ? (
                   <div key={item.href} className="flex min-h-[72px] cursor-not-allowed flex-col justify-between rounded-2xl bg-[#F6F6F8] p-3.5 text-[#A0A3AA]">
-                    <item.icon className="h-5 w-5" /><span className="text-xs font-bold">{item.label} · Pride kmalu</span>
+                    <item.icon className="h-5 w-5" /><span className="text-xs font-bold">{item.label} · {mode === "admin" ? "Pride kmalu" : "Coming soon"}</span>
                   </div>
                 ) : (
                   <DialogClose asChild key={item.href}>
